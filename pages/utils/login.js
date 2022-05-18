@@ -59,11 +59,13 @@ export function verifykWeixnLogin(){
 	})
 }
 export function getH5Login(parame){
+	var recommend_id = uni.getStorageSync('recommend_id');
 	uni.request({
 		url: Config.restUrl + "login/h5Token",
 		method: "GET",
 		data:{
-		    code: parame.code
+		    code: parame.code,
+				recommend_id:recommend_id
 		},
 		header:{
 		    'content-type': 'application/x-www-form-urlencoded',
@@ -71,13 +73,12 @@ export function getH5Login(parame){
 		    'shopToken': Config.shopToken
 		},
 		success:function(ret){
-			console.log(ret)
+			// console.log(ret)
 			var time = Date.now();
-			uni.setStorageSync('has_h5_auth_key',time);
-				
+		
 			if (ret.statusCode == 200 && ret.data.openid){
 				if(Object.keys(ret.data).length>0){
-					
+					uni.setStorageSync('has_h5_auth_key',time);
 					var openid = ret.data.openid;
 					var userInfo = ret.data.userInfo;
 					var token = ret.data.token;

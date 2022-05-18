@@ -8,6 +8,12 @@ const DeviceType = 'H5'
 const DeviceType = 'WEIXIN'
 //#endif
 
+//导入
+import wxPay from '@/pages/utils/wxPay.js'
+//挂载
+Vue.prototype.$wxPay = wxPay.wexinPay
+
+
 // #ifndef VUE3
 import Vue from 'vue'
 

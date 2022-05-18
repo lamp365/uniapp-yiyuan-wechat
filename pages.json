@@ -63,38 +63,56 @@
             }
             
         }
+        ,{
+            "path" : "pages/category/category",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "点单",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8",
-		"navigationStyle": "custom"  
-	},
+
 	"tabBar": {
-		"color": "#b5cbfd",
-		"selectedColor": "#5b83ff",
+		"color": "#282828",
+		"selectedColor": "#ff3366",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
 				"pagePath": "pages/index/index",
-				"iconPath": "static/nav_1.png",
-				"selectedIconPath": "static/nav_1_sel.png",
+				"iconPath": "static/1-001.png",
+				"selectedIconPath": "static/1-002.png",
 				"text": "首页"
 			},
 			{
+				"pagePath": "pages/category/category",
+				"iconPath": "static/2-001.png",
+				"selectedIconPath": "static/2-002.png",
+				"text": "点单"
+			},
+			{
 				"pagePath": "pages/orders/orders",
-				"iconPath": "static/nav_2.png",
-				"selectedIconPath": "static/nav_2_sel.png",
+				"iconPath": "static/3-001.png",
+				"selectedIconPath": "static/3-002.png",
 				"text": "订单"
 			},
 			{
-				"pagePath": "pages/my/my",
-				"iconPath": "static/nav_4.png",
-				"selectedIconPath": "static/nav_4_sel.png",
+				"pagePath": "pages/user/index",
+				"iconPath": "static/4-001.png",
+				"selectedIconPath": "static/4-002.png",
 				"text": "我的"
 			}
 		]
+	},
+	"globalStyle": {
+		"navigationStyle": "custom", //取消原生导航栏
+		"navigationBarTitleText": "加载中",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#F8F8F8", //全局背景颜色
+		"app-plus": {									//app端配置
+			"background": "#F8F8F8"
+		}
 	},
 	"condition" : { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
