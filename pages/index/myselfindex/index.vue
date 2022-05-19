@@ -20,6 +20,10 @@
 					</swiper-item>
 				</swiper>
 			</view>
+			<!-- 新人福利专区 -->
+			<view class="newfuli">
+				<view class="main">dsf</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -104,17 +108,30 @@ export default {
 	    background: linear-gradient(to right, #ff6151, #e93323);
 	    border-bottom-left-radius: 22px;
 	    border-bottom-right-radius: 22px;
+			position: absolute;
+			z-index: 200;
 }
 .swiperBg .swiper {
     z-index: 600;
-    position: absolute;
-		top: 0;
+    position: relative;
+		top: 2rpx;
     height: 306rpx;
-    padding: 0 32rpx;
+    padding: 0 30rpx;
     overflow: hidden;
 }
 .swiperBg .swiper .box,.swiperBg .swiper image{
 	width: 100%;
 	height: 306rpx;
+	border-radius: 20rpx;
+}
+.newfuli{
+	padding: 0 30rpx;
+
+}
+.newfuli .main{
+	background:  linear-gradient(to right, #ff6151, #e93323);
+	margin-top: 16rpx;
+		height: 140rpx;
+		border-radius: 10rpx;
 }
 </style>

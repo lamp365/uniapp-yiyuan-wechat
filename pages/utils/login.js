@@ -75,7 +75,6 @@ export function getH5Login(parame){
 		success:function(ret){
 			// console.log(ret)
 			var time = Date.now();
-		
 			if (ret.statusCode == 200 && ret.data.openid){
 				if(Object.keys(ret.data).length>0){
 					uni.setStorageSync('has_h5_auth_key',time);

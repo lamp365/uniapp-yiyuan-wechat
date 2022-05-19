@@ -36,7 +36,7 @@
 				// 判断是否存在code
 				if(code != null && code != '' && code != undefined) {
 					// 发送code
-					getH5Login({code:code})
+					getH5Login({code:code});
 				} else {
 					this.code = '';
 				}
