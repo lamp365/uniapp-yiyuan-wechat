@@ -14,7 +14,7 @@ function service(options = {}) {
 				'shopToken': Config.shopToken 
 			}
 		}).then(res => {
-			console.log(res);
+			// console.log(res);
 			if(res[1].data.code == 200){
 				resolved(res[1].data.data);
 			}else{

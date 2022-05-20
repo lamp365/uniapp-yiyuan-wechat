@@ -7,7 +7,7 @@
 				</view>
 				<view class="input">
 					<image src="../../../static/search.png"></image>
-					搜索商品
+					请输入搜索名称
 				</view>
 			</view>
 		</view>
@@ -313,7 +313,7 @@
 			</view>
 		</view>
 		
-
+		<view class="dixian">---- 人家也是有底线得 ----</view>
 	</view>
 </template>
 
@@ -757,4 +757,13 @@ export default {
 	color: #fff;
 	border-radius: 8px;
 }
+	.dixian{
+		background:  #f5f5f5;
+		color: #888;
+		font-size: 24rpx;
+		text-align: center;
+		height: 40rpx;
+		line-height: 40rpx;
+		padding-bottom: 16rpx;
+	}
 </style>
