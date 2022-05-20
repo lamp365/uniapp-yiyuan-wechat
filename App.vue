@@ -14,4 +14,8 @@
 
 <style>
 	/*每个页面公共css */
+	/* 全局取消滚动条 */
+	::-webkit-scrollbar{
+	      display: none;
+	}
 </style>
