@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "便民缴费"
+				"navigationBarTitleText": "商城"
 			}
 		},
 		{
@@ -17,16 +17,7 @@
 			"style": {
 				"navigationBarTitleText": "个人中心"
 			}
-		},
-		{
-					"path" : "pages/detail/detail",
-					"style" :                                                                                    
-					{
-							"navigationBarTitleText": "订单详情",
-							"enablePullDownRefresh": false
-					}
-					
-			}
+		}
         ,{
             "path" : "pages/my/help",
             "style" :                                                                                    
@@ -76,7 +67,16 @@
             "path" : "pages/search/search",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "搜索",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/product/product",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "商品详情",
                 "enablePullDownRefresh": false
             }
             

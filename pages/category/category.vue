@@ -38,19 +38,22 @@
 						<view class="category-detail-box">
 							
 						   <view  v-if="categoryProducts.length>0">
-						     <view class="product_list"  v-for="(item,index) in categoryProducts" :key="index" @click="onProductsItemTap(item.id,index)">
+						     <view class="product_list"  v-for="(item,index) in categoryProducts" :key="index" @click="gotoProduct(item.id)">
 						       <image :src="item.main_img_url" class="product_img" mode='aspectFill'></image>
 						       <view class="product_content">
-						         <view class="product_title">{{item.name}}</view>
-						         <view v-if="is_show_sale_num == 0">库存 {{item.stock}}</view>
-						         <view v-else>销量 {{item.seller_num+item.virtual_num}}</view>
-							
-							
-						         <view class="product_buy" catchtap="stopMaopao">
-						             <view v-if="item.type ==0">¥{{item.sale_price}}</view>
-						             <view v-else>¥{{item.active_price}}</view>
-							
-						             <view @click="addToCart(item.id,item.category_id)"><image src="../../static/add.png"></image></view>
+						         <view class="product_title">{{item.name}}</view>							
+						         <view class="" @click="stopMaopao">
+											 <view  v-if="is_show_sale_num == 1" class="has_sale">已售 {{item.seller_num+item.virtual_num}}</view>
+											 
+											  <view  v-if="item.type !=0" class="huaxian_price">¥{{item.sale_price}}</view>
+												
+												<view class="product_buy">
+													<view v-if="item.type ==0">¥{{item.sale_price}}</view>
+													<view v-else>¥{{item.active_price}} <text class="icon">新人价</text></view>
+																				
+													<view @click="addToCart(item.id,item.category_id)"><image src="../../static/add.png"></image></view>
+												</view>
+						            
 						         </view>
 						       </view>
 						     </view>
@@ -80,13 +83,13 @@
 	export default {
 		data() {
 			return {
-				 categoryTypeArr: {},
-					categoryProducts: {},
+				 categoryTypeArr: [],
+					categoryProducts: [],
 					currentMenuIndex: 0,
 					parentCurrentMenuIndex: 0,
 					loadedData: {},
 			
-					secondCategory: {},
+					secondCategory: [],
 			
 					is_nodata:false,  
 					categoryBoxTop:308,
@@ -115,19 +118,19 @@
 						  //一定要在回调里再进行获取分类详情的方法调用
 						  // var parame_data = {id:category_id,page:that.data.current_page}
 							getProductsByCategory({id:category_id}).then(data => {
-								if(Object.keys(data).length > 0){
+								if(data.length > 0){
 									var is_nodata = false;
-									var dataObj = {};
+								
 								}else{
 									var is_nodata = true;
-									var dataObj = {products:data};
+								
 								}
 								
 								that.categoryProducts = data;
 								that.is_nodata = is_nodata;
 								//第一次加载保存到loadedData中
 								var index_key = "cate_"+category_id+"_0";
-								that.loadedData[index_key] = dataObj;
+								that.loadedData[index_key] = data;
 							});
 						})
 			},
@@ -169,27 +172,23 @@
 			    if (!this.isLoadedData(index_key)) {
 			      //如果没有加载过当前分类的商品数据
 						getProductsByCategory({id:id}).then(data =>{
-							var dataObj = {};
-							if(data == 0){
-							  var is_nodata = true;
+							if(data.length>0){
+								 var is_nodata = false;
 							}else{
-							  var dataObj = {
-							    products: data
-							  };
-							  var is_nodata = false;
+								var is_nodata = true;
 							}
+							
 							// console.log(Object.keys(dataObj).length);
 							that.categoryProducts = data;
 							that.is_nodata = is_nodata
 							//第一次加载保存到loadedData中
-							that.loadedData[index_key] = dataObj;
+							that.loadedData[index_key] = data;
 						});
 			    } else {
 			      //不是第一次加载就使用loadedData
 			      var getData = this.loadedData[index_key];
-						console.log(gatData);
 			      var is_nodata = false;
-			      if(Object.keys(getData).length == 0)
+			      if(getData.length == 0)
 			          is_nodata = true;
 								
 						this.categoryProducts = getData;
@@ -215,6 +214,14 @@
 					 }else{
 						 return "menu-item";
 					 }
+				 },
+				 stopMaopao(){
+					return false; 
+				 },
+				 gotoProduct(id){
+					 uni.navigateTo({
+					 	url:"../product/product?id="+id
+					 })
 				 }
 		},
 		  //滚动到底部加载更多
@@ -230,6 +237,7 @@
 	}
 	.top_main{
 		background: #fff;
+		overflow: hidden;
 	}
 .search_input{
     display: flex;
@@ -341,7 +349,7 @@
     margin-top:20rpx;
 		background: #fff;
 		border-radius: 16rpx;
-		padding: 20rpx;
+		padding: 16rpx 20rpx;
 }
 .product_list>image{
     height: 180rpx;
@@ -360,13 +368,32 @@
 }
 .product_content>view:nth-child(2){
     font-size: 28rpx;
-    color: #979797;
-    padding-bottom: 0rpx;
+    color: #f94a3b;
+		margin-bottom: 0rpx;
 }
 
 .product_content{
     margin-left: 12rpx;
     flex: 1;
+		justify-content: space-between;
+		flex-flow: column;
+		display: flex;
+		 font-size: 28rpx;
+}
+.product_content .has_sale{
+	color: #bdbbbb;
+}
+.product_content .huaxian_price{
+	color: #bdbbbb;
+	text-decoration: line-through;
+}
+.product_content .icon{
+	margin-left: 8rpx;
+	padding: 0 8rpx;
+	font-size: 18rpx;
+	background: #f94a3b;
+	color: #fff;
+	border-radius: 8px;
 }
 .product_buy{
     display: flex;
