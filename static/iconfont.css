@@ -1,0 +1,31 @@
+/* https://www.iconfont.cn/ */
+@font-face {
+  font-family: "iconfont"; /* Project id 3423417 */
+  src: url('//at.alicdn.com/t/font_3423417_0og3jl6w3kbj.woff2?t=1653329959499') format('woff2'),
+       url('//at.alicdn.com/t/font_3423417_0og3jl6w3kbj.woff?t=1653329959499') format('woff'),
+       url('//at.alicdn.com/t/font_3423417_0og3jl6w3kbj.ttf?t=1653329959499') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-jianshao:before {
+  content: "\e8b2";
+}
+
+.icon-zengjia:before {
+  content: "\e8c0";
+}
+
+.icon-cart-Empty:before {
+  content: "\e747";
+}
+
+.icon-guanzhu:before {
+  content: "\e8b1";
+}

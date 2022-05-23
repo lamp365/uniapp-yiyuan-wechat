@@ -42,7 +42,7 @@
 						       <image :src="item.main_img_url" class="product_img" mode='aspectFill'></image>
 						       <view class="product_content">
 						         <view class="product_title">{{item.name}}</view>							
-						         <view class="" @click="stopMaopao">
+						         <view class="">
 											 <view  v-if="is_show_sale_num == 1" class="has_sale">已售 {{item.seller_num+item.virtual_num}}</view>
 											 
 											  <view  v-if="item.type !=0" class="huaxian_price">¥{{item.sale_price}}</view>
@@ -51,7 +51,7 @@
 													<view v-if="item.type ==0">¥{{item.sale_price}}</view>
 													<view v-else>¥{{item.active_price}} <text class="icon">新人价</text></view>
 																				
-													<view @click="addToCart(item.id,item.category_id)"><image src="../../static/add.png"></image></view>
+													<view @click.stop="chooseSpec(item.id)"><image src="../../static/add.png"></image></view>
 												</view>
 						            
 						         </view>
@@ -75,6 +75,42 @@
 		
 		</view>
 		<!-- mian box -->
+		
+		<!-- 普通弹窗 选择规格 -->
+		<view>
+			<uni-popup ref="specpopup" background-color="#fff" @change="change">
+				<view class="popup-content specpopup">
+					<view class="show_info">
+						<view class="main_pic"><image src="https://demo26.crmeb.net/uploads/attach/2021/11/15/08ba709edfd9d1cc5505f69bd53e679b.jpg" mode=""></image></view>
+						<view class="show_price">
+							<view class="tit">新人价</view>
+							<view class="money">￥<text class="sale_price">29.9</text> <text class="huaxian_price">￥16.58</text></view>
+							<view class="choose_spec">已选：1件750ml <text class="kucun">库存：16件</text></view>
+						</view>
+					</view>
+					<view class="spec_list">
+						<view class="spec_title">规格</view>
+						<view class="spec_show_box">
+							<view class="one_spec">一件360ML</view>
+							<view class="one_spec">一件360ML75du</view>
+							<view class="one_spec has_choose">一件360ML</view>
+							<view class="one_spec">一件360ML</view>
+							<view class="one_spec">一件360ML</view>
+						</view>
+					</view>
+					<view class="set_nums">
+						<view class="set_nums_title">数量</view>
+						<view class="nums_buttom">
+							<text class="iconfont icon-jianshao icon"></text>
+							<text class="show_geshu">8</text>
+							<text class="iconfont icon-zengjia icon"></text>
+						</view>
+					</view>
+					<view style="height: 250rpx;"></view>
+				</view>
+			</uni-popup>
+		</view>  
+		<!-- 弹窗end -->
 	</view>
 </template>
 
@@ -216,13 +252,22 @@
 					 }
 				 },
 				 stopMaopao(){
+					 console.log(2);
 					return false; 
 				 },
 				 gotoProduct(id){
 					 uni.navigateTo({
 					 	url:"../product/product?id="+id
 					 })
-				 }
+				 },
+				 chooseSpec(id){
+				 	var type = 'bottom';
+				 	// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
+				 	this.$refs.specpopup.open(type);
+				 },
+				 change(e) {
+				 	console.log('当前模式：' + e.type + ',状态：' + e.show);
+				 },
 		},
 		  //滚动到底部加载更多
 		  onReachBottom:function() {
@@ -232,6 +277,7 @@
 </script>
 
 <style>
+	@import url("../../static/iconfont.css");
 	page{
 		background: #f8f8f8;
 	}
@@ -296,7 +342,7 @@
 		color: #646363;
 }
 .tuijian_box .the_item .active{
-		background: #40E0D0;
+		background: #10d3c2;
 		color: #fff;
 		padding: 0 16rpx;
 		border-radius: 12rpx;
@@ -331,8 +377,8 @@
     border-left: 6rpx solid #fff;
 }
 .menu-item.selected {
-    color: #40E0D0;
-    border-left-color: #40E0D0;
+    color: #10d3c2;
+    border-left-color: #10d3c2;
 }
 .foods-type-box {
     height: 100%;
@@ -457,5 +503,90 @@
     color:#444452;
     font-size: 24rpx;
 
+}
+/* 理解购买 显示规格 */
+.specpopup .show_info{
+	display: flex;
+	background: #fff;
+	padding: 38rpx 20rpx;
+}
+.specpopup .show_info image{
+	width: 150rpx;
+	height: 150rpx;
+	border-radius: 16rpx;
+}
+.specpopup .show_info .show_price{
+	font-size: 24rpx;
+	color: #999;
+	margin-left: 30rpx;
+}
+.specpopup .show_info .show_price .tit{
+	color:  #f94a3b;
+}
+.specpopup .show_info .show_price .money{
+	margin-top: 10rpx;
+	color:  #f94a3b;
+	font-weight: 600;
+}
+.specpopup .show_info .show_price .sale_price{
+	font-size: 44rpx;
+	
+}
+.specpopup .show_info .show_price .huaxian_price{
+	color: #999;
+	text-decoration: line-through;
+	margin-left: 24rpx;
+	font-weight: normal;
+}
+.specpopup .show_info .show_price .choose_spec{
+	margin-top: 16rpx;
+}
+.specpopup .show_info .show_price .kucun{
+	margin-left: 30rpx;
+}
+.specpopup .spec_list{
+	    padding: 0px 22rpx;
+}
+.specpopup .spec_list .spec_title{
+	color: #999;
+}
+.specpopup  .spec_show_box{
+	margin-bottom: 24rpx;
+}
+.specpopup  .spec_show_box .one_spec{
+	border: 2rpx solid #f2f2f2;
+	font-size: 26rpx;
+	color: #282828;
+	padding: 10rpx 32rpx;
+	border-radius: 24rpx;
+	margin: 20rpx 20rpx 0rpx 0rpx;
+	background-color: #f2f2f2;
+	display: inline-block;
+	font-size: 24rpx;
+}
+.specpopup  .spec_show_box .has_choose{
+	border: 2rpx solid  #10d3c2;
+	color:  #10d3c2;
+}
+.specpopup .set_nums{
+	 padding: 0px 22rpx;
+	 display: flex;
+	 justify-content: space-between;
+	 align-items: center;
+}
+.specpopup .set_nums .set_nums_title{
+	color: #999;
+}
+.specpopup .set_nums .nums_buttom{
+	display: flex;
+	align-items: center;
+	color: #666;
+}
+.specpopup .set_nums .show_geshu{
+	padding: 0rpx 16rpx;
+}
+.specpopup .set_nums .icon{
+	font-size: 40rpx;
+	color: #c1baba;
 }
 </style>
