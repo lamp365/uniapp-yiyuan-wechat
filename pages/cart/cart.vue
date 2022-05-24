@@ -228,7 +228,27 @@
 					uni.navigateTo({
 						url:"../product/product?id="+id
 					})
-				}
+				},
+			 submitOrder() {
+				 if(this.account == 0){
+					 return false;
+				 }
+					//判断是否 多少起送
+					var start_money = this.sysData.start_money;
+					if(start_money != 0){
+						if(start_money>this.account){
+							uni.showToast({
+								title: "满"+start_money+"元起送哦",
+								duration: 1000,
+								icon: 'false'
+							});
+							return false;
+						}
+					}
+					uni.navigateTo({
+						url:'../jiesuan/jiesuan?account=' + this.account + '&from=cart',
+					})
+				},
 		}
 	}
 </script>

@@ -90,6 +90,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/jiesuan/jiesuan",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "确认订单",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 
 	"tabBar": {
