@@ -82,7 +82,7 @@ export function _isHasThatOne(id, arr) {
 */
 export function _changeCounts(id, counts) {
     var cartData = getCartDataFromLocal();
-    var isHasInfo = isHasThatOne(id, cartData);
+    var isHasInfo = _isHasThatOne(id, cartData);
     if (isHasInfo.index != -1) {
       if (isHasInfo.data.counts > 1) {
         cartData[isHasInfo.index].counts += counts;
@@ -100,7 +100,7 @@ export function deleteCart(ids) {
 
     var cartData = getCartDataFromLocal();
     for (let i = 0; i < ids.length; i++) {
-      var hasInfo = this._isHasThatOne(ids[i], cartData);
+      var hasInfo = _isHasThatOne(ids[i], cartData);
       if (hasInfo.index != -1) {
         cartData.splice(hasInfo.index, 1); //删除数组某一项
       }

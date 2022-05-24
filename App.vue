@@ -13,6 +13,7 @@
 </script>
 
 <style>
+		@import url("./static/iconfont.css");
 	/*每个页面公共css */
 	/* 全局取消滚动条 */
 	::-webkit-scrollbar{

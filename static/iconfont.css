@@ -1,9 +1,9 @@
 /* https://www.iconfont.cn/ */
 @font-face {
   font-family: "iconfont"; /* Project id 3423417 */
-  src: url('//at.alicdn.com/t/font_3423417_0og3jl6w3kbj.woff2?t=1653329959499') format('woff2'),
-       url('//at.alicdn.com/t/font_3423417_0og3jl6w3kbj.woff?t=1653329959499') format('woff'),
-       url('//at.alicdn.com/t/font_3423417_0og3jl6w3kbj.ttf?t=1653329959499') format('truetype');
+  src: url('//at.alicdn.com/t/font_3423417_mtgi5t2tqoo.woff2?t=1653409532059') format('woff2'),
+       url('//at.alicdn.com/t/font_3423417_mtgi5t2tqoo.woff?t=1653409532059') format('woff'),
+       url('//at.alicdn.com/t/font_3423417_mtgi5t2tqoo.ttf?t=1653409532059') format('truetype');
 }
 
 .iconfont {
@@ -12,6 +12,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-rcd-trash-f:before {
+  content: "\e61a";
+}
+
+.icon-icon_wushuju:before {
+  content: "\e622";
 }
 
 .icon-jianshao:before {

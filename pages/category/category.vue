@@ -95,7 +95,7 @@
 					<view class="spec_list">
 						<view class="spec_title">规格</view>
 						<view class="spec_show_box">
-							<view :class="[specSetClass(index)]" v-for="(item,index) in one_product_spec" @click="changeSpec(index,item)">
+							<view :class="[specSetClass(index)]" v-for="(item,index) in one_product_spec" @click="changeSpec(index,item)" :key="index">
 								<text class="spec_wenben" v-if="item.stock < 1">{{item.spec_name}}</text>
 								<text class="" v-else>{{item.spec_name}}</text>
 							</view>
@@ -389,10 +389,11 @@
 </script>
 
 <style>
-	@import url("../../static/iconfont.css");
+
 	page{
 		background: #f8f8f8;
 	}
+
 	.top_main{
 		background: #fff;
 		overflow: hidden;
