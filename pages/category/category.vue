@@ -50,8 +50,9 @@
 												<view class="product_buy">
 													<view v-if="item.type ==0">¥{{item.sale_price}}</view>
 													<view v-else>¥{{item.active_price}} <text class="icon">新人价</text></view>
-																				
-													<view @click.stop="chooseSpec(item.id)"><image src="../../static/add.png"></image></view>
+															
+													<view v-if="item.spec_type == 1" @click.stop="addCart(item.id)"><image src="../../static/add.png"></image></view>				
+													<view v-if="item.spec_type == 2" @click.stop="chooseSpec(item.id)"><image src="../../static/add.png"></image></view>
 												</view>
 						            
 						         </view>
@@ -81,42 +82,59 @@
 			<uni-popup ref="specpopup" background-color="#fff" @change="change">
 				<view class="popup-content specpopup">
 					<view class="show_info">
-						<view class="main_pic"><image src="https://demo26.crmeb.net/uploads/attach/2021/11/15/08ba709edfd9d1cc5505f69bd53e679b.jpg" mode=""></image></view>
+						<view class="main_pic"><image :src="one_product.main_img_url" mode=""></image></view>
 						<view class="show_price">
-							<view class="tit">新人价</view>
-							<view class="money">￥<text class="sale_price">29.9</text> <text class="huaxian_price">￥16.58</text></view>
-							<view class="choose_spec">已选：1件750ml <text class="kucun">库存：16件</text></view>
+							<view class="tit"><text v-if="one_product.type ==1">新人价</text><text v-else>价格</text></view>
+							<view class="money">
+								￥<text class="sale_price" v-if="one_product.type ==1">{{active_price}}</text> <text class="sale_price" v-else>{{sale_price}}</text> 
+								<text class="huaxian_price" v-if="one_product.type ==1">￥{{sale_price}}</text>
+							</view>
+							<view class="choose_spec">已选：{{has_choose_spec}} <text class="kucun">库存：{{stock}}件</text></view>
 						</view>
 					</view>
 					<view class="spec_list">
 						<view class="spec_title">规格</view>
 						<view class="spec_show_box">
-							<view class="one_spec">一件360ML</view>
-							<view class="one_spec">一件360ML75du</view>
-							<view class="one_spec has_choose">一件360ML</view>
-							<view class="one_spec">一件360ML</view>
-							<view class="one_spec">一件360ML</view>
+							<view :class="[specSetClass(index)]" v-for="(item,index) in one_product_spec" @click="changeSpec(index,item)">
+								<text class="spec_wenben" v-if="item.stock < 1">{{item.spec_name}}</text>
+								<text class="" v-else>{{item.spec_name}}</text>
+							</view>
 						</view>
 					</view>
 					<view class="set_nums">
 						<view class="set_nums_title">数量</view>
 						<view class="nums_buttom">
-							<text class="iconfont icon-jianshao icon"></text>
-							<text class="show_geshu">8</text>
-							<text class="iconfont icon-zengjia icon"></text>
+							<text class="iconfont icon-jianshao icon" @click="addNums(0)"></text>
+							<text class="show_geshu">{{add_num}}</text>
+							<text class="iconfont icon-zengjia icon" @click="addNums(1)"></text>
 						</view>
 					</view>
-					<view style="height: 250rpx;"></view>
+					<view class="buy_buttom">
+						<view class="to_gouwuche" @click="addGowuche(one_product.id)">
+							加入购物车
+						</view>
+						<view class="to_buy" @click="lijiBuy(one_product.id)">
+							立即购买
+						</view>
+					</view>	
+					<view style="height: 160rpx;"></view>
 				</view>
 			</uni-popup>
 		</view>  
 		<!-- 弹窗end -->
+		<fullLoading :loadModal="loadModal"></fullLoading>
 	</view>
 </template>
 
 <script>
 	import {getCategoryType,getProductsByCategory} from "../api/categoryApi.js";
+	import {getProduct} from "../api/productApi.js";
+	import {addCart} from "../utils/cart.js";
+	import fullLoading from "../../components/loading/fullLoading.vue";
 	export default {
+		components:{
+			fullLoading
+		},
 		data() {
 			return {
 				 categoryTypeArr: [],
@@ -128,9 +146,19 @@
 					secondCategory: [],
 			
 					is_nodata:false,  
-					categoryBoxTop:308,
 					is_show_sale_num:0,
-					current_page:1
+					current_page:1,
+					
+					one_product:[],
+					one_product_spec:[],
+					loadModal:false,
+					has_choose_spec:'',
+					spec_current_index:0,
+					active_price:0.00,
+					sale_price:0.00,
+					stock:0,
+					add_num:1,
+					product_id:0
 			}
 		},
 		onLoad: function(options) {
@@ -187,7 +215,7 @@
 			          this.changeGetDataFunc(index_key,id);
 			        }else{
 			          //没有子分类
-								this.categoryProducts = {};
+								this.categoryProducts = [];
 								this.is_nodata = true;
 			        }
 			      }
@@ -260,10 +288,94 @@
 					 	url:"../product/product?id="+id
 					 })
 				 },
+				 addCart(id){
+					 
+				 },
 				 chooseSpec(id){
-				 	var type = 'bottom';
-				 	// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
-				 	this.$refs.specpopup.open(type);
+					 this.loadModal = true;
+					 getProduct({id:id}).then(result=>{
+						this.one_product = result;
+						this.one_product_spec = result.product_spec;
+						this.loadModal = false;
+						this.active_price    = result.product_spec[0].active_price;
+						this.sale_price      = result.product_spec[0].sale_price;
+						this.stock           = result.product_spec[0].stock;
+						this.has_choose_spec = result.product_spec[0].spec_name;
+						this.showSpecBox();
+					 }).catch(err=>{
+						 this.loadModal = false;
+					 });
+				 },
+				 showSpecBox(){
+					 var type = 'bottom';
+					 // open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
+					 this.$refs.specpopup.open(type);
+				 },
+				 changeSpec(index,spec_item){
+					 if(spec_item.stock>0){
+						 this.spec_current_index = index;
+						 this.active_price    = spec_item.active_price;
+						 this.sale_price      = spec_item.sale_price;
+						 this.stock           = spec_item.stock;
+						 this.has_choose_spec = spec_item.spec_name;
+						 this.add_num = 1;
+					 }
+				 },
+				 specSetClass(index){
+					if(this.spec_current_index == index){
+						 return 'one_spec has_choose';
+					}else{
+						 return 'one_spec';
+					}					
+				 },
+				 addNums(type){
+					 if(type == 0){
+						 //减去
+						 var temp_num = this.add_num - 1;
+						 var limit_num = 1;
+						 if(temp_num<limit_num){
+							 return false;
+						 }else{
+							 this.add_num = temp_num;
+						 }
+					 }else{
+						  var temp_num = this.add_num + 1;
+						  var limit_num = this.stock;
+						  if(temp_num>limit_num){
+							  return false;
+						  }else{
+							  this.add_num = temp_num;
+						  }
+					 }
+				 },
+				 addGowuche(id){
+					 this.product_id = id;
+					 var this_product = this.one_product;
+					
+					 // console.log(products_arr);
+					 var tempObj = {};
+					 var cartDataObj = {
+						 id:id,
+						 name:this_product.name,
+						 main_img_url:this_product.main_img_url,
+						 sale_price:this.sale_price,
+						 active_price:this.active_price,
+						 stock:this.stock,
+						 spec_name:this.has_choose_spec,
+						 type:this_product.type,
+						 selectStatus:1
+					 };
+					 console.log(cartDataObj);
+					 addCart(cartDataObj, this.add_num);
+					 this.$refs.specpopup.close();
+					uni.showToast({
+						title: '已加入购物车',
+						duration: 1000,
+						icon: 'success'
+					})
+				 },
+				 lijiBuy(){
+					 
 				 },
 				 change(e) {
 				 	console.log('当前模式：' + e.type + ',状态：' + e.show);
@@ -568,6 +680,9 @@
 	border: 2rpx solid  #10d3c2;
 	color:  #10d3c2;
 }
+.specpopup  .spec_show_box .spec_wenben{
+	text-decoration: line-through;
+}
 .specpopup .set_nums{
 	 padding: 0px 22rpx;
 	 display: flex;
@@ -588,5 +703,33 @@
 .specpopup .set_nums .icon{
 	font-size: 40rpx;
 	color: #c1baba;
+}
+.buy_buttom{
+	margin-top: 60rpx;
+	display: flex;
+	height: 80rpx;
+	line-height:80rpx;
+	font-weight: 600;
+	color: #fff;
+	width: 80%;
+	margin-left: 10%;
+}
+.buy_buttom .to_gouwuche{
+	width: 50%;
+	text-align: center;
+	color: #fff;
+	font-size: 14px;
+	border-radius: 26px 0 0 26px;
+	background: #2ee4d4;
+	height: 100%;
+}
+.buy_buttom .to_buy{
+	width: 50%;
+	text-align: center;
+	color: #fff;
+	font-size: 14px;
+	border-radius: 0px 26px 26px 0;
+	background: #10d3c2;
+	height: 100%;
 }
 </style>

@@ -318,24 +318,57 @@
 </template>
 
 <script>
-	
+import {getShopInfo,getTopBanner} from "../../api/indexApi.js";
 export default {
 	data(){
 		return{
+		    sysInfo:{},
 			topBanner:[
 				{'image':'https://data44.wuht.net//uploads/attach/2022/01/20220115/84578abf1060697da0529a5ccc50934c.png'},
 				{'image':'https://data44.wuht.net//uploads/attach/2022/01/20220115/d54f87813d22fc2ce2e6e231f3bcfae7.png'}
 			]
 		}
 	},
-	onLoad(){
+	mounted(){
+		this.getShopInfoInit();
 		
 	},
 	onShow() {
-	    
+		console.log(2222);
+	    /* getTopBanner().then(result=>{
+	    	this.topBanner = result;
+	    }); */
+	   
 	},
 	methods: {
-		
+		getShopInfoInit(){
+			var cacheData = uni.getStorageSync('sysInfo');
+			if(!cacheData){
+				getShopInfo().then(result=>{
+					var cacheTime = Date.now();
+					result.cacheTime = cacheTime;
+					this.sysInfo = result;
+					uni.setNavigationBarTitle({
+						title:result.shop_name
+					})
+					uni.setStorageSync('sysInfo',result)
+				});
+			}else{
+				const oldTime = cacheData.cacheTime;
+				const currentTime = Date.now();
+				const overTime = (currentTime - oldTime)/1000;
+				var condition = 60*60*24;
+				this.sysInfo = cacheData;
+				uni.setNavigationBarTitle({
+					title:cacheData.shop_name
+				})
+				if(overTime > condition){
+					//清空下次 重新请求
+					uni.setStorageSync('sysInfo','')
+				}
+				
+			}
+		}
 	}
 }
 </script>

@@ -81,6 +81,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/cart/cart",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "购物车",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 
 	"tabBar": {
@@ -101,10 +110,10 @@
 				"text": "点单"
 			},
 			{
-				"pagePath": "pages/orders/orders",
+				"pagePath": "pages/cart/cart",
 				"iconPath": "static/3-001.png",
 				"selectedIconPath": "static/3-002.png",
-				"text": "订单"
+				"text": "购物车"
 			},
 			{
 				"pagePath": "pages/user/index",

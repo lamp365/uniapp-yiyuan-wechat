@@ -5,9 +5,9 @@ export function getTopBanner() {
 		method: 'GET'
 	})
 }
-export function getSysInfo() {
+export function getShopInfo() {
   return request({
-    url: 'sysInfo',
+    url: 'getShop',
     method: 'GET'
   })
 }

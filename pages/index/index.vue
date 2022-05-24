@@ -7,18 +7,15 @@
 
 </template>
 <script>
-	import {getOauthUrl,getSysInfo,getTopBanner} from "../api/indexApi.js";
+  import {getOauthUrl} from "../api/indexApi.js";
   import {weixinLogin,verifykWeixnLogin,getH5Login} from "../utils/login.js";
 	import myselfindex from './myselfindex'
 	export default {
 		data() {
 			return {
 				title: '',
-				topBanner: [],
-				sysInfo:[],
 				wx_ouathUrl:'',
-				code:'',
-				account: '',
+				code:''
 			}
 		},
 		components: {
@@ -42,30 +39,18 @@
 				}
 			}
 					
-		// #ifdef MP-WEIXIN
-		weixinLogin();
-		//#endif
+			// #ifdef MP-WEIXIN
+			weixinLogin();
+			//#endif
+				
+			// #ifdef H5
+			var that = this;
+			setTimeout(function(){
+				//获取授权url去跳转授权
+				that.getH5LoginFunc();
+			},200)
+			//#endif
 			
-    // #ifdef H5
-		var that = this;
-		setTimeout(function(){
-			//获取授权url去跳转授权
-			that.getH5LoginFunc();
-		},200)
-		//#endif
-			
-			/* getTopBanner().then(result=>{
-				this.topBanner = result;
-			}); */
-			getSysInfo().then(result=>{
-				this.sysInfo = result;
-				uni.setNavigationBarTitle({
-					title:result.name
-				})
-				uni.setStorageSync(
-						'sysInfo',JSON.stringify(result)
-				)
-			});
 		},
 		onShow() {
 		    console.log('showw');
