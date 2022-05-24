@@ -61,7 +61,7 @@
 						   </view>
 							 
 						   <view class="no_data"  v-if="is_nodata" style="justify-content: center;display: flex;">
-						     <image src="../../static/no_data.png" style="margin-top: 48rpx;width: 240rpx;height: 240rpx;"></image>
+						     <image src="../../static/no_data.png" style="margin-top: 160rpx;width: 240rpx;height: 240rpx;"></image>
 						   </view>
 							 
 						 </view> 
