@@ -107,6 +107,9 @@
 			}
 		},
 		onLoad() {
+			
+		},
+		onShow(){
 			this.sysData = uni.getStorageSync('sysInfo');
 			this.getCartData();
 		},
@@ -146,7 +149,7 @@
 					
 					this.selectedCounts     = selectedCounts;
 					this.selectedTypeCounts = selectedTypeCounts;
-					this.account            = account;
+					this.account            = account.toFixed(2);
 					
 			    return {
 			      selectedCounts: selectedCounts,

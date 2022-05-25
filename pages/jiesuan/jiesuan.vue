@@ -65,10 +65,11 @@
 						<view>{{item.name}}</view>
 						<view v-if="item.type ==1">￥{{item.active_price}}/件  共{{item.counts}}件</view>
 						<view v-else>￥{{item.sale_price}}/件  共{{item.counts}}件</view>
+						<view class="">规格：{{item.spec_name}}</view>
 					</view>
 	
 					<view class="item-right">
-						￥{{item.price}}
+						￥<text v-if="item.type ==1">{{item.active_heji}}</text><text v-else>{{item.sale_heji}}</text>	
 					</view>
 	
 				</view>
@@ -142,6 +143,7 @@
 <script>
 	import {getCartDataFromLocal} from "../utils/cart.js";
 	import {getOrderInfoById} from "../api/orderApi.js";
+	import {getUserOneCoupon} from "../api/couponApi.js";
 	export default {
 		data() {
 			return {
@@ -161,8 +163,8 @@
 				    no_good_type: 0,
 				    choseQuestionBank:"其它商品继续购买(缺货商品退款) >",
 				    coupon_user_id:0,
-				    coupon_money: 0.00,
-				    last_account:0.00,
+				    coupon_money: '0.00',
+				    last_account:'0.00',
 				    msg_liuyan:'',
 				    start_away:0,
 				    showTipsStatus:false,
@@ -178,9 +180,11 @@
 					 var id = options.id;
 					 this._fromOrder(id);
 				 }
-				 
-				 this.sysInfo = uni.getStorageSync('sysInfo');
-				 this.showSendTips();
+		},
+		onShow(){
+			this.sysInfo = uni.getStorageSync('sysInfo');
+			this.showSendTips();
+			this.getOrderOneCoupon();
 		},
 		methods: {
 			_fromCart(account) {
@@ -190,7 +194,7 @@
 			    productsArr = getCartDataFromLocal(true);
 					this.productsArr    = productsArr;
 					this.account       = account;
-					this.orderStatus   = orderStatus;
+					this.orderStatus   = 0;
 					this.last_account  = account;
 					
 			  },
@@ -223,8 +227,9 @@
 					this.showTipsStatus = true;
 				}
 				this.start_away = this.sysInfo.start_away;
+				var that = this;
 				setTimeout(function(){
-					this.showTipsStatus = false;
+					that.showTipsStatus = false;
 				},3000)
 			},
 			setOrderTypeClass(){
@@ -241,14 +246,24 @@
 					return "pay";
 				}
 			},
+			getOrderOneCoupon(){
+				getUserOneCoupon({account:this.account}).then(result => {
+					 var last_account = this.account - result.money;
+					 this.coupon_user_id= result.id;
+					 this.coupon_money = result.money.toFixed(2);
+					 this.last_account = last_account.toFixed(2);
+				})
+			},
 		}
 	}
 </script>
 
 <style>
-
+page{
+	background:#f8f8f8;
+}
 .order-container{
-    background-color: #F4F4F4;
+    background-color: #f8f8f8;
     overflow-x: hidden;
     font-size: 28rpx;
 }
@@ -266,7 +281,14 @@
     border-bottom: 1rpx solid #E9E9E9;
     display: flex;
 }
-
+.footer-account-box{
+		position: fixed;
+		bottom: 0rpx;
+		height: 98rpx;
+		width: 100%;
+		display: flex;
+		border-top: 1rpx solid #eeeeee;
+}
 .order-time-no{
     flex: 1;
 }
@@ -289,6 +311,20 @@
     margin-bottom: 20rpx;
 }
 
+.add-new-address{
+    width: 100%;
+    height: 90rpx;
+    font-size:28rpx;
+    color:#989898;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.add-new-address .icon{
+    /*font-size: 40rpx;*/
+    color:#AB956D;
+    margin-right: 10rpx;
+}
 .contact-box{
     display: flex;
 }

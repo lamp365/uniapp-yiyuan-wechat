@@ -5,17 +5,21 @@ export function addCart(item, counts){
   var isHasInfo = _isHasThatOne(item.id, cartData);
 
   if (isHasInfo.index == -1) {
-	// 缓存没有就直接加入
-	 item.counts = counts;
-	cartData.push(item);
-  } else {
-	var  old_item = isHasInfo.data;
-	if(old_item.spec_name == item.spec_name){
-		item.counts = counts+old_item.counts;
-	}else{
+		// 缓存没有就直接加入
 		item.counts = counts;
-	}
-	cartData[isHasInfo.index] = item;
+		item.active_heji = item.counts*item.active_price;
+		item.sale_heji = item.counts*item.sale_price;
+		cartData.push(item);
+  } else {
+		var  old_item = isHasInfo.data;
+		if(old_item.spec_name == item.spec_name){
+			item.counts = counts+old_item.counts;
+		}else{
+			item.counts = counts;
+		}
+		item.active_heji = (item.counts*item.active_price).toFixed(2);
+		item.sale_heji = (item.counts*item.sale_price).toFixed(2);
+		cartData[isHasInfo.index] = item;
   }
 
   uni.setStorageSync('local_cart_key', cartData);
@@ -84,10 +88,15 @@ export function _changeCounts(id, counts) {
     var cartData = getCartDataFromLocal();
     var isHasInfo = _isHasThatOne(id, cartData);
     if (isHasInfo.index != -1) {
-      if (isHasInfo.data.counts > 1) {
+      if (isHasInfo.data.counts > 0) {
         cartData[isHasInfo.index].counts += counts;
       }
     }
+		
+		var active_heji = cartData[isHasInfo.index].counts*cartData[isHasInfo.index].active_price;
+		var sale_heji = cartData[isHasInfo.index].counts*cartData[isHasInfo.index].sale_price;
+		cartData[isHasInfo.index].active_heji = active_heji.toFixed(2);
+		cartData[isHasInfo.index].sale_heji   = sale_heji.toFixed(2);
     //更新本地缓存
     uni.setStorageSync('local_cart_key', cartData);
 }

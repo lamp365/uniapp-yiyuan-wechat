@@ -14,15 +14,17 @@ function service(options = {}) {
 				'shopToken': Config.shopToken 
 			}
 		}).then(res => {
-			// console.log(res);
+			// console.log(res[1].data);
 			if(res[1].data.code == 200){
 				resolved(res[1].data.data);
 			}else{
-				 uni.showToast({
-					title: res[1].data.message,
-					duration: 2000,
-					icon: 'error'
-				})
+				if(res[1].data.data.noShowMsg == undefined){
+					uni.showToast({
+						title: res[1].data.msg,
+						duration: 2000,
+						icon: 'error'
+					})
+				}
 			}
 		}).catch(error => {
 			rejected(error[1]);
