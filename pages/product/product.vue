@@ -5,16 +5,13 @@
 			<view class="title_name">
 				<view>商品</view><view>详情</view>
 			</view>
-			<view></view>
+			<view style="width: 50rpx;height: 20rpx;"></view>
 		</view>
 		<!-- 主图 -->
 		<view class="product-main">
 			<swiper :indicator-dots="true" :autoplay="true" indicator-active-color="#e93323"  class="pic_box">
-				<swiper-item>
-				　　<image src="https://data44.wuht.net//uploads/attach/2022/01/15/c815678a906c85ecd7f6535c8e5a29d3.jpg"></image>
-				</swiper-item>
-				<swiper-item>
-				　　<image src="https://data44.wuht.net//uploads/attach/2022/01/15/4aed387bf4eead2237150c9d4b747ae5.jpg"></image>
+				<swiper-item v-for="(item,index) in one_product.img_url" :key="index">
+				　　<image :src="item"></image>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -22,50 +19,53 @@
 		<!-- 商品信息 -->
 		<view class="boxbox">
 			<view class="goods_info">
-				<view class="price_title">新人价</view>
+				<view class="price_title"><text v-if="one_product.type == 0">价格</text> <text v-else>新人价</text></view>
 				<view class="price_line">
-					<view class="sale_price">
-						<text>￥</text><text class="price">158.00</text>
+					<view class="sale_price" v-if="one_product.type == 0">
+						<text>￥</text><text class="price">{{one_product.sale_price}}</text>
 					</view>
-					<view class="huaxian_price">￥168.25</view>
+					<view class="sale_price" v-else>
+						<text>￥</text><text class="price">{{one_product.active_price}}</text>
+					</view>
+					
+					
+					<view class="huaxian_price" v-if="one_product.type != 0">￥{{one_product.sale_price}}</view>
 					<view class="share">
 						<image src="../../static/share.png"></image>
 					</view>
 				</view>
-				<view class="goods_title">联想笔记本电脑 拯救者R9000P 16英寸高性能电竞游戏本(标压 8核 R7-5800H 16G 512G RTX3060 2.5k屏 165Hz)</view>
+				<view class="goods_title">{{one_product.name}}</view>
 				<view class="goods_stock">
-					<view>库存:900件</view>
-					<view>已售:15件</view>
+					<view>库存:{{one_product.stock}}件</view>
+					<view>已售:{{one_product.seller_num + one_product.virtual_num}}件</view>
 				</view>
 				<!-- 优惠券 -->
-				<view class="coupon_list">
+				<view class="coupon_list" v-if="twoCoupon.length > 0"  @click="chooseConponLog('bottom')">
 					<view class="coupon_left">
 						<view>优惠券：</view>
-						<view class="one_coupon">满180减20</view>
+						<view class="one_coupon" v-for="(item,index) in twoCoupon" :key = 'index'>满<text>{{item.tiaojian}}</text>减<text>{{item.money}}</text></view>
 					</view>
 					<view class="coupon_right">
 						<view class="more"></view>
 					</view>
 				</view>
 				<!-- 活动 -->
-				<view class="show_active">
+				<view class="show_active" v-if="one_product.type != 0">
 					<view>活 <text class="temp_show">活</text> 动：</view>
 					<view class="active_name">参与新人价</view>
 				</view>
 			</view>
 			
-			<!-- 参数 -->
-			<view class="goods_params">
-				<view class="tit">参数</view>
-				<view class="line_info"><text class="key">品牌/产地</text><text class="value">意大利</text></view>
-				<view class="line_info"><text class="key">酒精度</text><text class="value">40%wao</text></view>
-				<view class="line_info"><text class="key">容量</text><text class="value">700ML</text></view>
-			</view>
+		<!-- 参数 -->
+		<view class="goods_params" v-if="property.length > 0">
+			<view class="tit">参数</view>
+			<view class="line_info" v-for="(item,index) in property" :key="index"><text class="key">{{item.name}}</text><text class="value">{{item.detail}}</text></view>
+		</view>
 			
 			<!-- 详情 -->
 			<view class="goods_desc">
 				<view class="tit">商品介绍</view>
-				<image src="https://data44.wuht.net//uploads/attach/2022/01/15/d1742d71ce3d2762c05bc009fe962424.jpg" mode="widthFix"></image>
+				<rich-text :nodes="one_product.descript" class="descript_ht"></rich-text>
 			</view>
 			
 			<view style="height: 40rpx;"></view>
@@ -73,7 +73,7 @@
 		
 		<!-- footnav -->
 		<view class="foot_nav">
-			<view class="gowuche">
+			<view class="gowuche" @click="gotoCart()">
 				<view><text class='iconfont icon'>&#xe747;</text></view>
 				<view>购物车</view>
 			</view>
@@ -123,19 +123,62 @@
 				</view>
 			</uni-popup>
 		</view>
+		
+		<!-- 普通弹窗 选择规格 -->
+		<view>
+			<uni-popup ref="couponpopup" background-color="#fff" @change="change">
+				<view class="popup-content couponpopup">
+					<view class="coupon_title">优惠券</view>
+					<view class="coupon-list">
+						<view class="item" v-for="(item,index) in allCoupon" :key="key">
+							<view class="money">
+								<view><text class="uni">￥</text><text class="show_price">{{item.money}}</text></view>
+								<view>满{{item.tiaojian}}元可用</view>
+							</view>
+							<view class="right">
+								<view class="tt1">{{item.title}}</view>
+								<view class="time"></view>
+								<view class="">
+									<text class="end_time">限时优惠</text>
+									<text class="lingqu bnt_bg1">立即领取</text>
+								</view>
+							</view>
+						</view>
+					
+						
+					</view>
+					<view style="height: 120rpx;"></view>
+				</view>
+			</uni-popup>
+		</view>
 	</view>
 	
 </template>
 
 <script>
+	import {getProduct} from "../api/productApi.js";
+	import {getAllCoupon} from "../api/couponApi.js";
 	export default {
 		data() {
 			return {
-				id:0
+				id:0,
+				one_product:[],
+				one_product_spec:[],
+				active_price:0.00,
+				sale_price:0.00,
+				stock:0,
+				add_num:1,
+				has_choose_spec:'',
+				spec_current_index:0,
+				allCoupon:[],
+				twoCoupon:[],
+				property:[]
 			}
 		},
 		onLoad(option) {
 			this.id = option.id;
+			this.getProductFunc(this.id);
+			this.getAllCouponFunc();
 		},
 		methods: {
 			chooseSpec(){
@@ -143,12 +186,67 @@
 				// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
 				this.$refs.specpopup.open(type);
 			},
+			chooseConponLog(){
+				var type = 'bottom';
+				// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
+				this.$refs.couponpopup.open(type);
+			},
+			getProductFunc(id){
+				getProduct({id:id}).then(result=>{
+							result.descript = this.imgDesc(result.descript);
+							this.one_product = result;
+							this.one_product_spec = result.product_spec;
+							this.active_price    = result.product_spec[0].active_price;
+							this.sale_price      = result.product_spec[0].sale_price;
+							this.stock           = result.product_spec[0].stock;
+							this.has_choose_spec = result.product_spec[0].spec_name;
+							this.property = result.property;
+				})
+			},
+			getAllCouponFunc(){
+				getAllCoupon().then(result => {
+					this.allCoupon = result;
+					if(result.length > 0){
+						if(result.length > 2){
+							this.twoCoupon = result.slice(0,2)
+						}else{
+							this.twoCoupon = result;
+						}
+					}else{
+						this.twoCoupon = [];
+					}
+				})
+			},
+			imgDesc(html){
+			  // return str.replace(/\<img/gi, '<img style="width:100%;height:auto;display:block;margin-top:10px"');
+				html = html.replace(/style=""/gi,'');
+				html = html.replace(/<p>/gi,'');
+				html = html.replace(/<\/p>/gi,'');
+				let newContent= html.replace(/<img[^>]*>/gi,function(match,capture){
+				    match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
+				    match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
+				    match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
+				    return match;
+				  });
+				  newContent = newContent.replace(/style="[^"]+"/gi,function(match,capture){
+				    match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;');
+				    return match;
+				  });
+				  newContent = newContent.replace(/<br[^>]*\/>/gi, '');
+				  newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:block;margin-top:0;margin-bottom:0px;"');
+				  return newContent;
+			},
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
 			gotoBack(){
 				uni.navigateBack({
 					delta:1
+				})
+			},
+			gotoCart(){
+				uni.switchTab({
+					url:"../cart/cart"
 				})
 			}
 		}
@@ -239,7 +337,7 @@
 .price_title{
 	padding: 10rpx 20rpx;
 	font-size: 18rpx;
-	color: #f94a3b;
+	color: #ff448f;
 }
 .price_line{
 	display: flex;
@@ -247,7 +345,7 @@
 	align-items: center;
 }
 .price_line .sale_price{
-	color: #f94a3b;
+	color: #ff448f;
 	font-size: 24rpx;
 	font-weight: 600;
 	margin-right: 24rpx;
@@ -319,8 +417,8 @@
 .one_coupon{
 	    height: 44rpx;
 	    padding: 0 20rpx;
-	    border: 1rpx solid #ff6151;
-	    color: #e93323;
+	    border: 1rpx solid #ff448f;
+	    color: #ff448f;
 	    font-size: 24rpx;
 	    line-height: 44rpx;
 	    position: relative;
@@ -333,7 +431,7 @@
 	width: 6rpx;
 	height: 10rpx;
 	border-radius: 0 6rpx 6rpx 0;
-	border: 1rpx solid #ff6151;
+	border: 1rpx solid #ff448f;
 	background-color: #fff;
 	bottom: 50%;
 	left: -2rpx;
@@ -346,7 +444,7 @@
     width: 6rpx;
     height: 10rpx;
     border-radius: 6rpx 0 0 6rpx;
-    border: 1rpx solid #ff6151;
+    border: 1rpx solid #ff448f;
     background-color: #fff;
     right: -2rpx;
     bottom: 50%;
@@ -496,11 +594,11 @@
 	margin-left: 30rpx;
 }
 .specpopup .show_info .show_price .tit{
-	color:  #f94a3b;
+	color:  #ff448f;
 }
 .specpopup .show_info .show_price .money{
 	margin-top: 10rpx;
-	color:  #f94a3b;
+	color:  #ff448f;
 	font-weight: 600;
 }
 .specpopup .show_info .show_price .sale_price{
@@ -563,5 +661,90 @@
 .specpopup .set_nums .icon{
 	font-size: 40rpx;
 	color: #c1baba;
+}
+.descript_ht{
+	line-height: 46rpx;
+	height: auto;
+}
+/* 优惠券 */
+.coupon_title{
+	height: 80rpx;
+	line-height: 80rpx;
+	text-align: center;
+	border-bottom: 2rpx solid #f5f5f5;
+	background-color: #fff;
+	font-size: 30rpx;
+	color: #282828;
+	font-weight: 600;
+}
+.coupon-list{
+    padding: 30rpx;
+    overflow: auto;
+}
+.coupon-list .item{
+    margin-bottom: 18rpx;
+    box-shadow: 0 8rpx 18rpx rgba(0,0,0,.06);
+		display: flex;
+		height: 170rpx;
+		width: 100%;
+}
+.coupon-list .item .money {
+    width: 240rpx;
+    height: 100%;
+    color: #fff;
+    font-size: 24rpx;
+    text-align: center;
+		font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+		background: #ff448f;
+		background-image: url("@/static/coupon_bg.png");
+	background-size: 100% 100%;
+}
+.coupon-list .item .money .uni{
+	font-size: 30rpx;
+}
+.coupon-list .item .money .show_price{
+	font-size: 54rpx;
+}
+.coupon-list .item .right {
+    flex: 1;
+    padding: 0 18rpx 14rpx 24rpx;
+    box-sizing: border-box;
+    background-color: #fff;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+}
+.coupon-list .item .right .tt1{
+	    color: #282828;
+			font-size: 28rpx;
+}
+.coupon-list .item .right .time{
+	font-size: 20rpx;
+	color: #999;
+}
+.coupon-list .item .right  .end_time{
+	font-size: 20rpx;
+	color: #999;
+	float: left;
+}
+.coupon-list .item .right .lingqu {
+    width: 130rpx;
+    height: 44rpx;
+    border-radius: 22rpx;
+    font-size: 22rpx;
+    text-align: center;
+    line-height: 44rpx;
+    color: #fff;
+		float: right;
+}
+.bnt_bg1{
+	background: #ff448f;
+}
+.bnt_bg2{
+	background: #ccc;
 }
 </style>

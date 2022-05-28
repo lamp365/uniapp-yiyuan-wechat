@@ -6,3 +6,9 @@ export function getUserOneCoupon(params) {
 		data: params
 	})
 }
+export function getAllCoupon() {
+	return request({
+		url: 'getAllCoupon',
+		method: 'GET'
+	})
+}
