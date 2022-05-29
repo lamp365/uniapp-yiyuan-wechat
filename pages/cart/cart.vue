@@ -168,6 +168,7 @@
 			  //改变购物车的商品数量
 			changeCounts(item,action,index) {
 				var id = item.id,
+				spec_id = item.spec_id,
 				counts = 1;
 		
 				if (action == 'add') {
@@ -179,13 +180,13 @@
 						})
 						return false;
 					}
-					addCounts(id);
+					addCounts(id,spec_id);
 				} else {
 					if(item.counts-1 <=0){
 						return false;
 					}
 					counts = -1;
-					cutCounts(id);
+					cutCounts(id,spec_id);
 				}
 				this.cartData[index].counts += counts;
 				//重新计算

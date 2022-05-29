@@ -158,7 +158,8 @@
 					sale_price:0.00,
 					stock:0,
 					add_num:1,
-					product_id:0
+					product_id:0,
+					spec_id:0
 			}
 		},
 		onLoad: function(options) {
@@ -301,6 +302,8 @@
 						this.sale_price      = result.product_spec[0].sale_price;
 						this.stock           = result.product_spec[0].stock;
 						this.has_choose_spec = result.product_spec[0].spec_name;
+						this.spec_id         = result.product_spec[0].id;
+						this.spec_current_index = 0;
 						this.showSpecBox();
 					 }).catch(err=>{
 						 this.loadModal = false;
@@ -312,6 +315,7 @@
 					 this.$refs.specpopup.open(type);
 				 },
 				 changeSpec(index,spec_item){
+					 console.log(spec_item);
 					 if(spec_item.stock>0){
 						 this.spec_current_index = index;
 						 this.active_price    = spec_item.active_price;
@@ -319,6 +323,7 @@
 						 this.stock           = spec_item.stock;
 						 this.has_choose_spec = spec_item.spec_name;
 						 this.add_num = 1;
+						 this.spec_id = spec_item.id
 					 }
 				 },
 				 specSetClass(index){
@@ -356,6 +361,7 @@
 					 var tempObj = {};
 					 var cartDataObj = {
 						 id:id,
+						 spec_id:this.spec_id,
 						 name:this_product.name,
 						 main_img_url:this_product.main_img_url,
 						 sale_price:this.sale_price,

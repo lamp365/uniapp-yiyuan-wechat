@@ -12,3 +12,10 @@ export function getAllCoupon() {
 		method: 'GET'
 	})
 }
+export function lingQuan(params) {
+	return request({
+		url: 'lingQuan',
+		method: 'GET',
+		data: params
+	})
+}

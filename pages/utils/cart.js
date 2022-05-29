@@ -2,7 +2,7 @@ import Config from "@/pages/utils/config.js"
 export function addCart(item, counts){
   var cartData = getCartDataFromLocal(); //cartData是数组，item是对象
   
-  var isHasInfo = _isHasThatOne(item.id, cartData);
+  var isHasInfo = _isHasThatOne(item.id, item.spec_id,cartData);
 
   if (isHasInfo.index == -1) {
 		// 缓存没有就直接加入
@@ -46,14 +46,14 @@ export function getCartDataFromLocal(flag) {
 /*
 *判断某个商品是否已经添加到购物车，并且返回这个商品的数据以及所在数据的序号
 */
-export function _isHasThatOne(id, arr) {
+export function _isHasThatOne(id,spec_id,arr) {
     var item;
     var result = {
       index: -1
     };
     for (let i = 0; i < arr.length; i++) {
       item = arr[i];
-      if (item.id == id) {
+      if (item.id == id && spec_id == item.spec_id) {
         result = {
           index: i,
           data: item
@@ -68,15 +68,15 @@ export function _isHasThatOne(id, arr) {
 /*
    *商品数目加一
    */
-  export function addCounts(id) {
-    _changeCounts(id, 1);
+  export function addCounts(id,spec_id) {
+    _changeCounts(id,spec_id,1);
   }
 
   /*
    *商品数目减一
    */
-  export function cutCounts(id) {
-    _changeCounts(id, -1);
+  export function cutCounts(id,spec_id) {
+    _changeCounts(id,spec_id,-1);
   }
   
  /*
@@ -84,9 +84,9 @@ export function _isHasThatOne(id, arr) {
 *id- {int} 商品id
 *counts - {int} 商品数量
 */
-export function _changeCounts(id, counts) {
+export function _changeCounts(id,spec_id,counts) {
     var cartData = getCartDataFromLocal();
-    var isHasInfo = _isHasThatOne(id, cartData);
+    var isHasInfo = _isHasThatOne(id, spec_id,cartData);
     if (isHasInfo.index != -1) {
       if (isHasInfo.data.counts > 0) {
         cartData[isHasInfo.index].counts += counts;

@@ -77,60 +77,62 @@
 				<view><text class='iconfont icon'>&#xe747;</text></view>
 				<view>购物车</view>
 			</view>
-			<view class="guangzhu">
+			<view class="guangzhu" @click="collectProductFunc()">
 				<view><text class='iconfont icon'>&#xe8b1;</text></view>
 				<view>关注</view>
 			</view>
 			<view class="buy_button">
 				<view class="box">
-					<view class="add_gouwuce"  @click="chooseSpec('bottom')">加入购物车</view>
-					<view class="liji_buy" @click="chooseSpec('bottom')">立即购买</view>
+					<view class="add_gouwuce"  @click="chooseSpec('bottom','1')">加入购物车</view>
+					<view class="liji_buy" @click="chooseSpec('bottom','2')">立即购买</view>
 				</view>
 			</view>
 		</view>
 		
 		<!-- 普通弹窗 选择规格 -->
 		<view>
-			<uni-popup ref="specpopup" background-color="#fff" @change="change">
+			<uni-popup ref="specpopup" background-color="#fff" @change="spec_change">
 				<view class="popup-content specpopup">
 					<view class="show_info">
-						<view class="main_pic"><image src="https://demo26.crmeb.net/uploads/attach/2021/11/15/08ba709edfd9d1cc5505f69bd53e679b.jpg" mode=""></image></view>
+						<view class="main_pic"><image :src="one_product.main_img_url" mode=""></image></view>
 						<view class="show_price">
-							<view class="tit">新人价</view>
-							<view class="money">￥<text class="sale_price">29.9</text> <text class="huaxian_price">￥16.58</text></view>
-							<view class="choose_spec">已选：1件750ml <text class="kucun">库存：16件</text></view>
+							<view class="tit"><text v-if="one_product.type ==1">新人价</text><text v-else>价格</text></view>
+							<view class="money">
+								￥<text class="sale_price" v-if="one_product.type ==1">{{active_price}}</text> <text class="sale_price" v-else>{{sale_price}}</text> 
+								<text class="huaxian_price" v-if="one_product.type ==1">￥{{sale_price}}</text>
+							</view>
+							<view class="choose_spec">已选：{{has_choose_spec}} <text class="kucun">库存：{{stock}}件</text></view>
 						</view>
 					</view>
 					<view class="spec_list">
 						<view class="spec_title">规格</view>
 						<view class="spec_show_box">
-							<view class="one_spec">一件360ML</view>
-							<view class="one_spec">一件360ML75du</view>
-							<view class="one_spec has_choose">一件360ML</view>
-							<view class="one_spec">一件360ML</view>
-							<view class="one_spec">一件360ML</view>
+							<view :class="[specSetClass(index)]" v-for="(item,index) in one_product_spec" @click="changeSpec(index,item)" :key="index">
+								<text class="spec_wenben" v-if="item.stock < 1">{{item.spec_name}}</text>
+								<text class="" v-else>{{item.spec_name}}</text>
+							</view>
 						</view>
 					</view>
 					<view class="set_nums">
 						<view class="set_nums_title">数量</view>
 						<view class="nums_buttom">
-							<text class="iconfont icon-jianshao icon"></text>
-							<text class="show_geshu">8</text>
-							<text class="iconfont icon-zengjia icon"></text>
+							<text class="iconfont icon-jianshao icon" @click="addNums(0)"></text>
+							<text class="show_geshu">{{add_num}}</text>
+							<text class="iconfont icon-zengjia icon" @click="addNums(1)"></text>
 						</view>
 					</view>
-					<view style="height: 250rpx;"></view>
+					<view style="height: 160rpx;"></view>
 				</view>
 			</uni-popup>
 		</view>
 		
 		<!-- 普通弹窗 选择规格 -->
 		<view>
-			<uni-popup ref="couponpopup" background-color="#fff" @change="change">
+			<uni-popup ref="couponpopup" background-color="#fff" @change="coupon_change">
 				<view class="popup-content couponpopup">
 					<view class="coupon_title">优惠券</view>
 					<view class="coupon-list">
-						<view class="item" v-for="(item,index) in allCoupon" :key="key">
+						<view class="item" v-for="(item,index) in allCoupon" :key="index">
 							<view class="money">
 								<view><text class="uni">￥</text><text class="show_price">{{item.money}}</text></view>
 								<view>满{{item.tiaojian}}元可用</view>
@@ -140,7 +142,8 @@
 								<view class="time"></view>
 								<view class="">
 									<text class="end_time">限时优惠</text>
-									<text class="lingqu bnt_bg1">立即领取</text>
+									<text class="lingqu bnt_bg1" v-if="item.has_get == 0" @click="lingquQuanFunc(item.id,index)">立即领取</text>
+									<text class="lingqu bnt_bg2" v-else>已经领取</text>
 								</view>
 							</view>
 						</view>
@@ -157,11 +160,14 @@
 
 <script>
 	import {getProduct} from "../api/productApi.js";
-	import {getAllCoupon} from "../api/couponApi.js";
+	import {collectProduct} from "../api/myApi.js";
+	import {getAllCoupon,lingQuan} from "../api/couponApi.js";
+	import {addCart} from "../utils/cart.js";
 	export default {
 		data() {
 			return {
 				id:0,
+				spec_id:0,
 				one_product:[],
 				one_product_spec:[],
 				active_price:0.00,
@@ -172,19 +178,53 @@
 				spec_current_index:0,
 				allCoupon:[],
 				twoCoupon:[],
-				property:[]
+				property:[],
+				click_gouwuche_times:0,
+				click_lijibuy_times:0
 			}
 		},
 		onLoad(option) {
 			this.id = option.id;
 			this.getProductFunc(this.id);
-			this.getAllCouponFunc();
+		},
+		onShow() {
+				this.getAllCouponFunc();
 		},
 		methods: {
-			chooseSpec(){
-				var type = 'bottom';
-				// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
-				this.$refs.specpopup.open(type);
+			chooseSpec(type,leixin){
+				if(this.click_gouwuche_times == 0){
+						var type = 'bottom';
+					// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
+					this.$refs.specpopup.open(type);
+				}else{
+					//第二次点击就要加入购物车 或者 购买
+					if(leixin == 1){
+						//加入购物车
+						this.addGowuche();
+					}else{
+						//购买
+						
+					}
+				}
+			
+			},
+			changeSpec(index,spec_item){
+				 if(spec_item.stock>0){
+					 this.spec_current_index = index;
+					 this.active_price    = spec_item.active_price;
+					 this.sale_price      = spec_item.sale_price;
+					 this.stock           = spec_item.stock;
+					 this.has_choose_spec = spec_item.spec_name;
+					 this.add_num = 1;
+					 this.spec_id         = spec_item.id;
+				 }
+			},
+			specSetClass(index){
+					if(this.spec_current_index == index){
+						 return 'one_spec has_choose';
+					}else{
+						 return 'one_spec';
+					}					
 			},
 			chooseConponLog(){
 				var type = 'bottom';
@@ -200,6 +240,8 @@
 							this.sale_price      = result.product_spec[0].sale_price;
 							this.stock           = result.product_spec[0].stock;
 							this.has_choose_spec = result.product_spec[0].spec_name;
+							this.spec_id         = result.product_spec[0].id;
+							this.spec_current_index = 0;
 							this.property = result.property;
 				})
 			},
@@ -236,8 +278,86 @@
 				  newContent = newContent.replace(/\<img/gi, '<img style="max-width:100%;height:auto;display:block;margin-top:0;margin-bottom:0px;"');
 				  return newContent;
 			},
-			change(e) {
-				console.log('当前模式：' + e.type + ',状态：' + e.show);
+			lingquQuanFunc(id,index){
+				lingQuan({id:id}).then(result=>{
+					uni.showToast({
+						title: '领取完毕',
+						duration: 1500,
+						icon: 'success'
+					})
+					this.allCoupon[index].has_get = 1;
+				})
+			},
+			addNums(type){
+				 if(type == 0){
+					 //减去
+					 var temp_num = this.add_num - 1;
+					 var limit_num = 1;
+					 if(temp_num<limit_num){
+						 return false;
+					 }else{
+						 this.add_num = temp_num;
+					 }
+				 }else{
+						var temp_num = this.add_num + 1;
+						var limit_num = this.stock;
+						if(temp_num>limit_num){
+							return false;
+						}else{
+							this.add_num = temp_num;
+						}
+				 }
+			},
+			spec_change(e) {
+				console.log('当前模式spec：' + e.type + ',状态：' + e.show);
+				if(e.show == true){
+					this.click_gouwuche_times = 1;
+					this.click_lijibuy_times  = 1;
+				}else{
+					this.click_gouwuche_times = 0;
+					this.click_lijibuy_times  = 0;
+				}
+			},
+			coupon_change(e) {
+				console.log('当前模式coupon：' + e.type + ',状态：' + e.show);
+				if(e.show == true){
+					
+				}
+			},
+			addGowuche(){
+					 var id = this.id;
+					 var this_product = this.one_product;
+					
+					 // console.log(products_arr);
+					 var tempObj = {};
+					 var cartDataObj = {
+						 id:id,
+						 spec_id:this.spec_id,
+						 name:this_product.name,
+						 main_img_url:this_product.main_img_url,
+						 sale_price:this.sale_price,
+						 active_price:this.active_price,
+						 stock:this.stock,
+						 spec_name:this.has_choose_spec,
+						 type:this_product.type,
+						 selectStatus:1
+					 };
+					 addCart(cartDataObj, this.add_num);
+					 this.$refs.specpopup.close();
+					uni.showToast({
+						title: '已加入购物车',
+						duration: 1000,
+						icon: 'success'
+					})
+			},
+			collectProductFunc(){
+				collectProduct({id:this.id}).then(result =>{
+					uni.showToast({
+						title: result,
+						duration: 1000,
+						icon: 'success'
+					})
+				})
 			},
 			gotoBack(){
 				uni.navigateBack({
