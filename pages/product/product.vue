@@ -77,10 +77,15 @@
 				<view><text class='iconfont icon'>&#xe747;</text></view>
 				<view>购物车</view>
 			</view>
-			<view class="guangzhu" @click="collectProductFunc()">
+			<view class="guangzhu" @click="collectProductFunc()" v-if="one_product.has_collect">
+				<view><text class='iconfont icon'>&#xe8b1;</text></view>
+				<view>已关注</view>
+			</view>
+			<view  @click="collectProductFunc()" v-else>
 				<view><text class='iconfont icon'>&#xe8b1;</text></view>
 				<view>关注</view>
 			</view>
+			
 			<view class="buy_button">
 				<view class="box">
 					<view class="add_gouwuce"  @click="chooseSpec('bottom','1')">加入购物车</view>
@@ -352,6 +357,7 @@
 			},
 			collectProductFunc(){
 				collectProduct({id:this.id}).then(result =>{
+					this.one_product.has_collect = !this.one_product.has_collect;
 					uni.showToast({
 						title: result,
 						duration: 1000,
@@ -670,6 +676,9 @@
 	height: 76rpx;
 	line-height: 76rpx;
 		font-weight: 600;
+}
+.foot_nav .guangzhu{
+	color: #ff448f;
 }
 .foot_nav .buy_button .box{
 	width: 93%;

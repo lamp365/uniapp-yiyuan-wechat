@@ -40,6 +40,9 @@
 		                <text v-if="item.type == 0">￥{{item.sale_price}}</text>
 		                <text v-else>￥{{item.active_price}}</text>
 		              </view>
+									<view class="show_spec">
+										规格：{{item.spec_name}}
+									</view>
 		              <view class='bottom-box'>
 		                <view class='cart-item-counts'>
 		                  <view class="btns" @click="changeCounts(item,'cut',index)"><text class="iconfont icon-jianshao icon"></text></view>
@@ -376,9 +379,12 @@ page{
     flex-direction:column;
     justify-content:space-between;
     padding: 8rpx 0;
-    margin:0 20rpx;
+    margin:0 10rpx 0 20rpx;
     box-sizing: border-box;
     color: #454553;
+}
+.show_spec{
+	font-size: 20rpx;
 }
 .title-box{
     display: flex;

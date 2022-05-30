@@ -99,6 +99,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/myAddress/myAddress",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "地址",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 
 	"tabBar": {

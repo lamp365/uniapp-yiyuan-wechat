@@ -79,9 +79,9 @@
 		    <view class="pay_info">
 					<view class="tit">商品总额</view><view class="money">￥{{account}}</view>
 				</view>
-		      <view class="pay_info">
+		      <!-- <view class="pay_info">
 		        <view class="tit">运费</view><view class="money">￥0.00</view>
-		      </view>
+		      </view> -->
 		      <view class="pay_info">
 		        <view class="tit">优惠券/活动</view><view class="money">￥{{coupon_money}}</view>
 		      </view>
@@ -92,14 +92,10 @@
 		      <view class="pay_info">
 		        <view class="tit">订单留言</view>
 		        <view class="liuyan">
-		          <input type="text"  placeholder="请输入留言信息 >" class="liuyan_put" placeholder-class="liuyan_put_placeholder" bindinput="inputBlur"/>
+		          <input type="text"  placeholder="请输入留言信息 >" class="liuyan_put" placeholder-class="liuyan_put_placeholder" v-model="msg_liuyan"/>
 		        </view>
 		      </view>
-		      <view class="pay_info">
-		        <view class="tit">如遇缺货</view>
-		       
-		      </view>
-		
+		  		
 		      <view class="pay_info" v-if="start_away > 0">
 		        <view class="tit">配送范围</view><view class="">{{start_away}}公里内可配送</view>
 		      </view>
@@ -107,13 +103,13 @@
 		  </view>
 		  <!--外卖还是店食-->
 		  <view class='select-item-checkbox'>
-		    <view class='select-item-detail' @click="selectNowStatus()" >
+		    <view class='select-item-detail' @click="selectPeisonType(1)" >
 		      <image v-if="selectAddressStatus == 1" src='../../static/circle@selected.png'></image>
 		      <image v-else src='../../static/circle@noselected.png'></image>
 		      <text>配送</text>
 		    </view>
 		
-		    <view class='select-item-detail' @click="selectOutStatus()" >
+		    <view class='select-item-detail' @click="selectPeisonType(2)" >
 		      <image v-if="selectAddressStatus == 2" src='../../static/circle@selected.png'></image>
 		      <image v-else src='../../static/circle@noselected.png'></image>
 		      <text>自取</text>
@@ -142,8 +138,10 @@
 
 <script>
 	import {getCartDataFromLocal} from "../utils/cart.js";
+	import {setAddressInfo} from "../utils/address.js";
 	import {getOrderInfoById} from "../api/orderApi.js";
 	import {getUserOneCoupon} from "../api/couponApi.js";
+	import {getAddress} from "../api/addressApi.js";
 	export default {
 		data() {
 			return {
@@ -156,7 +154,7 @@
 				    //来源是哪里
 				    fromUrl: null,
 				
-				    addressInfo:[],
+				    addressInfo:{},
 				    isNoAddressData:true,
 				
 				    no_goods_sel:["其它商品继续购买(缺货商品退款) >","缺货时电话与我沟通 >"],
@@ -185,6 +183,7 @@
 			this.sysInfo = uni.getStorageSync('sysInfo');
 			this.showSendTips();
 			this.getOrderOneCoupon();
+			this.getDefaultAddress();
 		},
 		methods: {
 			_fromCart(account) {
@@ -249,11 +248,64 @@
 			getOrderOneCoupon(){
 				getUserOneCoupon({account:this.account}).then(result => {
 					 var last_account = this.account - result.money;
+					 var coupon_money = result.money;
+					coupon_money = parseFloat(coupon_money);
+					last_account = parseFloat(last_account);
 					 this.coupon_user_id= result.id;
-					 this.coupon_money = result.money.toFixed(2);
+					 this.coupon_money = coupon_money.toFixed(2);
 					 this.last_account = last_account.toFixed(2);
 				})
 			},
+			selectPeisonType(type){
+				if(type ==1){
+					this.selectAddressStatus=1;
+					//滚动到顶部
+				}else{
+					this.selectAddressStatus=2;
+				}
+			},
+			getDefaultAddress(){
+				getAddress({id:0}).then(result => {
+					 var isNoAddressData = true;
+						if(Object.keys(result).length>0){
+							isNoAddressData = false;
+						}
+						this.isNoAddressData = isNoAddressData;
+						this.addressInfo = result;
+				})
+			},
+			editAddress() {
+			    //请用真机演示，效果地址操作还是很完美的
+			   /* var that = this;
+			    wx.chooseAddress({
+			      success: function(res) {
+			        var addressInfo = {
+			          name: res.userName,
+			          mobile: res.telNumber,
+			          totalDetail: setAddressInfo(res)
+			        }
+			        that.addressInfo = addressInfo;
+			
+			        //保存地址（保存到数据库中）
+			        submitAddress(res, (flag) => {
+			          if (!flag) {
+			            that.showTips('操作提示', '地址信息更新失败', true);
+			          }
+			        });
+			      }
+			    });
+			    return '';  //可用以上方法或者注释上面，用下面的方法
+			 */
+			    var id = 0;
+			    if(Object.keys(this.addressInfo).length >0 )
+			       id = this.addressInfo.id;
+			
+					uni.navigateTo({
+						url:'../myAddress/myAddress?id='+id,
+					})
+			  
+			},
+
 		}
 	}
 </script>
@@ -466,6 +518,7 @@ page{
 }
 .liuyan_put_placeholder,.liuyan_put{
     text-align: right;
+		font-size: 24rpx;
 }
 .select-item-checkbox{
     display: flex;
