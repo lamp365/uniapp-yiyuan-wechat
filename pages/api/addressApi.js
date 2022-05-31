@@ -6,3 +6,10 @@ export function getAddress(params) {
 		data:params
 	})
 }
+export function createAddress(params) {
+	return request({
+		url: 'createAddress',
+		method: 'POST',
+		data:params
+	})
+}
