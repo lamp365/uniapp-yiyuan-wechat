@@ -108,6 +108,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/myAddress/addressList",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "地址管理",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 
 	"tabBar": {

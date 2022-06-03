@@ -54,7 +54,7 @@
 		<view class="goback">
 			<text class="icon-back icon iconfont" @click="gotoBack()"></text>
 		</view>
-		<view class="btn" @click="submitAddress()">保存</view>
+		<view class="btn" @click="submitAddress()">保存地址</view>
 		    
 		
 		<view v-if="!isCity" class="selector">
@@ -180,7 +180,12 @@
 					 this.consigneeName    = addressInfo.name;
 					 this.phone            = addressInfo.mobile;
 					 this.consigneeRegion  = addres_name;
-				     this.detailedAddress  = addressInfo.detail;
+					 this.detailedAddress  = addressInfo.detail;
+					 this.provinceName = addressInfo.province;
+					 this.cityName     = addressInfo.city;
+					 this.countyName  = addressInfo.country;
+						this.cityText = addressInfo.province + ' - ' + addressInfo.city + ' - ' + addressInfo.country;
+						this.isDafault  = addressInfo.is_default;
 				});
 			},
 			selectCity(){
@@ -266,8 +271,13 @@
 			  formData.city = this.cityName;
 			  formData.country = this.countyName;
 			  formData.detail = this.detailedAddress;
-			  formData.is_default = this.isDafault;
-			  formData.chooseLabelIndex = this.chooseLabelIndex;
+				formData.is_default = 0;
+				if(this.isDafault){
+					 formData.is_default = 1;
+				}
+			 
+			  formData.label_index = this.chooseLabelIndex;
+				formData.id = this.id;
 		  
 			  var consigneeRegion = this.cityText;
 			  if (formData.name == "") {
@@ -288,7 +298,7 @@
 			  }
 			  createAddress(formData).then(res => {
 				  uni.showToast({
-				  	title: res.msg,
+				  	title: "地址操作成功！",
 				  	duration: 1500,
 				  	icon: 'success'
 				  })

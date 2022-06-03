@@ -6,3 +6,10 @@ export function getOrderInfoById(params) {
 		data: params
 	})
 }
+export function createOrder(params) {
+	return request({
+		url: 'createOrder',
+		method: 'POST',
+		data: params
+	})
+}

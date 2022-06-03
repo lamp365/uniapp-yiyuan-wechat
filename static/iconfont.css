@@ -1,9 +1,9 @@
 /* https://www.iconfont.cn/ */
 @font-face {
   font-family: "iconfont"; /* Project id 3423417 */
-  src: url('//at.alicdn.com/t/font_3423417_pww4a8wtsg.woff2?t=1653990810585') format('woff2'),
-       url('//at.alicdn.com/t/font_3423417_pww4a8wtsg.woff?t=1653990810585') format('woff'),
-       url('//at.alicdn.com/t/font_3423417_pww4a8wtsg.ttf?t=1653990810585') format('truetype');
+  src: url('//at.alicdn.com/t/font_3423417_sf7qd2tujwn.woff2?t=1654267923553') format('woff2'),
+       url('//at.alicdn.com/t/font_3423417_sf7qd2tujwn.woff?t=1654267923553') format('woff'),
+       url('//at.alicdn.com/t/font_3423417_sf7qd2tujwn.ttf?t=1654267923553') format('truetype');
 }
 
 .iconfont {
@@ -12,6 +12,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dizhi:before {
+  content: "\e61b";
+}
+
+.icon-bianjiwenjian:before {
+  content: "\e601";
+}
+
+.icon-gengduo:before {
+  content: "\e600";
 }
 
 .icon-back:before {
@@ -41,4 +53,3 @@
 .icon-guanzhu:before {
   content: "\e8b1";
 }
-

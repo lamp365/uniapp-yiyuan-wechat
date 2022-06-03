@@ -13,3 +13,23 @@ export function createAddress(params) {
 		data:params
 	})
 }
+export function getAddressList() {
+	return request({
+		url: 'allAddress',
+		method: 'GET'
+	})
+}
+export function delAddress(params) {
+	return request({
+		url: 'delAddress',
+		method: 'GET',
+		data:params
+	})
+}
+export function addressDefault(params) {
+	return request({
+		url: 'addressDefault',
+		method: 'GET',
+		data:params
+	})
+}

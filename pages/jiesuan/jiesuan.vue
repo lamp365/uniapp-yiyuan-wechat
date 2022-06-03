@@ -25,22 +25,20 @@
 		  <!--地址-->
 		  <view :class="[setOrderTypeClass()]"  v-if="selectAddressStatus == 1">
 		    <view v-if="!isNoAddressData">
-		      <view class="contact-box" @click="editAddress()">
+		      <view class="contact-box" @click="gotoAddressList()">
 		        <view>
 		          <view class="contact">
 		            <view>
-		              <image src="../../static/user.png"></image>
 		              <text class="val">{{addressInfo.name}}</text>
 		            </view>
 		            <view class="mobile-box">
-		              <image src="../../static/mobile.png"></image>
 		              <text class="val">{{addressInfo.mobile}}</text>
 		            </view>
 		          </view>
-		          <view class="detail">{{addressInfo.totalDetail}}</view>
+		          <view class="detail">{{addressInfo.detail}}</view>
 		        </view>
-		        <view class="contact-icon" v-if="orderStatus==0">
-		          <text>ss</text>
+		        <view class="contact-icon">
+		          <text class="icon-gengduo icon iconfont"></text>
 		        </view>
 		      </view>
 		    </view>
@@ -142,6 +140,7 @@
 	import {getOrderInfoById} from "../api/orderApi.js";
 	import {getUserOneCoupon} from "../api/couponApi.js";
 	import {getAddress} from "../api/addressApi.js";
+	import {createOrder} from "../api/orderApi.js";
 	export default {
 		data() {
 			return {
@@ -160,7 +159,7 @@
 				    no_goods_sel:["其它商品继续购买(缺货商品退款) >","缺货时电话与我沟通 >"],
 				    no_good_type: 0,
 				    choseQuestionBank:"其它商品继续购买(缺货商品退款) >",
-				    coupon_user_id:0,
+				    user_coupon_id:0,
 				    coupon_money: '0.00',
 				    last_account:'0.00',
 				    msg_liuyan:'',
@@ -251,7 +250,7 @@
 					 var coupon_money = result.money;
 					coupon_money = parseFloat(coupon_money);
 					last_account = parseFloat(last_account);
-					 this.coupon_user_id= result.id;
+					 this.user_coupon_id= result.id;
 					 this.coupon_money = coupon_money.toFixed(2);
 					 this.last_account = last_account.toFixed(2);
 				})
@@ -305,7 +304,57 @@
 					})
 			  
 			},
-
+			gotoAddressList(){
+				uni.navigateTo({
+					url:"../myAddress/addressList"
+				})
+			},
+			_showMessageToast(msg){
+			  uni.showToast({
+			  	title: msg,
+			  	duration: 1500,
+			  	icon: 'error'
+			  })
+			},
+			pay(){
+				 //判断地址信息是否填写
+					if (this.selectAddressStatus == 1 && Object.keys(this.addressInfo).length <= 0) {
+						this._showMessageToast('请填写你的收货地址');
+						return;
+					}
+					//判断订单是否生成（购物车里的支付是还没生成订单，个人中心里面的历史订单是已经生成了订单）
+					if (this.orderStatus == 0) {
+						//第一次支付，先生成订单
+						this._firstTimePay();
+					} else {
+						//不是第一次支付，已经存在订单直接支付
+						this._oneMoresTimePay();
+					}
+			},
+			_firstTimePay(){
+				var that = this;
+				var post_data = {},
+					productInfo = this.productsArr;
+					
+					post_data.user_coupon_id = this.user_coupon_id;
+					post_data.coupon_money   = this.coupon_money;
+					post_data.totalPrice     = this.last_account;
+					post_data.product_id       = productInfo[0].id;
+					post_data.snap_img       = productInfo[0].main_img_url;
+					post_data.snap_name      = productInfo[0].name;
+					post_data.coupon_id      = this.coupon_id;
+					post_data.mark_info      = this.msg_liuyan;
+					post_data.select_status  = this.selectAddressStatus;
+					post_data.address_id     = this.addressInfo.id;
+					post_data.productInfo    = JSON.stringify(productInfo);
+								
+				createOrder(post_data).then(result => {
+					
+				});
+			},
+			_oneMoresTimePay(){
+				
+			},
 		}
 	}
 </script>
@@ -389,6 +438,9 @@ page{
     align-items: center;
     justify-content: flex-end;
 }
+.contact-icon .icon{
+	font-size: 40rpx;
+}
 .contact-icon image{
     transform: rotate(270deg);
     height: 48rpx;
@@ -396,8 +448,11 @@ page{
 }
 .contact{
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 25rpx;
+    margin-bottom: 16rpx;
+		font-weight: 600;
+}
+.contact view:first-child{
+	margin-right: 60rpx;
 }
 .contact view{
     display: flex;
