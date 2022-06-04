@@ -69,10 +69,11 @@
 				if(this.code != ''){
 					return '';
 				}
-			
+				
+				var wap_url = location.href.split("?")[0];
 				var has_h5_auth_key = uni.getStorageSync('has_h5_auth_key');
 				if(has_h5_auth_key =='' || has_h5_auth_key == undefined){
-					getOauthUrl().then(result=>{
+					getOauthUrl({wap_url:wap_url}).then(result=>{
 						if(Object.keys(result).length>0){
 							this.wx_ouathUrl = result.oauthUrl;
 							window.location.href = this.wx_ouathUrl;

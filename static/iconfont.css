@@ -1,9 +1,9 @@
 /* https://www.iconfont.cn/ */
 @font-face {
   font-family: "iconfont"; /* Project id 3423417 */
-  src: url('//at.alicdn.com/t/font_3423417_sf7qd2tujwn.woff2?t=1654267923553') format('woff2'),
-       url('//at.alicdn.com/t/font_3423417_sf7qd2tujwn.woff?t=1654267923553') format('woff'),
-       url('//at.alicdn.com/t/font_3423417_sf7qd2tujwn.ttf?t=1654267923553') format('truetype');
+  src: url('//at.alicdn.com/t/font_3423417_rdmk5ktwfj.woff2?t=1654324047021') format('woff2'),
+       url('//at.alicdn.com/t/font_3423417_rdmk5ktwfj.woff?t=1654324047021') format('woff'),
+       url('//at.alicdn.com/t/font_3423417_rdmk5ktwfj.ttf?t=1654324047021') format('truetype');
 }
 
 .iconfont {
@@ -12,6 +12,38 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-shezhi:before {
+  content: "\e668";
+}
+
+.icon-shezhi1:before {
+  content: "\e637";
+}
+
+.icon-tixing:before {
+  content: "\e611";
+}
+
+.icon-daifukuan:before {
+  content: "\e607";
+}
+
+.icon-daifahuo:before {
+  content: "\e62c";
+}
+
+.icon-daishouhuo:before {
+  content: "\e62d";
+}
+
+.icon-daipingjia:before {
+  content: "\e602";
+}
+
+.icon-shouhou:before {
+  content: "\e629";
 }
 
 .icon-dizhi:before {

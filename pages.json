@@ -116,6 +116,24 @@
                 "enablePullDownRefresh": false
             }
             
+        },
+				{
+				    "path" : "pages/my/seting/userInfo",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "个人信息",
+				        "enablePullDownRefresh": false
+				    }
+				    
+				}
+        ,{
+            "path" : "pages/my/seting/index",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
         }
     ],
 
@@ -143,7 +161,7 @@
 				"text": "购物车"
 			},
 			{
-				"pagePath": "pages/user/index",
+				"pagePath": "pages/my/my",
 				"iconPath": "static/4-001.png",
 				"selectedIconPath": "static/4-002.png",
 				"text": "我的"

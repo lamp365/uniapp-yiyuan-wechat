@@ -121,7 +121,7 @@
 		    </view>
 		    <!--因为屏蔽了支付系统，故第一次支付会不成功，但会生成订单，第二次付款支付不了-->
 		    <!--订单状态为未付款，从购物车来的请求，第一次支付，满足这些才可以第一次生成订单     -->
-		    <view v-if="orderStatus<=1 && fromUrl == 'cart' && firstPayStatus ==1" :class="[setOrderPayClass()]" @click="pay">
+		    <view v-if="orderStatus<=1  && firstPayStatus ==1" :class="[setOrderPayClass()]" @click="pay">
 		      提交订单
 		    </view>
 		    
@@ -129,19 +129,23 @@
 		      提交订单
 		    </view>
 		  </view><!-- 结算end-->
-			
+				<fullLoading :loadModal="loadModal"></fullLoading>
 		</view>
 	</view>
 </template>
 
 <script>
-	import {getCartDataFromLocal} from "../utils/cart.js";
+	import {getCartDataFromLocal,deleteCart} from "../utils/cart.js";
 	import {setAddressInfo} from "../utils/address.js";
 	import {getOrderInfoById} from "../api/orderApi.js";
 	import {getUserOneCoupon} from "../api/couponApi.js";
 	import {getAddress} from "../api/addressApi.js";
 	import {createOrder} from "../api/orderApi.js";
+	import fullLoading from "../../components/loading/fullLoading.vue";
 	export default {
+		components:{
+			fullLoading
+		},
 		data() {
 			return {
 				 //订单编号id，有则订单生成成功，没就失败
@@ -165,24 +169,38 @@
 				    msg_liuyan:'',
 				    start_away:0,
 				    showTipsStatus:false,
-						sysInfo:{}
+						sysInfo:{},
+						jiesuanFrom:'',
+						basicInfo:'',
+						loadModal:false,
 			}
 		},
-		onLoad(options) {
-			 var from = options.from;
-			 this.fromUrl = from;
-			  if (from == 'cart') {
-					 this._fromCart(options.account);
-				 }else{
-					 var id = options.id;
-					 this._fromOrder(id);
-				 }
+		onLoad() {
+			 
 		},
 		onShow(){
 			this.sysInfo = uni.getStorageSync('sysInfo');
+			this.jiesuanFrom = uni.getStorageSync('jiesuanFromKey');
 			this.showSendTips();
 			this.getOrderOneCoupon();
 			this.getDefaultAddress();
+			if(this.jiesuanFrom == '' || this.jiesuanFrom == undefined ){
+				uni.showToast({
+					title: "当前无结算订单！",
+					duration: 1000,
+					icon: 'false'
+				});
+				uni.navigateBack({
+					delta:1
+				})
+				return false;
+			}else if(this.jiesuanFrom.action = 'cart'){
+				var account = this.jiesuanFrom.saveData;
+				 this._fromCart(account);
+			}else{
+				var id = this.jiesuanFrom.saveData;
+				this._fromOrder(id);
+			}
 		},
 		methods: {
 			_fromCart(account) {
@@ -333,6 +351,8 @@
 			},
 			_firstTimePay(){
 				var that = this;
+				//创建订单
+				var wap_url = location.href.split("#")[0];
 				var post_data = {},
 					productInfo = this.productsArr;
 					
@@ -347,13 +367,57 @@
 					post_data.select_status  = this.selectAddressStatus;
 					post_data.address_id     = this.addressInfo.id;
 					post_data.productInfo    = JSON.stringify(productInfo);
-								
+					post_data.wap_url        = wap_url;
+					this.loadModal = true;
 				createOrder(post_data).then(result => {
-					
+					this.loadModal = false;
+					this.firstPayStatus = 2;
+					//将已经下单的商品从购物车里删除
+					this.deleteProducts();
+					if(result.dev == 1){
+						//清空缓存记录来源
+						uni.setStorageSync('jiesuanFromKey','');
+						//开发测试
+						uni.switchTab({
+							url:"../orders/orders"
+						})
+					}else{
+						//更新缓存记录来源
+						uni.setStorageSync('jiesuanFromKey',{action:'order',saveData:result.order_id});
+						this.$wxPay(result, function (res) {
+						    /*成功的回调*/
+						    uni.showToast({
+						    	title: '支付成功',
+						    	duration: 2000,
+						    	icon: 'success'
+						    });
+								//清空缓存记录来源
+								uni.setStorageSync('jiesuanFromKey','');
+								uni.switchTab({
+									url:"../orders/orders"
+								})
+								
+						}, function (e) {
+						    /**失败的回调*/
+						     uni.showToast({
+						     	title: '支付失败了',
+						     	duration: 2000,
+						     	icon: 'error'
+						     })
+						})
+					}
+			
 				});
 			},
 			_oneMoresTimePay(){
 				
+			},
+			//将已经下单的商品从购物车中删除
+			deleteProducts() {
+				var arr = this.productsArr;
+				for (let i = 0; i < arr.length; i++) {
+					deleteCart(arr[i].id,arr[i].spec_id);
+				}
 			},
 		}
 	}

@@ -101,18 +101,12 @@ export function _changeCounts(id,spec_id,counts) {
     uni.setStorageSync('local_cart_key', cartData);
 }
 
-export function deleteCart(ids) {
-    //ids不是一串数组
-    if (!(ids instanceof Array)) {
-      ids = [ids];
-    }
-
+export function deleteCart(id,spec_id) {
+   
     var cartData = getCartDataFromLocal();
-    for (let i = 0; i < ids.length; i++) {
-      var hasInfo = _isHasThatOne(ids[i], cartData);
-      if (hasInfo.index != -1) {
-        cartData.splice(hasInfo.index, 1); //删除数组某一项
-      }
+    var hasInfo = _isHasThatOne(id, spec_id,cartData);
+    if (hasInfo.index != -1) {
+      cartData.splice(hasInfo.index, 1); //删除数组某一项
     }
 
     //更新本地缓存

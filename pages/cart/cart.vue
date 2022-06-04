@@ -252,8 +252,14 @@
 							return false;
 						}
 					}
+					var cacheJiesuanData = {
+						action:'cart',
+						saveData:this.account
+						
+					}
+					uni.setStorageSync('jiesuanFromKey',cacheJiesuanData);
 					uni.navigateTo({
-						url:'../jiesuan/jiesuan?account=' + this.account + '&from=cart',
+						url:'../jiesuan/jiesuan',
 					})
 				},
 		}

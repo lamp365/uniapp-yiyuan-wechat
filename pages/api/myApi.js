@@ -6,3 +6,9 @@ export function collectProduct(params) {
 		data: params
 	})
 }
+export function orderState() {
+	return request({
+		url: 'user/state',
+		method: 'GET'
+	})
+}
