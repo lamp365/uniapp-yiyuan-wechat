@@ -35,8 +35,8 @@
 									</view>
 									<view class="message">
 										<navigator url="/pages/my/message/index" hover-class="none">
-											<view v-if="userInfo.service_num" class="num">
-												{{userInfo.service_num >= 100 ? '99+' : userInfo.service_num}}
+											<view v-if="orderStateData.message_num" class="num">
+												{{orderStateData.message_num >= 100 ? '99+' : orderStateData.message_num}}
 											</view>
 											<view class="iconfont icon-tixing"></view>
 										</navigator>
@@ -237,6 +237,11 @@
 			},
 			bindPhone(){
 				
+			},
+			goSeting(){
+				uni.navigateTo({
+					url:"./seting/index"
+				})
 			},
 			goEdit(){
 				uni.navigateTo({

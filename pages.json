@@ -130,11 +130,20 @@
             "path" : "pages/my/seting/index",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "设置",
                 "enablePullDownRefresh": false
             }
             
-        }
+        },
+				{
+				    "path" : "pages/my/message/index",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "消息中心",
+				        "enablePullDownRefresh": false
+				    }
+				    
+				}
     ],
 
 	"tabBar": {

@@ -12,3 +12,9 @@ export function orderState() {
 		method: 'GET'
 	})
 }
+export function messageList() {
+	return request({
+		url: 'user/messageList',
+		method: 'GET'
+	})
+}

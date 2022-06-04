@@ -1,181 +1,340 @@
 <template>
-	<view>
-		<view class="order_nav">
-				<view class="order_box">
-						<view class="li active"><text class="tt">电费充值</text></view>
-						<view class="li"></view>
-						<view class="li">  </view>
-				</view>
-		</view>   
-		<view style="height: 24rpx;background: #f8f8f8;"></view>
-		
-		<view class="show_order_box">
-			<view style="height: 20rpx;"></view>
-			<view class="order_list">
-				<view class="order_no">
-					<view class="img_box">
-						<image src="../../static/zhanghu.png" mode=""></image><text class="order_num">订单编号：2022042344788</text>
+		<view>
+			<view class="my-order">
+				<view class="header bg-color">
+					<view class="picTxt acea-row row-between-wrapper">
+						<view class="text">
+							<view class="name">订单信息</view>
+							<view>消费订单：{{ orderData.order_count || 0 }} 总消费：￥{{ orderData.sum_price || 0 }}</view>
+						</view>
+						<view class="pictrue">
+							<image src="../../static/orderTime.png"></image>
+						</view>
 					</view>
-					<view class="pay_status">未支付</view>
 				</view>
-				<view class="detail">
-					<view class="d_info">充值账户：<text class="right">54812121</text></view>
-					<view class="d_info">充值金额：<text class="right">50.00元</text></view>
-					<view class="d_info">实收金额：<text class="right">48.00元</text></view>
-				</view>
-				
-				<view class="pay_btn_info">
-					<view class="pay_btn">立即支付</view>
-					<view class="pay_btn2" @click="gotoDetail(6)">查看详情</view>
-				</view>
-				<view class="bottom"></view>
-			</view>
-			
-			<view class="order_list">
-				<view class="order_no">
-					<view class="img_box">
-						<image src="../../static/zhanghu.png" mode=""></image><text class="order_num">订单编号：2022042344788</text>
+				<view class="nav acea-row row-around">
+					<view class="item" :class="orderStatus == 1 ? 'on' : ''" @click="statusClick(1)">
+						<view>待付款</view>
+						<view class="num">{{ orderData.wait_pay || 0 }}</view>
 					</view>
-					<view class="pay_status">未支付</view>
-				</view>
-				<view class="detail">
-					<view class="d_info">充值账户：<text class="right">54812121</text></view>
-					<view class="d_info">充值金额：<text class="right">50.00元</text></view>
-					<view class="d_info">实收金额：<text class="right">48.00元</text></view>
-				</view>
-				
-				<view class="pay_btn_info">
-					<view class="pay_btn2">查看详情</view>
-				</view>
-				<view class="bottom"></view>
-			</view>
-			
-			<view class="order_list">
-				<view class="order_no">
-					<view class="img_box">
-						<image src="../../static/zhanghu.png" mode=""></image><text class="order_num">订单编号：2022042344788</text>
+					<view class="item" :class="orderStatus == 2 ? 'on' : ''" @click="statusClick(2)">
+						<view>待发货</view>
+						<view class="num">{{ orderData.wait_send || 0 }}</view>
 					</view>
-					<view class="pay_status">未支付</view>
-				</view>
-				<view class="detail">
-					<view class="d_info">充值账户：<text class="right">54812121</text></view>
-					<view class="d_info">充值金额：<text class="right">50.00元</text></view>
-					<view class="d_info">实收金额：<text class="right">48.00元</text></view>
-				</view>
+					<view class="item" :class="orderStatus == 3 ? 'on' : ''" @click="statusClick(3)">
+						<view>待收货</view>
+						<view class="num ">{{ orderData.wait_get || 0 }}</view>
+					</view>
 				
-				<view class="pay_btn_info">
-					<view class="pay_btn2">查看详情</view>
+					<view class="item" :class="orderStatus == 4 ? 'on' : ''" @click="statusClick(4)">
+						<view>已完成</view>
+						<view class="num">{{ orderData.finish || 0 }}</view>
+					</view>
 				</view>
-				<view class="bottom"></view>
+				<view class="list" v-if="orderList.length>0">
+					<view class="item" v-for="(item, index) in orderList" :key="index">
+						<view @click="goOrderDetail(item.order_id)">
+							<view class="title acea-row row-between-wrapper">
+								<view class="acea-row row-middle">
+									<text class="sign cart-color acea-row row-center-wrapper"
+										v-if="item.type == 2">砍价</text>
+									<text class="sign cart-color acea-row row-center-wrapper"
+										v-else-if="item.type == 3">拼团</text>
+									<text class="sign cart-color acea-row row-center-wrapper"
+										v-else-if="item.type == 1">秒杀</text>
+									<text class="sign cart-color acea-row row-center-wrapper"
+										v-else-if="item.type == 4">预售</text>
+									<view>{{ item.create_time}}</view>
+								</view>
+							
+								<view v-if="item.status == 1" class="font-color">待付款</view>
+								<view v-else-if="item.status == 2" class="font-color">待发货
+									<text v-if="item.after">退款中</text>
+								</view>
+								<view v-else-if="item.status == 3" class="font-color">待收货
+									<text v-if="item.after">退款中</text>
+								</view>
+				
+								<view v-else-if="item.status == 4" class="font-color">已完成
+									<text v-if="item.after">退款中</text>
+								</view>
+	
+								</view>
+	
+							</view>
+							<view class="item-info acea-row row-between row-top" v-for="(items, index) in item.productInfo"
+								:key="index">
+								<view class="pictrue">
+									<image :src="item.snap_img"></image>
+								</view>
+								<view class="text  row-between">
+									<text class="name line2">{{ item.snap_name }}</text>
+									<view class="money">
+							
+										<view>￥{{ items.money }}</view>
+										<view>x{{ items.buy_num }}</view>
+										<view v-if="item.after != 0" class="return">
+											有退款
+										</view>
+									</view>
+								</view>
+							</view>
+							<view class="totalPrice">
+								共{{ item.buy_num || 0 }}件商品，总金额
+								<text class="money">￥{{ item.total_money }}</text>
+							</view>
+						</view>
+						<view class="bottom acea-row row-right row-middle">
+							<view class="bnt cancelBnt" v-if="item.status == 1 "
+								@click="cancelOrder(index, item.order_id)">取消订单</view>
+							<view class="bnt bg-color" v-if="item.status == 1"
+								@click="goPay(item.pay_price, item.order_id)">立即付款</view>
+						
+							<view class="bnt cancelBnt" v-if="item._status._type == 4"
+								@click="delOrder(item.order_id, index)">删除订单</view>
+							<view class="bnt bg-color" @click="goOrderDetails(item.order_id)">查看详情</view>
+						</view>
+					</view>
+				</view>
+				<view class="loadingicon acea-row row-center-wrapper" v-if="orderList.length > 0">
+					<text class="loading iconfont icon-jiazai" :hidden="loading == false"></text>
+					{{ loadTitle }}
+				</view>
+				<view v-if="orderList.length == 0">
+					<view class="no_data" style="justify-content: center;display: flex;">
+					  <image src="../../static/no_data.png" style="margin-top: 160rpx;width: 240rpx;height: 240rpx;"></image>
+					</view>
+				</view>
 			</view>
+	
 		</view>
-	</view>
 </template>
 
 <script>
 	export default {
 		data() {
 			return {
-				
+				orderData:'',
+				orderStatus:1,
+				orderList:'',
+				loadTitle:'加载中'
 			}
 		},
+		onLoad: function(options) {
+			if (options.status) 
+				this.orderStatus = options.status;
+				
+				this.getOrderData();
+		},
 		methods: {
-			gotoDetail(id){
+			goOrderDetail(id){
 				uni.navigateTo({
-					url:"../detail/detail?id="+id
+					url:"../orders/detail?id="+id
 				})
-			}
+			},
+			getOrderData(){
+				var status = this.orderStatus;
+			},
+			statusClick: function(status) {
+				if (status == this.orderStatus) return;
+					this.orderStatus = status;
+					this.page = 1;
+					this.getOrderData();
+			},
 		}
 	}
 </script>
 
 <style>
-  .order_nav{
-        padding: 20rpx;
-        height: 45rpx;
-        line-height: 45rpx;
-        font-size: 32rpx;
-        color: #000;
-    }
-    .order_nav .order_box{
-        width: 100%;
-        display: flex;
-    }
-    .order_nav .order_box .li{
-        width: 33%;
-    }
-		 .order_nav .order_box .li .tt{margin-left: 10rpx;}
-		.order_nav .order_box .active{
-				color:  #5b83ff;
-				font-weight: bold;
-		}
-		/* 订单 */
-		.show_order_box{margin-bottom: 50rpx;}
-		.order_list{padding: 0rpx 20rpx 20rpx 20rpx;}
-		.order_list .order_no{
+	page{
+		background: #f8f8f8;
+	}
+  .my-order .header {
+  		height: 260rpx;
+  		padding: 0 30rpx;
+			background: #1db0fc;
+  	}
+  
+  	.my-order .header .picTxt {
+  		height: 190rpx;
 			display: flex;
-			align-items: center;
-			height: 60rpx;
-			line-height: 60rpx;
 			justify-content: space-between;
-		}
-		.order_list .order_no .img_box{
-			display: flex;
 			align-items: center;
-		}
-		.order_list .order_no image{
-			width: 48rpx;
-			height: 48rpx;
-			margin-right: 6rpx;
-		}
-		.order_list .order_no .order_num{
-			font-weight: bold;
-			color: #000000;
-			font-size: 28rpx;
-		}
-		.order_list .order_no .pay_status{
-			font-size: 28rpx;
-			color: #4d4d4d;
-		}
-		.detail{margin-top: 10rpx;}
-		.detail .d_info{
-			font-size: 24rpx;
-			color: #888888 ;
-			line-height: 40rpx;
-		}
-		.detail .d_info .right{
-			color: #1a1a1a;
-		}
-		.order_list .bottom{
-			height: 6rpx;
-			border-bottom: 2rpx solid #f4f4f4;
-		}
-		.pay_btn_info{
-			margin-top: 20rpx;
-			margin-bottom: 20rpx;
-			overflow: hidden;
-		}
-		.pay_btn{
-			width: 180rpx;
-			height: 50rpx;
-			float: left;
-			background: #5b83ff;
-			border-radius: 26rpx;
-			line-height: 50rpx;
-			text-align: center;
-			font-size: 28rpx;
-			color: #fff;
-		}
-		.pay_btn2{
-			width: 180rpx;
-			height: 50rpx;
-			float: left;
-			border: solid 2rpx #989898;
-			border-radius: 26rpx;
-			line-height: 50rpx;
-			text-align: center;
-			font-size: 28rpx;
-			margin-left: 20rpx;
-			color: #1a1a1a;
-		}
+  	}
+  
+  	.my-order .header .picTxt .text {
+  		color: rgba(255, 255, 255, 0.8);
+  		font-size: 26rpx;
+  		font-family: 'Guildford Pro';
+  	}
+  
+  	.my-order .header .picTxt .text .name {
+  		font-size: 34rpx;
+  		font-weight: bold;
+  		color: #fff;
+  		margin-bottom: 20rpx;
+  	}
+  
+  	.my-order .header .picTxt .pictrue {
+  		width: 122rpx;
+  		height: 109rpx;
+  	}
+  
+  	.my-order .header .picTxt .pictrue image {
+  		width: 100%;
+  		height: 100%;
+  	}
+  
+  	.my-order .nav {
+  		background-color: #fff;
+  		width: 690rpx;
+  		height: 140rpx;
+  		border-radius: 6rpx;
+  		margin: -73rpx auto 0 auto;
+			display: flex;
+			justify-content: space-around;
+  	}
+  
+  	.my-order .nav .item {
+  		text-align: center;
+  		font-size: 26rpx;
+  		color: #282828;
+  		padding: 27rpx 0;
+  		border-bottom: 5rpx solid transparent;
+  	}
+  
+  	.my-order .nav .item.on {
+  		/* #ifdef H5 || MP */
+  		font-weight: bold;
+  		/* #endif */
+  		/* #ifdef APP-PLUS */
+  		color: #000;
+  		/* #endif */
+  		border-color: #1db0fc;
+  	}
+  
+  	.my-order .nav .item .num {
+  		margin-top: 18rpx;
+  	}
+  
+  	.my-order .list {
+  		width: 690rpx;
+  		margin: 14rpx auto 0 auto;
+  	}
+  
+  	.my-order .list .item {
+  		background-color: #fff;
+  		border-radius: 6rpx;
+  		margin-bottom: 14rpx;
+  	}
+  
+  	.my-order .list .item .title {
+  		height: 84rpx;
+  		padding: 0 30rpx;
+  		border-bottom: 1rpx solid #eee;
+  		font-size: 28rpx;
+  		color: #282828;
+  	}
+  
+  	.my-order .list .item .title .sign {
+  		font-size: 24rpx;
+  		padding: 0 7rpx;
+  		height: 36rpx;
+  		margin-right: 15rpx;
+  	}
+  
+  	.my-order .list .item .item-info {
+  		padding: 0 30rpx;
+  		margin-top: 22rpx;
+  	}
+  
+  	.my-order .list .item .item-info .pictrue {
+  		width: 120rpx;
+  		height: 120rpx;
+  	}
+  
+  	.my-order .list .item .item-info .pictrue image {
+  		width: 100%;
+  		height: 100%;
+  		border-radius: 6rpx;
+  	}
+  
+  	.my-order .list .item .item-info .text {
+  		width: 486rpx;
+  		font-size: 28rpx;
+  		color: #999;
+  		margin-top: 6rpx;
+  		display: flex;
+  	}
+  
+  	.my-order .list .item .item-info .text .name {
+  		width: 306rpx;
+  		color: #282828;
+  		height: 78rpx;
+  	}
+  
+  	.my-order .list .item .item-info .text .money {
+  		text-align: right;
+  		flex: 1;
+  	}
+  
+  	.my-order .list .item .totalPrice {
+  		font-size: 26rpx;
+  		color: #282828;
+  		text-align: right;
+  		margin: 27rpx 0 0 30rpx;
+  		padding: 0 30rpx 30rpx 0;
+  		border-bottom: 1rpx solid #eee;
+  	}
+  
+  	.my-order .list .item .totalPrice .money {
+  		font-size: 28rpx;
+  		font-weight: bold;
+  		color: #fff;
+  	}
+  
+  	.my-order .list .item .bottom {
+  		height: 107rpx;
+  		padding: 0 30rpx;
+  	}
+  
+  	.my-order .list .item .bottom .bnt {
+  		width: 176rpx;
+  		height: 60rpx;
+  		text-align: center;
+  		line-height: 60rpx;
+  		color: #fff;
+  		border-radius: 50rpx;
+  		font-size: 27rpx;
+  	}
+  
+  	.my-order .list .item .bottom .bnt.cancelBnt {
+  		border: 1rpx solid #ddd;
+  		color: #aaa;
+  	}
+  
+  	.my-order .list .item .bottom .bnt~.bnt {
+  		margin-left: 17rpx;
+  	}
+  
+  	.noCart {
+  		margin-top: 171rpx;
+  		padding-top: 0.1rpx;
+  	}
+  
+  	.noCart .pictrue {
+  		width: 414rpx;
+  		height: 336rpx;
+  		margin: 78rpx auto 56rpx auto;
+  	}
+  
+  	.noCart .pictrue image {
+  		width: 100%;
+  		height: 100%;
+  	}
+  
+  	.my-order .list .item .item-info .text .money .return {
+  		margin-top: 10rpx;
+  		font-size: 24rpx;
+  	}
 </style>
