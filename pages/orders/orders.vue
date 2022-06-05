@@ -36,14 +36,8 @@
 						<view @click="goOrderDetail(item.order_id)">
 							<view class="title acea-row row-between-wrapper">
 								<view class="acea-row row-middle">
-									<text class="sign cart-color acea-row row-center-wrapper"
-										v-if="item.type == 2">砍价</text>
-									<text class="sign cart-color acea-row row-center-wrapper"
-										v-else-if="item.type == 3">拼团</text>
-									<text class="sign cart-color acea-row row-center-wrapper"
-										v-else-if="item.type == 1">秒杀</text>
-									<text class="sign cart-color acea-row row-center-wrapper"
-										v-else-if="item.type == 4">预售</text>
+									<text class="sign cart-color acea-row row-center-wrapper" >{{item.type_str}}</text>
+			
 									<view>{{ item.create_time}}</view>
 								</view>
 							
@@ -51,13 +45,9 @@
 								<view v-else-if="item.status == 2" class="font-color">待发货
 									<text v-if="item.after">退款中</text>
 								</view>
-								<view v-else-if="item.status == 3" class="font-color">待收货
-									<text v-if="item.after">退款中</text>
-								</view>
+								<view v-else-if="item.status == 3" class="font-color">待收货</view>
 				
-								<view v-else-if="item.status == 4" class="font-color">已完成
-									<text v-if="item.after">退款中</text>
-								</view>	
+								<view v-else-if="item.status == 4" class="font-color">已完成</view>	
 							</view>
 							<view class="item-info acea-row row-between row-top" v-for="(items, index2) in item.productInfo" :key="index2">
 								<view class="pictrue">
@@ -76,7 +66,7 @@
 							
 										<view>￥{{ items.money }}</view>
 										<view>x{{ items.buy_num }}</view>
-										<view v-if="items.after == 0" class="return">
+										<view v-if="items.after != 0" class="return">
 											退款单
 										</view>
 									</view>
@@ -89,15 +79,14 @@
 						</view>
 						<view class="bottom acea-row row-right row-middle">
 							<view class="bnt cancelBnt" v-if="item.status == 1 "
-								@click="cancelOrder(index, item.order_id)">取消订单</view>
+								@click="cancelOrder(item.id,index)">取消订单</view>
 								
 							<view class="bnt bg-color" v-if="item.status == 1"
-								@click="goPay(item.pay_price, item.order_id)">立即付款</view>
+								@click="goPay(item.id)">立即付款</view>
 						
-							<view class="bnt cancelBnt" v-if="item.status == 4"
-								@click="delOrder(item.order_id, index)">删除订单</view>
+			
 								
-							<view class="bnt bg-color" @click="goOrderDetails(item.order_id)">查看详情</view>
+							<view class="bnt bg-color" @click="goOrderDetails(item.id)">查看详情</view>
 						</view>
 					</view>
 				</view>
@@ -122,18 +111,19 @@
 </template>
 
 <script>
-	import {getOrderList} from "../api/orderApi.js";
+	import {getOrderList,deleteOrder,oneMorePay} from "../api/orderApi.js";
 	import {orderState} from "../api/myApi.js";
 	export default {
 		data() {
 			return {
 				orderData:'',
 				orderStatus:1,
-				orderList:'',
+				orderList:[],
 				loadTitle:'------我也是有底线的------',
 				tempTitle:'------我也是有底线的------',
 				page:1,
-				loading:false
+				loading:false,
+				has_finish:false
 			}
 		},
 		onShow() {
@@ -159,19 +149,64 @@
 					status:status,
 					page:this.page
 				}
+				this.loading = true;
+				this.loadTitle = "加载中";
 				getOrderList(params).then(result=>{
-					this.orderList = result;
+					this.loading = false;
+					this.loadTitle = this.tempTitle;
+					
+					if(result.length < 1){
+							this.has_finish = true;
+						}else{
+							this.has_finish = false;
+							var resultData = this.orderList.concat(result);
+							this.orderList = resultData;
+						}
 				})
 				
 			},
 			statusClick: function(status) {
 				if (status == this.orderStatus) return;
 				
+				  this.orderList = [];
 					this.orderStatus = status;
 					this.page = 1;
 					this.getOrderData();
 			},
-		}
+			goOrderDetails(id){
+				uni.navigateTo({
+					url:"./detail?id="+id
+				})
+			},
+			cancelOrder(id,index){
+				//删除订单
+			},
+			delOrder(id, index){
+				deleteOrder({id:id}).then(result=>{
+					uni.showToast({
+						title: result,
+						duration: 1500,
+						icon: 'success'
+					});
+					this.orderList.splice(index,1);
+				})
+			},
+			goPay(id){
+				//更新缓存记录来源
+				uni.setStorageSync('jiesuanFromKey',"order|"+id);
+				uni.navigateTo({
+					url:"../jiesuan/jiesuan"
+				})
+			}
+		},
+		onReachBottom(){
+			console.log("我已经滚动到底部了");
+			if(!this.has_finish){
+				this.page += 1;
+				this.getOrderData();	
+			}
+				
+		},
 	}
 </script>
 
@@ -273,7 +308,7 @@
 	  align-items: center;
   }
   	.my-order .list .item .title .sign {
-  		font-size: 24rpx;
+  		font-size: 20rpx;
   		padding: 0rpx 10rpx;
   		height: 36rpx;
   		margin-right: 15rpx;
@@ -345,14 +380,16 @@
   		height: 60rpx;
   		text-align: center;
   		line-height: 60rpx;
-  		color: #1db0fc;
+  		color: #fff;
   		border-radius: 50rpx;
   		font-size: 27rpx;
+			background:#1db0fc;
   	}
   
   	.my-order .list .item .bottom .bnt.cancelBnt {
   		border: 1rpx solid #ddd;
   		color: #aaa;
+			background: #fff;
   	}
   
   	.my-order .list .item .bottom .bnt~.bnt {

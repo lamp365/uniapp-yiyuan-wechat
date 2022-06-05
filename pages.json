@@ -144,6 +144,15 @@
 				    }
 				    
 				}
+        ,{
+            "path" : "pages/orders/detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 
 	"tabBar": {
