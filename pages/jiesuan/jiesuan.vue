@@ -95,7 +95,7 @@
 		      </view>
 		  		
 		      <view class="pay_info" v-if="start_away > 0">
-		        <view class="tit">配送范围</view><view class="">{{start_away}}公里内可配送</view>
+		        <view class="tit">配送范围</view><view class="">{{start_away}}公里内免费配送</view>
 		      </view>
 		
 		  </view>

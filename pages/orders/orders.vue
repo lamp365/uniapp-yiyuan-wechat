@@ -5,7 +5,7 @@
 					<view class="picTxt acea-row row-between-wrapper">
 						<view class="text">
 							<view class="name">订单信息</view>
-							<view>消费订单：{{ orderData.order_count || 0 }} 总消费：￥{{ orderData.sum_price || 0 }}</view>
+							<view>消费订单：{{ orderData.order_num || 0 }} 总消费：￥{{ orderData.total_price || 0 }}</view>
 						</view>
 						<view class="pictrue">
 							<image src="../../static/orderTime.png"></image>
@@ -57,48 +57,59 @@
 				
 								<view v-else-if="item.status == 4" class="font-color">已完成
 									<text v-if="item.after">退款中</text>
-								</view>
-	
-								</view>
-	
+								</view>	
 							</view>
-							<view class="item-info acea-row row-between row-top" v-for="(items, index) in item.productInfo"
-								:key="index">
+							<view class="item-info acea-row row-between row-top" v-for="(items, index2) in item.productInfo" :key="index2">
 								<view class="pictrue">
-									<image :src="item.snap_img"></image>
+									<image :src="items.snap_img"></image>
 								</view>
 								<view class="text  row-between">
-									<text class="name line2">{{ item.snap_name }}</text>
+									<view class="name line2">
+										<view class="">
+											{{ items.snap_name }}
+										</view>	
+										<view class="show_spec">
+											规格：{{ items.spec_name }}
+										</view>	
+									</view>
 									<view class="money">
 							
 										<view>￥{{ items.money }}</view>
 										<view>x{{ items.buy_num }}</view>
-										<view v-if="item.after != 0" class="return">
-											有退款
+										<view v-if="items.after == 0" class="return">
+											退款单
 										</view>
 									</view>
 								</view>
 							</view>
 							<view class="totalPrice">
 								共{{ item.buy_num || 0 }}件商品，总金额
-								<text class="money">￥{{ item.total_money }}</text>
+								<text class="money">￥{{ item.total_price}}</text>
 							</view>
 						</view>
 						<view class="bottom acea-row row-right row-middle">
 							<view class="bnt cancelBnt" v-if="item.status == 1 "
 								@click="cancelOrder(index, item.order_id)">取消订单</view>
+								
 							<view class="bnt bg-color" v-if="item.status == 1"
 								@click="goPay(item.pay_price, item.order_id)">立即付款</view>
 						
-							<view class="bnt cancelBnt" v-if="item._status._type == 4"
+							<view class="bnt cancelBnt" v-if="item.status == 4"
 								@click="delOrder(item.order_id, index)">删除订单</view>
+								
 							<view class="bnt bg-color" @click="goOrderDetails(item.order_id)">查看详情</view>
 						</view>
 					</view>
 				</view>
-				<view class="loadingicon acea-row row-center-wrapper" v-if="orderList.length > 0">
-					<text class="loading iconfont icon-jiazai" :hidden="loading == false"></text>
-					{{ loadTitle }}
+				
+				<view class="loadingicon" v-if="orderList.length > 0">
+					<view class="c_loading">
+						<text class="iconfont icon-jiazaizhong" v-if="loading"></text>
+					</view>	
+					<view class="c_loadTitle">
+						{{ loadTitle }}
+					</view>	
+					
 				</view>
 				<view v-if="orderList.length == 0">
 					<view class="no_data" style="justify-content: center;display: flex;">
@@ -111,18 +122,28 @@
 </template>
 
 <script>
+	import {getOrderList} from "../api/orderApi.js";
+	import {orderState} from "../api/myApi.js";
 	export default {
 		data() {
 			return {
 				orderData:'',
 				orderStatus:1,
 				orderList:'',
-				loadTitle:'加载中'
+				loadTitle:'------我也是有底线的------',
+				tempTitle:'------我也是有底线的------',
+				page:1,
+				loading:false
 			}
+		},
+		onShow() {
+			orderState({from:'order'}).then(result=>{
+				this.orderData = result;
+			}) 
 		},
 		onLoad: function(options) {
 			if (options.status) 
-				this.orderStatus = options.status;
+					this.orderStatus = options.status;
 				
 				this.getOrderData();
 		},
@@ -134,9 +155,18 @@
 			},
 			getOrderData(){
 				var status = this.orderStatus;
+				var params = {
+					status:status,
+					page:this.page
+				}
+				getOrderList(params).then(result=>{
+					this.orderList = result;
+				})
+				
 			},
 			statusClick: function(status) {
 				if (status == this.orderStatus) return;
+				
 					this.orderStatus = status;
 					this.page = 1;
 					this.getOrderData();
@@ -234,18 +264,29 @@
   		border-bottom: 1rpx solid #eee;
   		font-size: 28rpx;
   		color: #282828;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
   	}
-  
+  .my-order .list .item .row-middle{
+	  display: flex;
+	  align-items: center;
+  }
   	.my-order .list .item .title .sign {
   		font-size: 24rpx;
-  		padding: 0 7rpx;
+  		padding: 0rpx 10rpx;
   		height: 36rpx;
   		margin-right: 15rpx;
+		
+		background: rgb(247, 203, 210);
+		color: rgb(235, 99, 106);
+		border-radius: 4px;
   	}
   
   	.my-order .list .item .item-info {
   		padding: 0 30rpx;
   		margin-top: 22rpx;
+		display: flex;
   	}
   
   	.my-order .list .item .item-info .pictrue {
@@ -260,17 +301,18 @@
   	}
   
   	.my-order .list .item .item-info .text {
-  		width: 486rpx;
   		font-size: 28rpx;
   		color: #999;
   		margin-top: 6rpx;
   		display: flex;
+		flex: 1;
   	}
   
   	.my-order .list .item .item-info .text .name {
-  		width: 306rpx;
+  		width: 370rpx;
   		color: #282828;
   		height: 78rpx;
+		font-size: 26rpx;
   	}
   
   	.my-order .list .item .item-info .text .money {
@@ -289,8 +331,8 @@
   
   	.my-order .list .item .totalPrice .money {
   		font-size: 28rpx;
-  		font-weight: bold;
-  		color: #fff;
+  		font-weight: 400;
+  		color: #e64340;
   	}
   
   	.my-order .list .item .bottom {
@@ -303,7 +345,7 @@
   		height: 60rpx;
   		text-align: center;
   		line-height: 60rpx;
-  		color: #fff;
+  		color: #1db0fc;
   		border-radius: 50rpx;
   		font-size: 27rpx;
   	}
@@ -336,5 +378,13 @@
   	.my-order .list .item .item-info .text .money .return {
   		margin-top: 10rpx;
   		font-size: 24rpx;
+		color: rgb(235, 99, 106);
   	}
+	.show_spec{
+		font-size: 26rpx;
+		color: #999;
+	}
+	.loadingicon{color: #666;text-align: center;margin-top: 12rpx;}
+	.c_loading .iconfont{font-size: 50rpx;}
+	.c_loadTitle{font-size: 24rpx;}
 </style>

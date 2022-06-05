@@ -249,7 +249,7 @@
 				})
 			},
 			getOrderState(){
-				orderState().then(result=>{
+				orderState({from:'user'}).then(result=>{
 					this.orderStateData = result;
 				})
 			},

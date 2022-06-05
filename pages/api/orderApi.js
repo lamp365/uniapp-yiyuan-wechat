@@ -13,3 +13,17 @@ export function createOrder(params) {
 		data: params
 	})
 }
+export function getOrderList(params) {
+	return request({
+		url: 'Order/list',
+		method: 'GET',
+		data: params
+	})
+}
+export function orderDetail(params) {
+	return request({
+		url: 'Order/detail',
+		method: 'GET',
+		data: params
+	})
+}

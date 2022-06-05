@@ -6,10 +6,11 @@ export function collectProduct(params) {
 		data: params
 	})
 }
-export function orderState() {
+export function orderState(params) {
 	return request({
 		url: 'user/state',
-		method: 'GET'
+		method: 'GET',
+		data: params
 	})
 }
 export function messageList() {

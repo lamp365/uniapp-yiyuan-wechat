@@ -1,10 +1,11 @@
 /* https://www.iconfont.cn/ */
 @font-face {
   font-family: "iconfont"; /* Project id 3423417 */
-  src: url('//at.alicdn.com/t/font_3423417_rdmk5ktwfj.woff2?t=1654324047021') format('woff2'),
-       url('//at.alicdn.com/t/font_3423417_rdmk5ktwfj.woff?t=1654324047021') format('woff'),
-       url('//at.alicdn.com/t/font_3423417_rdmk5ktwfj.ttf?t=1654324047021') format('truetype');
+  src: url('//at.alicdn.com/t/font_3423417_a0tdm5q7lub.woff2?t=1654418608460') format('woff2'),
+       url('//at.alicdn.com/t/font_3423417_a0tdm5q7lub.woff?t=1654418608460') format('woff'),
+       url('//at.alicdn.com/t/font_3423417_a0tdm5q7lub.ttf?t=1654418608460') format('truetype');
 }
+
 
 .iconfont {
   font-family: "iconfont" !important;
@@ -13,7 +14,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+.icon-jiazaizhong:before {
+  content: "\e6ae";
+}
 .icon-shezhi:before {
   content: "\e668";
 }
