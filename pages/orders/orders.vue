@@ -318,6 +318,7 @@
   .my-order .list .item .row-middle{
 	  display: flex;
 	  align-items: center;
+		justify-content: flex-end;
   }
   	.my-order .list .item .title .sign {
   		font-size: 20rpx;
