@@ -6,6 +6,13 @@ export function getUserOneCoupon(params) {
 		data: params
 	})
 }
+export function geOrderCoupon(params) {
+	return request({
+		url: 'orderCoupon',
+		method: 'POST',
+		data: params
+	})
+}
 export function getAllCoupon() {
 	return request({
 		url: 'getAllCoupon',

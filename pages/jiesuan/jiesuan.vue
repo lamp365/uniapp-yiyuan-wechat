@@ -125,8 +125,8 @@
 		      提交订单
 		    </view>
 		    
-		    <view v-else class="pay disabled">
-		      提交订单
+		    <view v-else class="pay disabled"  @click="pay">
+		      立即支付
 		    </view>
 		  </view><!-- 结算end-->
 				<fullLoading :loadModal="loadModal"></fullLoading>
@@ -138,7 +138,7 @@
 	import {getCartDataFromLocal,deleteCart} from "../utils/cart.js";
 	import {setAddressInfo} from "../utils/address.js";
 	import {getOrderInfoById,oneMorePay} from "../api/orderApi.js";
-	import {getUserOneCoupon} from "../api/couponApi.js";
+	import {getUserOneCoupon,geOrderCoupon} from "../api/couponApi.js";
 	import {getAddress} from "../api/addressApi.js";
 	import {createOrder} from "../api/orderApi.js";
 	import fullLoading from "../../components/loading/fullLoading.vue";
@@ -169,10 +169,13 @@
 				    msg_liuyan:'',
 				    start_away:0,
 				    showTipsStatus:false,
-						sysInfo:{},
-						jiesuanFrom:{},
-						basicInfo:'',
-						loadModal:false,
+					sysInfo:{},
+					jiesuanFrom:{},
+					basicInfo:'',
+					loadModal:false,
+					productsArr:[],
+					account:'0.00',
+					orderStatus:0
 			}
 		},
 		onLoad() {
@@ -201,7 +204,7 @@
 				}else{
 					var jiesuanFrom = this.jiesuanFrom;
 					jiesuanFrom = jiesuanFrom.split('|');
-					console.log(jiesuanFrom);
+					console.log(jiesuanFrom,jiesuanFrom[0]);
 					if(jiesuanFrom[0] == 'cart'){
 						var account = jiesuanFrom[1];
 						 this._fromCart(account);
@@ -218,18 +221,20 @@
 			    this.account = account;
 			
 			    productsArr = getCartDataFromLocal(true);
-					this.productsArr    = productsArr;
-					this.account       = account;
-					this.orderStatus   = 0;
-					this.last_account  = account;
+				this.productsArr    = productsArr;
+				this.account       = account;
+				this.orderStatus   = 0;
+				this.last_account  = account;
 					
 			  },
 			
 			_fromOrder(id) {
+				this.id = id;
 				//下单后，支付成功或者失败，点击左上角返回时能够更新订单状态，所以放在onshow中
 				var that = this;
 				//访问服务器，根据订单id获取数据库中订单信息
 				getOrderInfoById({id:id}).then(data => {
+					console.log(data);
 					this.orderStatus = data.orderStatus;
 					this.productsArr  = data.productsArr;
 					this.account      = data.account;
@@ -240,7 +245,8 @@
 							orderNo: data.order_no
 						};
 						
-					that.getOrderOneCoupon();
+					this.firstPayStatus = 2;
+					that.geOrderCouponFunc({order_id:id,user_coupon_id:data.user_coupon_id});
 					that.getDefaultAddress(0);
 				});
 			},
@@ -277,6 +283,19 @@
 					 this.user_coupon_id= result.id;
 					 this.coupon_money = coupon_money.toFixed(2);
 					 this.last_account = last_account.toFixed(2);
+				})
+			},
+			geOrderCouponFunc(parame){
+				geOrderCoupon(parame).then(result => {
+					 var last_account = this.account - result.money;
+					 var coupon_money = result.money;
+					coupon_money = parseFloat(coupon_money);
+					last_account = parseFloat(last_account);
+					 this.user_coupon_id= result.id;
+					 this.coupon_money = coupon_money.toFixed(2);
+					 this.last_account = last_account.toFixed(2);
+				}).catch(err =>{
+					console.log(err);
 				})
 			},
 			selectPeisonType(type){
@@ -360,33 +379,42 @@
 				//创建订单
 				var wap_url = location.href.split("#")[0];
 				var post_data = {},
-					productInfo = this.productsArr;
-					
-					post_data.user_coupon_id = this.user_coupon_id;
-					post_data.coupon_money   = this.coupon_money;
-					post_data.totalPrice     = this.last_account;
-					post_data.product_id       = productInfo[0].id;
-					post_data.snap_img       = productInfo[0].main_img_url;
-					post_data.snap_name      = productInfo[0].name;
-					post_data.coupon_id      = this.coupon_id;
-					post_data.mark_info      = this.msg_liuyan;
-					post_data.select_status  = this.selectAddressStatus;
-					post_data.address_id     = this.addressInfo.id;
-					post_data.productInfo    = JSON.stringify(productInfo);
-					post_data.wap_url        = wap_url;
-					this.loadModal = true;
+				productInfo = this.productsArr;
+				
+				post_data.user_coupon_id = this.user_coupon_id;
+				post_data.coupon_money   = this.coupon_money;
+				post_data.totalPrice     = this.last_account;
+				post_data.product_id     = productInfo[0].id;
+				post_data.snap_img       = productInfo[0].main_img_url;
+				post_data.snap_name      = productInfo[0].name;
+				post_data.coupon_id      = this.coupon_id;
+				post_data.mark_info      = this.msg_liuyan;
+				post_data.select_status  = this.selectAddressStatus;
+				post_data.address_id     = this.addressInfo.id;
+				post_data.productInfo    = JSON.stringify(productInfo);
+				post_data.wap_url        = wap_url;
+				this.loadModal = true;
 				createOrder(post_data).then(result => {
 					this.loadModal = false;
 					this.firstPayStatus = 2;
+					this.id = result.order_id;
 					//将已经下单的商品从购物车里删除
 					this.deleteProducts();
 					if(result.dev == 1){
-						//清空缓存记录来源
-						uni.setStorageSync('jiesuanFromKey','');
-						//开发测试
-						uni.switchTab({
-							url:"../orders/orders"
-						})
+						uni.showToast({
+							title: '支付成功',
+							duration: 2000,
+							icon: 'success'
+						});
+						setTimeout(function(){
+							//清空缓存记录来源
+							uni.setStorageSync('jiesuanFromKey','');
+							//开发测试
+							uni.navigateTo({
+								url:"../orders/orders"
+							})
+						},2000)
+						
 					}else{
 						//更新缓存记录来源
 						uni.setStorageSync('jiesuanFromKey',"order|"+result.order_id);
@@ -397,11 +425,14 @@
 						    	duration: 2000,
 						    	icon: 'success'
 						    });
+							setTimeout(function(){
 								//清空缓存记录来源
 								uni.setStorageSync('jiesuanFromKey','');
-								uni.switchTab({
+								//开发测试
+								uni.navigateTo({
 									url:"../orders/orders"
 								})
+							},2000)
 								
 						}, function (e) {
 						    /**失败的回调*/
@@ -413,12 +444,19 @@
 						})
 					}
 			
+				}).catch(err => {
+					this.loadModal = false;
+					//刷新页面
+					setTimeout(function(){
+						location.reload();
+					},1500)
+					
 				});
 			},
 			_oneMoresTimePay(){
 				this.loadModal = true;
 				var wap_url = location.href.split("#")[0];
-				oneMorePay({id:id,wap_url:wap_url}).then(result=>{
+				oneMorePay({id:this.id,wap_url:wap_url}).then(result=>{
 					this.loadModal = false;
 					this.$wxPay(result, function (res) {
 					    /*成功的回调*/
@@ -429,7 +467,7 @@
 					    });
 							//清空缓存记录来源
 							uni.setStorageSync('jiesuanFromKey','');
-							uni.switchTab({
+							uni.navigateTo({
 								url:"../orders/orders"
 							})
 							
@@ -441,6 +479,8 @@
 					     	icon: 'error'
 					     })
 					})
+				}).catch(error=>{
+					this.loadModal = false;
 				});
 			},
 			//将已经下单的商品从购物车中删除
@@ -465,6 +505,9 @@ page{
 }
 .order-container>view{
     background-color: #fff;
+}
+.order-container .fullLoading{
+	background-color: rgba(126,125,125,0.4);
 }
 .order-main{
     padding-bottom:50rpx;

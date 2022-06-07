@@ -242,8 +242,12 @@
 				 }
 					//判断是否 多少起送
 					var start_money = this.sysData.start_money;
+					var account = this.account;
+					start_money = parseFloat(start_money);
+					account     = parseFloat(account);
+					// console.log(start_money);		console.log(account);return;
 					if(start_money != 0){
-						if(start_money>this.account){
+						if(start_money>account){
 							uni.showToast({
 								title: "满"+start_money+"元起送哦",
 								duration: 1000,

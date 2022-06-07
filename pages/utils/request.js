@@ -18,15 +18,23 @@ function service(options = {}) {
 			if(res[1].data.code == 200){
 				resolved(res[1].data.data);
 			}else{
-				if(res[1].data.data.noShowMsg == undefined){
-					uni.showToast({
-						title: res[1].data.msg,
-						duration: 2000,
-						icon: 'error'
-					})
+				var data = res[1].data;
+				if(res[1].data.hasOwnProperty('data')){
+					if(data.data.hasOwnProperty('noShowMsg')){
+						//失败不需要弹出的
+						rejected(res[1].data);
+						return '';
+					}
 				}
+				uni.showToast({
+					title: res[1].data.msg,
+					duration: 2000,
+					icon: 'error'
+				})
+				rejected(res[1].data);
 			}
 		}).catch(error => {
+			console.log('进入错误分支啦');
 			rejected(error[1]);
 		});
 

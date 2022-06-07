@@ -33,10 +33,10 @@
 				</view>
 				<view class="list" v-if="orderList.length>0">
 					<view class="item" v-for="(item, index) in orderList" :key="index">
-						<view @click="goOrderDetail(item.order_id)">
+						<view>
 							<view class="title acea-row row-between-wrapper">
 								<view class="acea-row row-middle">
-									<text class="sign cart-color acea-row row-center-wrapper" >{{item.type_str}}</text>
+									<text class="sign cart-color acea-row row-center-wrapper" v-if="item.type_str != ''">{{item.type_str}}</text>
 			
 									<view>{{ item.create_time}}</view>
 								</view>
@@ -49,7 +49,7 @@
 				
 								<view v-else-if="item.status == 4" class="font-color">已完成</view>	
 							</view>
-							<view class="item-info acea-row row-between row-top" v-for="(items, index2) in item.productInfo" :key="index2">
+							<view class="item-info acea-row row-between row-top" v-for="(items, index2) in item.productInfo" :key="index2" @click="goProductDetail(items.product_id)">
 								<view class="pictrue">
 									<image :src="items.snap_img"></image>
 								</view>
@@ -143,6 +143,11 @@
 					url:"../orders/detail?id="+id
 				})
 			},
+			goProductDetail(id){
+				uni.navigateTo({
+					url:"../product/product?id="+id
+				})
+			},
 			getOrderData(){
 				var status = this.orderStatus;
 				var params = {
@@ -180,8 +185,6 @@
 			},
 			cancelOrder(id,index){
 				//删除订单
-			},
-			delOrder(id, index){
 				deleteOrder({id:id}).then(result=>{
 					uni.showToast({
 						title: result,
@@ -190,6 +193,9 @@
 					});
 					this.orderList.splice(index,1);
 				})
+			},
+			delOrder(id, index){
+				
 			},
 			goPay(id){
 				//更新缓存记录来源
@@ -252,12 +258,12 @@
   
   	.my-order .nav {
   		background-color: #fff;
-  		width: 690rpx;
+  		width: 100%;
   		height: 140rpx;
   		border-radius: 6rpx;
   		margin: -73rpx auto 0 auto;
-			display: flex;
-			justify-content: space-around;
+		display: flex;
+		justify-content: space-around;
   	}
   
   	.my-order .nav .item {
@@ -283,7 +289,7 @@
   	}
   
   	.my-order .list {
-  		width: 690rpx;
+  		width: 100%;
   		margin: 14rpx auto 0 auto;
   	}
   
@@ -319,7 +325,7 @@
   	}
   
   	.my-order .list .item .item-info {
-  		padding: 0 30rpx;
+  		padding: 0 24rpx;
   		margin-top: 22rpx;
 		display: flex;
   	}
@@ -327,6 +333,7 @@
   	.my-order .list .item .item-info .pictrue {
   		width: 120rpx;
   		height: 120rpx;
+		margin-right: 10rpx;
   	}
   
   	.my-order .list .item .item-info .pictrue image {
@@ -359,7 +366,7 @@
   		font-size: 26rpx;
   		color: #282828;
   		text-align: right;
-  		margin: 27rpx 0 0 30rpx;
+  		margin-top: 16rpx;
   		padding: 0 30rpx 30rpx 0;
   		border-bottom: 1rpx solid #eee;
   	}

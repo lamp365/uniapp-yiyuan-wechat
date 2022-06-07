@@ -37,7 +37,7 @@ export function deleteOrder(params) {
 export function oneMorePay(params) {
 	return request({
 		url: 'Order/secondPay',
-		method: 'GET',
+		method: 'POST',
 		data: params
 	})
 }
