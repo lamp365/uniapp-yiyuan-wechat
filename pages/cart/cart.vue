@@ -139,11 +139,11 @@
 			
 			    for (let i = 0; i < len; i++) {
 			      if (data[i].selectStatus) {
-							if(data[i].type ==1){
-								var sale_price = Number(data[i].active_price)
-							}else{
-								var sale_price = Number(data[i].sale_price)
-							}
+					if(data[i].type ==1){
+						var sale_price = Number(data[i].active_price)
+					}else{
+						var sale_price = Number(data[i].sale_price)
+					}
 			        account += data[i].counts  * sale_price ;
 			        selectedCounts += data[i].counts;
 			        selectedTypeCounts++;

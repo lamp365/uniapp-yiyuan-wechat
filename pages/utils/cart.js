@@ -95,8 +95,8 @@ export function _changeCounts(id,spec_id,counts) {
 		
 		var active_heji = cartData[isHasInfo.index].counts*cartData[isHasInfo.index].active_price;
 		var sale_heji = cartData[isHasInfo.index].counts*cartData[isHasInfo.index].sale_price;
-		cartData[isHasInfo.index].active_heji = active_heji.toFixed(2);
-		cartData[isHasInfo.index].sale_heji   = sale_heji.toFixed(2);
+		cartData[isHasInfo.index].active_heji = Number(active_heji).toFixed(2);
+		cartData[isHasInfo.index].sale_heji   = Number(sale_heji).toFixed(2);
     //更新本地缓存
     uni.setStorageSync('local_cart_key', cartData);
 }
@@ -107,6 +107,17 @@ export function deleteCart(id,spec_id) {
     var hasInfo = _isHasThatOne(id, spec_id,cartData);
     if (hasInfo.index != -1) {
       cartData.splice(hasInfo.index, 1); //删除数组某一项
+    }
+
+    //更新本地缓存
+    uni.setStorageSync('local_cart_key', cartData);
+}
+export function changeCartStatus(status) {
+   
+    var cartData = getCartDataFromLocal();
+    for (let i = 0; i < cartData.length; i++) {
+       cartData[i].selectStatus = status;
+      
     }
 
     //更新本地缓存

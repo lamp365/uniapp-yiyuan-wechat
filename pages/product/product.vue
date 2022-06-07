@@ -167,7 +167,7 @@
 	import {getProduct} from "../api/productApi.js";
 	import {collectProduct} from "../api/myApi.js";
 	import {getAllCoupon,lingQuan} from "../api/couponApi.js";
-	import {addCart} from "../utils/cart.js";
+	import {addCart,deleteCart,changeCartStatus} from "../utils/cart.js";
 	export default {
 		data() {
 			return {
@@ -203,13 +203,7 @@
 					this.$refs.specpopup.open(type);
 				}else{
 					//第二次点击就要加入购物车 或者 购买
-					if(leixin == 1){
-						//加入购物车
-						this.addGowuche();
-					}else{
-						//购买
-						
-					}
+					this.addGowuche(leixin);
 				}
 			
 			},
@@ -329,10 +323,16 @@
 					
 				}
 			},
-			addGowuche(){
+			addGowuche(leixing){
 					 var id = this.id;
 					 var this_product = this.one_product;
 					
+					if(leixing == 2){
+						//立即购买  清空这个id,并购物车里面 把其他设置为 未选择
+						deleteCart(id,this.spec_id);
+						changeCartStatus(0);
+						
+					}
 					 // console.log(products_arr);
 					 var tempObj = {};
 					 var cartDataObj = {
@@ -340,8 +340,8 @@
 						 spec_id:this.spec_id,
 						 name:this_product.name,
 						 main_img_url:this_product.main_img_url,
-						 sale_price:this.sale_price,
-						 active_price:this.active_price,
+						 sale_price:Number(this.sale_price),
+						 active_price:Number(this.active_price),
 						 stock:this.stock,
 						 spec_name:this.has_choose_spec,
 						 type:this_product.type,
@@ -353,7 +353,23 @@
 						title: '已加入购物车',
 						duration: 1000,
 						icon: 'success'
-					})
+					});
+					if(leixing == 2){
+						//跳结算页面
+						if(this_product.type ==1){
+							var sale_price = Number(this.active_price);
+						}else{
+							var sale_price = Number(this.sale_price)
+						}
+						var _account = this.add_num  * sale_price ;
+						
+						uni.setStorageSync('jiesuanFromKey',"cart|"+_account);
+						setTimeout(function(){
+							uni.navigateTo({
+								url:"../jiesuan/jiesuan"
+							})
+						},1000)
+					}
 			},
 			collectProductFunc(){
 				collectProduct({id:this.id}).then(result =>{

@@ -654,6 +654,7 @@ page{
 .product-item .item-right{
     flex-basis: 80rpx;
     text-align: center;
+	padding-top: 18rpx;
 }
 
 .order-accounts{
