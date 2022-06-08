@@ -22,7 +22,7 @@
 		
 		<view class="mian-box">
 		  <view class='category-box'>
-		    <view class="left-box" style="position: fixed;top:308rpx;">
+		    <view class="left-box" style="position: fixed;top:312rpx;">
 		     
 					<view :class="[secendCateClass(index)]" v-for="(item,index) in secondCategory" :key="index" @click="changeCategory(item.id,index,item.parent_id)">
 						{{item.name}}
@@ -60,7 +60,17 @@
 						     </view>
 						   </view>
 							 
-						   <view class="no_data"  v-if="is_nodata" style="justify-content: center;display: flex;">
+							 <view class="loadingicon" v-if="categoryProducts.length > 0">
+							 	<view class="c_loading">
+							 		<text class="iconfont icon-jiazaizhong" v-if="loading"></text>
+							 	</view>	
+							 	<view class="c_loadTitle">
+							 		{{ loadTitle }}
+							 	</view>	
+							 	
+							 </view>
+							 
+						   <view class="no_data"  v-if="categoryProducts.length ==0" style="justify-content: center;display: flex;">
 						     <image src="../../static/no_data.png" style="margin-top: 160rpx;width: 240rpx;height: 240rpx;"></image>
 						   </view>
 							 
@@ -113,7 +123,7 @@
 						<view class="to_gouwuche" @click="addGowuche(one_product.id,1)">
 							加入购物车
 						</view>
-						<view class="to_buy" @click="lijiBuy(one_product.id,2)">
+						<view class="to_buy" @click="addGowuche(one_product.id,2)">
 							立即购买
 						</view>
 					</view>	
@@ -145,7 +155,7 @@
 			
 					secondCategory: [],
 			
-					is_nodata:false,  
+			
 					is_show_sale_num:0,
 					current_page:1,
 					
@@ -159,7 +169,13 @@
 					stock:0,
 					add_num:1,
 					product_id:0,
-					spec_id:0
+					spec_id:0,
+					page:1,
+					has_finish:false,
+					category_id:0,
+					loadTitle:'------我也是有底线的------',
+					tempTitle:'------我也是有底线的------',
+					loading:false,
 			}
 		},
 		onLoad: function(options) {
@@ -183,23 +199,15 @@
 						  //一定要在回调里再进行获取分类详情的方法调用
 						  // var parame_data = {id:category_id,page:that.data.current_page}
 							getProductsByCategory({id:category_id}).then(data => {
-								if(data.length > 0){
-									var is_nodata = false;
-								
-								}else{
-									var is_nodata = true;
-								
-								}
 								
 								that.categoryProducts = data;
-								that.is_nodata = is_nodata;
-								//第一次加载保存到loadedData中
-								var index_key = "cate_"+category_id+"_0";
-								that.loadedData[index_key] = data;
+								
 							});
 						})
 			},
 			 changeCategoryFirst:function(category_id,index){
+				 this.page =1;
+				 this.categoryProducts = [];
 			    var categoryData = this.categoryTypeArr;
 			    for(var i=0;i<categoryData.length;i++){
 
@@ -212,53 +220,52 @@
 			        if(categoryData[i].sonCate.length > 0){
 			          var sonCate = categoryData[i].sonCate;
 			          var id = sonCate[0].id;
-			          var index_key = "cate_"+category_id+"_0";
+			          var index_key = "cate_"+category_id+"_0_"+this.page;
 			          this.changeGetDataFunc(index_key,id);
 			        }else{
 			          //没有子分类
 								this.categoryProducts = [];
-								this.is_nodata = true;
+			
 			        }
 			      }
 			    }
 			  },
 			  changeCategory: function(id,index,parentid) {
+					this.page=1;
+					this.categoryProducts = [];
 					this.currentMenuIndex = index;
-					 var index_key = "cate_"+parentid+"_"+index;
+					 var index_key = "cate_"+parentid+"_"+index+"_"+this.page;
 			    this.changeGetDataFunc(index_key,id);
 			  },
 			
 			  changeGetDataFunc:function(index_key,id){
 			    //内容回滚顶部
-			    wx.pageScrollTo({
-			      scrollTop: 0
-			    });
-					var that = this;
-			    if (!this.isLoadedData(index_key)) {
-			      //如果没有加载过当前分类的商品数据
-						getProductsByCategory({id:id}).then(data =>{
-							if(data.length>0){
-								 var is_nodata = false;
-							}else{
-								var is_nodata = true;
-							}
-							
-							// console.log(Object.keys(dataObj).length);
-							that.categoryProducts = data;
-							that.is_nodata = is_nodata
-							//第一次加载保存到loadedData中
-							that.loadedData[index_key] = data;
+					this.category_id = id;
+					if(this.page == 1){
+						 wx.pageScrollTo({
+							scrollTop: 0
 						});
-			    } else {
-			      //不是第一次加载就使用loadedData
-			      var getData = this.loadedData[index_key];
-			      var is_nodata = false;
-			      if(getData.length == 0)
-			          is_nodata = true;
-								
-						this.categoryProducts = getData;
-						this.is_nodata = is_nodata;
-			    }
+					}
+			   
+					var that = this;
+			   
+				 this.loading = true;
+				 this.loadTitle = "加载中";
+			   getProductsByCategory({id:id,page:this.page}).then(data =>{
+					 
+					 this.loading = false;
+					 this.loadTitle = this.tempTitle;
+					
+			   	console.log(data);
+					if(data.length < 1){
+							this.has_finish = true;
+						}else{
+							this.has_finish = false;
+							var resultData = this.categoryProducts.concat(data);
+							this.categoryProducts = resultData;
+						}
+						
+			   });
 			  },
 				//判断当前分类下的商品数据是否已经被加载过
 				isLoadedData: function(index_key) {
@@ -408,7 +415,11 @@
 		},
 		  //滚动到底部加载更多
 		  onReachBottom:function() {
-		    console.log(22);
+		    console.log('底部啦');
+				if(!this.has_finish){
+					this.page += 1;
+					this.changeGetDataFunc('1_1',this.category_id);	
+				}
 		  },
 	}
 </script>
@@ -420,8 +431,12 @@
 	}
 
 	.top_main{
-		background: #fff;
+		position: fixed;
+		top: 0rpx;
+		background: #ffffff;
+		width: 100%;
 		overflow: hidden;
+		z-index: 999;
 	}
 .search_input{
     display: flex;
@@ -489,6 +504,7 @@
 /* 下半部 */
 .mian-box{
 	height: 100%;
+	margin-top:332rpx;
 }
 .category-box {
     display: flex;
@@ -758,4 +774,7 @@
 	background: #10d3c2;
 	height: 100%;
 }
+	.loadingicon{color: #666;text-align: center;margin-top: 12rpx;}
+	.c_loading .iconfont{font-size: 50rpx;}
+	.c_loadTitle{font-size: 24rpx;}
 </style>

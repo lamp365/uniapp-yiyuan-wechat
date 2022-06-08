@@ -122,7 +122,7 @@
 					</view>
 					<view class='item acea-row row-between'>
 						<view>支付时间：</view>
-						<view class='conter'>{{orderInfo.pay_time}}</view>
+						<view class='conter'>{{orderInfo.pay_time == 0? '-' : orderInfo.pay_time}}</view>
 					</view>
 					<view class='item acea-row row-between'>
 						<view>支付状态：</view>
@@ -161,7 +161,10 @@
 						<view>优惠券抵扣：</view>
 						<view class='conter'>-￥{{parseFloat(orderInfo.coupon_money).toFixed(2)}}</view>
 					</view>
-					
+					<view class='item acea-row row-between' v-if="orderInfo.youhui>0">
+						<view>优惠：</view>
+						<view class='conter'>-￥{{parseFloat(orderInfo.youhui).toFixed(2)}}</view>
+					</view>
 					<view class='actualPay acea-row row-right'>
 						实付款：<text class='money font-color'>￥{{parseFloat(orderInfo.total_price).toFixed(2)}}</text>
 					</view>
@@ -169,13 +172,13 @@
 				<view style='height:120rpx;'></view>
 				<view class='footer acea-row row-right row-middle'>
 	
-					<view class="more" @click="more">更多<span class='iconfont icon-xiangshang'></span></view>
+					<view class="more" @click="goBack">返回<span class='iconfont icon-xiangshang'></span></view>
 					<view class="more-box" v-if="moreBtn">
-						<view class="more-btn" >申请开票</view>
+						<view class="more-btn" >更多信息</view>
 					</view>
 	
-					<view class="qs-btn" v-if="orderInfo.status == 1" @click.stop="cancelOrder">取消订单</view>
-					<view class='bnt bg-color' v-if="orderInfo.status==1" @click='pay_open(orderInfo.id)'>立即付款</view>
+					<view class="qs-btn" v-if="orderInfo.status == 1" @click.stop="deleteOrderFunc()">取消订单</view>
+					<view class='bnt bg-color' v-if="orderInfo.status==1" @click='goPay(orderInfo.id)'>立即付款</view>
 					<view class='bnt cancel'	v-if="[2,3].includes(orderInfo.status)">
 						申请退款
 					</view>
@@ -195,7 +198,7 @@
 </template>
 
 <script>
- import {orderDetail} from "../api/orderApi.js";
+ import {orderDetail,deleteOrder} from "../api/orderApi.js";
 	export default {
 		data() {
 			return {
@@ -225,6 +228,31 @@
 				orderDetail({id:this.order_id}).then(result=>{
 					this.orderInfo = result;
 					this.orderProduct = result.product;
+				})
+			},
+			goBack(){
+				uni.navigateBack({
+					delta:1
+				})
+			},
+			deleteOrderFunc(){
+				//删除订单
+				deleteOrder({id:this.order_id}).then(result=>{
+					uni.showToast({
+						title: result,
+						duration: 1500,
+						icon: 'success'
+					});
+					uni.navigateBack({
+						delta:1
+					})
+				})
+			},
+			goPay(id){
+				//更新缓存记录来源
+				uni.setStorageSync('jiesuanFromKey',"order|"+this.order_id);
+				uni.navigateTo({
+					url:"../jiesuan/jiesuan"
 				})
 			}
 		}
@@ -490,6 +518,8 @@
 	.order-details .wrapper .item {
 		font-size: 28rpx;
 		color: #282828;
+		display: flex;
+		justify-content: space-between;
 	}
 
 	.order-details .wrapper .item~.item {
@@ -501,7 +531,6 @@
 
 	.order-details .wrapper .item .conter {
 		color: #868686;
-		width: 460rpx;
 		display: flex;
 		flex-wrap: nowrap;
 		justify-content: flex-end;
@@ -523,6 +552,7 @@
 		padding-top: 30rpx;
 		display: flex;
 		align-items: center;
+		justify-content: flex-end;
 
 		.pay-people {
 			display: flex;
@@ -553,9 +583,12 @@
 		bottom: 0;
 		left: 0;
 		background-color: #fff;
-		padding: 0 30rpx;
+		padding: 0rpx 30rpx;
 		box-sizing: border-box;
-
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		border-top: 1rpx solid #eee;
 		.more {
 			position: absolute;
 			left: 30rpx;

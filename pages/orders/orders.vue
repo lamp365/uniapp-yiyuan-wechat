@@ -107,6 +107,7 @@
 				</view>
 			</view>
 			
+			<view style="height: 40rpx;"></view>
 			<view class="goback"><text class="iconfont icon-back" @click="gotoMy()"></text></view>
 		</view>
 </template>

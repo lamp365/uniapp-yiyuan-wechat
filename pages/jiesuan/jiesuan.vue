@@ -83,6 +83,9 @@
 		      <view class="pay_info">
 		        <view class="tit">优惠券/活动</view><view class="money">￥{{coupon_money}}</view>
 		      </view>
+					<view class="pay_info" v-if="basicInfo.yunfei>0">
+					  <view class="tit">优惠</view><view class="money">￥{{basicInfo.yunfei}}</view>
+					</view>
 		      <view class="pay_info">
 		        <view class="tit">合计</view><view class="he_money">￥{{last_account}}</view>
 		      </view>
@@ -242,7 +245,8 @@
 					this.selectAddressStatus = data.selectAddressStatus;
 					this.basicInfo =  {
 							orderTime: data.create_time,
-							orderNo: data.order_no
+							orderNo: data.order_no,
+							youhui:data.youhui
 						};
 						
 					this.firstPayStatus = 2;
@@ -674,7 +678,7 @@ page{
 }
 .pay{ 
     flex-basis: 280rpx;
-    background-color: #ffD306;
+    background-color: #1db0fc;
     color: #fff;
     justify-content: center;
     font-weight: bolder;
