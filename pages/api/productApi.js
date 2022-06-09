@@ -6,3 +6,17 @@ export function getProduct(params) {
 		data:params
 	})
 }
+export function getNewProduct(params) {
+	return request({
+		url: 'product/new',
+		method: 'GET',
+		data:params
+	})
+}
+export function getRandProduct(params) {
+	return request({
+		url: 'product/rand',
+		method: 'GET',
+		data:params
+	})
+}

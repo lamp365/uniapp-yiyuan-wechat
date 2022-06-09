@@ -25,7 +25,7 @@
 		
 		
 		<!-- 新人福利专区 -->
-		<view class="newfuli">
+		<view class="newfuli" v-if="newProduct.length > 0">
 			<view class="main">
 				<view class="tit_line">
 					<view class="tit">新人福利专区</view>
@@ -33,34 +33,14 @@
 				</view>
 				<view class="good_list">
 					 <scroll-view scroll-x  scroll-left="scrollleft" class="box_scroll_view">
-						 <view class="the_item">
-							 <image src="http://bianlidian.com/uploads/202111/9aa829006b334a13cb4910528817b56d.jpg" mode="aspectFill"></image>
+						 <view class="the_item" v-for="(item,index) in newProduct" :key="index" @click.native="getoProduct(item.id)">
+							 <image :src="item.main_img_url" mode="aspectFill"></image>
 							 <view class="price_line">
-									<view class="active_price">¥88.0</view>
-									<view class="price">¥108.0</view>
+									<view class="active_price">¥{{item.active_price}}</view>
+									<view class="price">¥{{item.sale_price}}</view>
 							 </view>
 						 </view>
-						 <view class="the_item">
-							 <image src="http://bianlidian.com/uploads/202111/9aa829006b334a13cb4910528817b56d.jpg" mode="aspectFill"></image>
-							 <view class="price_line">
-							 										<view class="active_price">¥88.0</view>
-							 										<view class="price">¥108.0</view>
-							 </view>
-						 </view>
-						 <view class="the_item">
-							 <image src="http://bianlidian.com/uploads/202111/9aa829006b334a13cb4910528817b56d.jpg" mode="aspectFill"></image>
-							 <view class="price_line">
-							 										<view class="active_price">¥88.0</view>
-							 										<view class="price">¥108.0</view>
-							 </view>
-						 </view>
-						 <view class="the_item">
-							 <image src="http://bianlidian.com/uploads/202111/9aa829006b334a13cb4910528817b56d.jpg" mode="aspectFill"></image>
-							<view class="price_line">
-																	<view class="active_price">¥88.0</view>
-																	<view class="price">¥108.0</view>
-							</view>
-						 </view>
+						
 					 </scroll-view>
 				</view>	
 			</view>
@@ -149,7 +129,7 @@
 		
 		<view class="bbox_bg">
 			<!-- 优惠券 -->
-			<view class="coupon_main">
+			<view class="coupon_main" v-if="allCoupon.length>0">
 				<view class="title">
 					<view class="tit1">
 						<view class="name1">
@@ -164,67 +144,26 @@
 					</view>
 				</view>
 				<scroll-view scroll-x  scroll-left="scrollleft" class="coupon_scroll_view">
-					 <view class="coupon_item">
-						<view class="coupon_box">
+					 <view class="coupon_item" v-for="(item,index) in allCoupon" :key="index" >
+						<view class="coupon_box" @click="lingquQuan(item.id,index)">
 						 	<view class="price_info">
 								<view class="">
-									¥<text class="money">188.00</text>
+									¥<text class="money">{{parseFloat(item.money).toFixed(2)}}</text>
 								</view>	
 								<view class="tijian">
-									满100元可用
+									满{{item.tiaojian}}元可用
 								</view>
 							</view>
-							<view class="lingqu">
+							<view class="lingqu" v-if="item.has_get==0">
 								<view>领</view><view>取</view>
+							</view>
+							<view class="lingqu" v-if="item.has_get==1">
+								<view>已</view><view>领</view>
 							</view>
 						</view>
 						
 					 </view>
-					 <view class="coupon_item">
-					 		<view class="coupon_box">
-					 		 	<view class="price_info">
-					 				<view class="">
-					 					¥<text class="money">58.00</text>
-					 				</view>	
-					 				<view class="tijian">
-					 					满30元可用
-					 				</view>
-					 			</view>
-					 			<view class="lingqu">
-					 				<view>领</view><view>取</view>
-					 			</view>
-					 		</view>
-					 </view>
-					 <view class="coupon_item">
-					 			<view class="coupon_box">
-					 			 	<view class="price_info">
-					 					<view class="">
-					 						¥<text class="money">188.00</text>
-					 					</view>	
-					 					<view class="tijian">
-					 						满100元可用
-					 					</view>
-					 				</view>
-					 				<view class="lingqu">
-					 					<view>领</view><view>取</view>
-					 				</view>
-					 			</view>
-					 </view>
-					 <view class="coupon_item">
-					 			<view class="coupon_box">
-					 			 	<view class="price_info">
-					 					<view class="">
-					 						¥<text class="money">188.00</text>
-					 					</view>	
-					 					<view class="tijian">
-					 						满100元可用
-					 					</view>
-					 				</view>
-					 				<view class="lingqu">
-					 					<view>领</view><view>取</view>
-					 				</view>
-					 			</view>
-					 </view>
+					
 				</scroll-view>
 			</view>
 
@@ -234,32 +173,26 @@
 				好货推荐
 			</view>
 			<view class="haohuo_box">
-				<view class="one_list">
+				
+				<view class="one_list" v-for="(item,index) in randProduct" @click="getoProduct(item.id)" :key="index">
 					<view class="pic_view">
 						<view class="mian_img">
-							<image src="http://bianlidian.com/uploads/202111/3bcb89bfd62837cf7f874085aa18326f.jpg" mode="widthFix"></image>
+							<image :src="item.main_img_url" mode="widthFix"></image>
 						</view>
 					</view>
 					<view class="tit">
-						这是一个产品的标题呀
-					</view>
-				</view>
-				<view class="one_list">
-					<view class="pic_view">
-						<view class="mian_img">
-							<image src="http://bianlidian.com/uploads/202111/3bcb89bfd62837cf7f874085aa18326f.jpg" mode="widthFix"></image>
-						</view>
-					</view>
-					<view class="tit">
-						这是一个产品的标题呀这是一个产品的标题呀这是一个产品的标题呀
+						{{item.name}}
 					</view>
 					<view class="price_info">
 						<view class="">
-							<view class="money1">
-								¥<text class="sale_price">48.00</text>	<text class="icon">新人价</text>
+							<view class="money1" v-if="item.type==0">
+								¥<text class="sale_price">{{item.sale_price}}</text>
 							</view>
-							<view class="money2">
-								¥96.00
+							<view class="money1" v-if="item.type>0">
+								¥<text class="sale_price">{{item.active_price}}</text>	<text class="icon">{{item.type_str}}</text>
+							</view>
+							<view class="money2" v-if="item.type>0">
+								¥{{item.sale_price}}
 							</view>
 						</view>
 						<view class="jiagou">
@@ -267,49 +200,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="one_list">
-					<view class="pic_view">
-						<view class="mian_img">
-							<image src="http://bianlidian.com/uploads/202111/3bcb89bfd62837cf7f874085aa18326f.jpg" mode="widthFix"></image>
-						</view>
-					</view>
-					<view class="tit">
-						这是一个产品的标题呀是一个商品标题
-					</view>
-					<view class="price_info">
-						<view class="">
-							<view class="money1">
-								¥<text class="sale_price">48.00</text>
-							</view>
-						</view>
-						<view class="jiagou">
-							<image src="../../../static/add.png" mode=""></image>
-						</view>
-					</view>
-				</view>
-				<view class="one_list">
-					<view class="pic_view">
-						<view class="mian_img">
-							<image src="http://bianlidian.com/uploads/202111/841f29977dd97439cd03193861cdcb82.jpg" mode="widthFix"></image>
-						</view>
-					</view>
-					<view class="tit">
-						这是一个产品的标题呀
-					</view>
-					<view class="price_info">
-						<view class="">
-							<view class="money1">
-								¥<text class="sale_price">48.00</text>	<text class="icon">新人价</text>
-							</view>
-							<view class="money2">
-								¥96.00
-							</view>
-						</view>
-						<view class="jiagou">
-							<image src="../../../static/add.png" mode=""></image>
-						</view>
-					</view>
-				</view>
+				
 			</view>
 		</view>
 		
@@ -319,19 +210,27 @@
 
 <script>
 import {getShopInfo,getTopBanner} from "../../api/indexApi.js";
+import {getRandProduct,getNewProduct} from "../../api/productApi.js";
+import {getAllCoupon,lingQuan} from "../../api/couponApi.js";
 export default {
 	data(){
 		return{
-		    sysInfo:{},
+			sysInfo:{},
 			topBanner:[
 				{'image':'https://data44.wuht.net//uploads/attach/2022/01/20220115/84578abf1060697da0529a5ccc50934c.png'},
 				{'image':'https://data44.wuht.net//uploads/attach/2022/01/20220115/d54f87813d22fc2ce2e6e231f3bcfae7.png'}
-			]
+			],
+			page:1,
+			randProduct:[],
+			newProduct:[],
+			allCoupon:[]
 		}
 	},
 	mounted(){
 		this.getShopInfoInit();
-		
+		this.getRandProductFunc();
+		this.getNewProductFunc();
+		this.getAllCouponFunc();
 	},
 	onShow() {
 		console.log(2222);
@@ -368,6 +267,44 @@ export default {
 				}
 				
 			}
+		},
+		getRandProductFunc(){
+			getRandProduct().then(result=>{
+				this.randProduct = result;
+			})
+		},
+		getNewProductFunc(){
+			getNewProduct({limit:8}).then(result=>{
+				this.newProduct = result;
+			})
+		},
+		getAllCouponFunc(){
+			getAllCoupon().then(result=>{
+				this.allCoupon = result;
+			})
+		},
+		getoProduct(id){
+			uni.navigateTo({
+				url:"/pages/product/product?id="+id
+			})
+		},
+		lingquQuan(id,index){
+			if(this.allCoupon[index].has_get == 1){
+				uni.showToast({
+					title: "您已领取过了",
+					duration: 2000,
+					icon: 'error'
+				})
+				return '';
+			}
+			lingQuan({id:id}).then(result=>{
+				uni.showToast({
+					title: '领取完毕',
+					duration: 1500,
+					icon: 'success'
+				})
+				this.allCoupon[index].has_get = 1;
+			})
 		}
 	}
 }
