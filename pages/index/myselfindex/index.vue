@@ -2,10 +2,10 @@
 	<view>
 		<view class="header">
 			<view class="serch-wrapper">
-				<view class="logo">整件酒 
+				<view class="logo">{{sysInfo.shop_name}} 
 					<view class="tit_info">优质精选好物</view>
 				</view>
-				<view class="input">
+				<view class="input" @click="gotoSearch()">
 					<image src="../../../static/search.png"></image>
 					请输入搜索名称
 				</view>
@@ -204,7 +204,7 @@
 			</view>
 		</view>
 		
-		<view class="dixian">---- 人家也是有底线得 ----</view>
+		<view class="dixian">---- 人家也是有底线哦 ----</view>
 	</view>
 </template>
 
@@ -216,10 +216,7 @@ export default {
 	data(){
 		return{
 			sysInfo:{},
-			topBanner:[
-				{'image':'https://data44.wuht.net//uploads/attach/2022/01/20220115/84578abf1060697da0529a5ccc50934c.png'},
-				{'image':'https://data44.wuht.net//uploads/attach/2022/01/20220115/d54f87813d22fc2ce2e6e231f3bcfae7.png'}
-			],
+			topBanner:[],
 			page:1,
 			randProduct:[],
 			newProduct:[],
@@ -231,12 +228,11 @@ export default {
 		this.getRandProductFunc();
 		this.getNewProductFunc();
 		this.getAllCouponFunc();
+		this.getTopBannerFunc();
 	},
 	onShow() {
 		console.log(2222);
-	    /* getTopBanner().then(result=>{
-	    	this.topBanner = result;
-	    }); */
+	   
 	   
 	},
 	methods: {
@@ -304,6 +300,16 @@ export default {
 					icon: 'success'
 				})
 				this.allCoupon[index].has_get = 1;
+			})
+		},
+		getTopBannerFunc(){
+			getTopBanner().then(result=>{
+				this.topBanner = result;
+			});
+		},
+		gotoSearch(){
+			uni.navigateTo({
+				url:"/pages/search/search"
 			})
 		}
 	}
@@ -670,6 +676,7 @@ export default {
 }
 .haohuo_box .one_list:nth-of-type(odd) {
     float: left;
+	clear: both;
 }
 .haohuo_box .one_list:nth-of-type(even) {
     float: right;

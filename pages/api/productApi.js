@@ -20,3 +20,10 @@ export function getRandProduct(params) {
 		data:params
 	})
 }
+export function getSearchProduct(params) {
+	return request({
+		url: 'searchProduct',
+		method: 'GET',
+		data:params
+	})
+}

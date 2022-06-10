@@ -68,7 +68,7 @@
 				<rich-text :nodes="one_product.descript" class="descript_ht"></rich-text>
 			</view>
 			
-			<view style="height: 40rpx;"></view>
+			<view style="height: 70rpx;"></view>
 		</view>
 		
 		<!-- footnav -->
