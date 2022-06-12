@@ -26,3 +26,9 @@ export function lingQuan(params) {
 		data: params
 	})
 }
+export function getUserCoupon() {
+	return request({
+		url: 'userCoupon',
+		method: 'GET'
+	})
+}

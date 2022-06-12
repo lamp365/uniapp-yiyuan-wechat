@@ -139,7 +139,7 @@
 							领取今日好劵
 						</view>
 					</view>
-					<view class="more">
+					<view class="more" @click="gotoYouhuiquan()">
 						更多
 					</view>
 				</view>
@@ -311,7 +311,12 @@ export default {
 			uni.navigateTo({
 				url:"/pages/search/search"
 			})
-		}
+		},
+		gotoYouhuiquan(){
+			uni.navigateTo({
+				url:"/pages/product/coupon"
+			})
+		},
 	}
 }
 </script>

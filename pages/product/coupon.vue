@@ -1,78 +1,48 @@
 <template>
 	<view>
 		<view class="popup-content couponpopup">
-			<view class="coupon_title">
-				<view class="" @click="changeTitle(1)">
-					<text :class="titleIndex == 1? 'active':''" >未使用</text>
-				</view>
-				<view class="none_use"  @click="changeTitle(2)">
-					<text :class="titleIndex == 2? 'active':''"  >已使用/过期</text>
-				</view>
-			</view>
-			<view class="coupon-list" v-if="couponData.length>0">
-				<view class="item" v-for="(item,index) in couponData" :key="index">
+			<view class="coupon_title">领券中心</view>
+			<view class="coupon-list">
+				<view class="item" v-for="(item,index) in allCoupon" :key="index">
 					<view class="money">
 						<view><text class="uni">￥</text><text class="show_price">{{item.money}}</text></view>
 						<view>满{{item.tiaojian}}元可用</view>
 					</view>
 					<view class="right">
-						<view class="tt1">{{item.title}}234</view>
-						<view class="time">{{item.create_time}}</view>
+						<view class="tt1">{{item.title}}</view>
+						<view class="time"></view>
 						<view class="">
-							<text class="end_time">{{item.end_time}}</text>
-							<text class="lingqu bnt_bg1"  @click="lijiUseFunc(item.id,index)" v-if="titleIndex == 1">立即使用</text>
-							<text class="lingqu bnt_bg2"  v-if="titleIndex == 2 && item.type==1">已使用</text>
-							<text class="lingqu bnt_bg2"  v-if="titleIndex == 2 && item.type==2">已过期</text>
+							<text class="end_time">限时优惠</text>
+							<text class="lingqu bnt_bg1" v-if="item.has_get == 0" @click="lingquQuanFunc(item.id,index)">立即领取</text>
+							<text class="lingqu bnt_bg2" v-else>已经领取</text>
 						</view>
 					</view>
 				</view>
+			
 				
 			</view>
-			
-			<view class="no_data"  v-if="couponData.length ==0" style="justify-content: center;display: flex;">
-			  <image src="/static/no_data.png" style="margin-top: 160rpx;width: 240rpx;height: 240rpx;"></image>
-			</view>
-			
 			<view style="height: 120rpx;"></view>
 		</view>
 	</view>
 </template>
 
 <script>
-	import {getAllCoupon,getUserCoupon} from "../../api/couponApi.js";
+	import {getAllCoupon,lingQuan} from "../api/couponApi.js";
 	export default {
 		data() {
 			return {
-				has_use:[],
-				none_use:[],
-				couponData:[],
-				titleIndex:1
+				allCoupon:[],
 			}
 		},
 		onShow() {
-				this.getUserCouponFunc();
+				this.getAllCouponFunc();
 		},
 		methods: {
-			getUserCouponFunc(){
-				getUserCoupon().then(result => {
-					this.has_use = result.has_use;
-					this.none_use = result.none_use;
-					this.couponData = this.none_use;
+			getAllCouponFunc(){
+				getAllCoupon().then(result => {
+					this.allCoupon = result;
 				})
 			},
-			changeTitle(index){
-				this.titleIndex = index;
-				if(index == 1){
-					this.couponData = this.none_use;
-				}else{
-					this.couponData = this.has_use;
-				}
-			},
-			lijiUseFunc(){
-				uni.navigateTo({
-					url:"../../search/search"
-				})
-			}
 		}
 	}
 </script>
@@ -91,20 +61,6 @@
 	font-size: 30rpx;
 	color: #282828;
 	font-weight: 600;
-	display: flex;
-}
-.coupon_title view{
-	text-align: center;
-	width: 50%;
-	height: 88rpx;
-}
-.coupon_title .active{
-	border-bottom: 2rpx solid #ff448f;
-	height: 80rpx;
-	display: inline-block;
-}
-.coupon_title .none_use{
-	color: #999;
 }
 .coupon-list{
     padding: 30rpx;
@@ -145,12 +101,11 @@
     background-color: #fff;
 		display: flex;
 		flex-direction: column;
-		justify-content: flex-end;
+		justify-content: space-around;
 }
 .coupon-list .item .right .tt1{
 	    color: #282828;
 			font-size: 28rpx;
-			margin-bottom: 32rpx;
 }
 .coupon-list .item .right .time{
 	font-size: 20rpx;

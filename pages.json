@@ -148,11 +148,29 @@
             "path" : "pages/orders/detail",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "订单详情",
                 "enablePullDownRefresh": false
             }
             
         }
+        ,{
+            "path" : "pages/product/coupon",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "领券中心",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+				{
+				    "path" : "pages/my/user_coupon/index",
+				    "style" :                                                                                    
+				    {
+				        "navigationBarTitleText": "我的优惠券",
+				        "enablePullDownRefresh": false
+				    }
+				    
+				}
     ],
 
 	"tabBar": {

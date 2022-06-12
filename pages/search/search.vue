@@ -3,7 +3,7 @@
 		<view class="main_search">
 			<view class="put">
 				<uni-search-bar radius="16" placeholder="请输入搜索名称" v-model="searchValue" :value="searchValue" clearButton="none" cancelButton="none"
-			@confirm="sureSearch" @blur="sureSearch"/>
+			@confirm="" @blur="sureSearch"/>
 			</view>
 			<view class="s_btn">
 				确定
@@ -53,17 +53,24 @@
 	  
 	  <view class="dixian">---- 人家也是有底线哦 ----</view>
 	  
+		<!-- 弹窗end -->
+		<fullLoading :loadModal="loadModal"></fullLoading>
 	</view>
 </template>
 
 <script>
-	import {getRandProduct} from "../api/productApi.js";
+	import fullLoading from "../../components/loading/fullLoading.vue";
+	import {getRandProduct,getSearchProduct} from "../api/productApi.js";
 	export default {
+		components:{
+			fullLoading
+		},
 		data() {
 			return {
 				searchValue:'',
 				productData:[],
-				searchDataList:[]
+				searchDataList:[],
+				loadModal:false,
 			}
 		},
 		onShow() {
@@ -71,14 +78,17 @@
 			this.searchDataList = uni.getStorageSync('search_history');
 		},
 		methods: {
-			sureSearch(res){
-				this.searchValue = res.value;
+			sureSearch(){
+				console.log(this.searchValue);
 				if(this.searchValue == ''){
 					return false;
 				}
+				this.loadModal = true;
 				getSearchProduct({title:this.searchValue}).then(result=>{
+					this.loadModal = false;
 					this.productData = result;
 				}).catch(error=>{
+					this.loadModal = false;
 					this.productData = [];
 				})
 				//记录历史
@@ -89,6 +99,10 @@
 					this.productData = result;
 				})
 			},
+			clickHistory(val){
+				this.searchValue = val;
+				this.sureSearch();
+			},
 			setSearchHistory() {
 				if(this.searchValue == ''){
 					return false;
@@ -97,7 +111,7 @@
 				var searchDataList = uni.getStorageSync('search_history');
 				if(searchDataList == '' || searchDataList==null || searchDataList==undefined){
 					var history = [];
-					history.unshift(this.search);
+					history.unshift(search);
 				}else{
 					searchDataList.forEach(item=>{
 						if(item == search){
@@ -115,6 +129,11 @@
 					'search_history',history
 				);
 			},
+			getoProduct(id){
+				uni.navigateTo({
+					url:"../product/product?id="+id
+				})
+			}
 		}
 	}
 </script>
@@ -248,7 +267,6 @@
 	border-radius: 8px;
 }
 .dixian{
-	background:  #f5f5f5;
 	color: #888;
 	font-size: 24rpx;
 	text-align: center;
