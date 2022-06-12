@@ -19,3 +19,10 @@ export function messageList() {
 		method: 'GET'
 	})
 }
+export function getAbout(parame) {
+	return request({
+		url: 'about',
+		method: 'GET',
+		data: parame
+	})
+}

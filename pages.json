@@ -171,6 +171,33 @@
 				    }
 				    
 				}
+        ,{
+            "path" : "pages/product/new",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "新人福利",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/my/seting/about",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "关于",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/my/seting/connect",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "联系我们",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 
 	"tabBar": {

@@ -70,9 +70,9 @@
 							 	
 							 </view>
 							 
-						   <view class="no_data"  v-if="categoryProducts.length ==0" style="justify-content: center;display: flex;">
-						     <image src="../../static/no_data.png" style="margin-top: 160rpx;width: 240rpx;height: 240rpx;"></image>
-						   </view>
+								 <view class="no_data"  v-if="categoryProducts.length ==0" style="justify-content: center;display: flex;">
+									 <image src="../../static/no_data.png" style="margin-top: 160rpx;width: 240rpx;height: 240rpx;"></image>
+								 </view>
 							 
 						 </view> 
 		      </view>

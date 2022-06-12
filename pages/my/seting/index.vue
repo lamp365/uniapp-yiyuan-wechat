@@ -1,26 +1,26 @@
 <template>
 	<view>
 		<view class="user-setting">
-			<view class="item" @click="gotoPage('/pages/my/about/contect')">
+			<view class="item" @click="gotoPage('/pages/my/seting/connect')">
 				<view>联系我们</view>
 				<view><text class="iconfont icon-gengduo"></text></view>
 			</view>
 			
 			<view style="height: 16rpx;"></view>
-			<view class="item"  @click="gotoPage('/pages/my/about/us')">
+			<view class="item"  @click="gotoPage('/pages/my/seting/about?id=1')">
 				<view>关于我们</view>
 				<view><text class="iconfont icon-gengduo"></text></view>
 			</view>
 			
-			<view class="item" @click="gotoPage('/pages/my/about/yinsi')">
+			<view class="item" @click="gotoPage('/pages/my/seting/about?id=2')">
 				<view>关于隐私</view>
 				<view><text class="iconfont icon-gengduo"></text></view>
 			</view>
-			<view class="item" @click="gotoPage('/pages/my/about/xieyi')">
+			<view class="item" @click="gotoPage('/pages/my/seting/about?id=3')">
 				<view>注册协议</view>
 				<view><text class="iconfont icon-gengduo"></text></view>
 			</view>
-			<view class="item" @click="gotoPage('/pages/my/about/clean')">
+			<view class="item" @click="cleanData()">
 				<view>清除缓存</view>
 				<view><text class="iconfont icon-gengduo"></text></view>
 			</view>
@@ -39,6 +39,15 @@
 			gotoPage(url){
 				uni.navigateTo({
 					url:url
+				})
+			},
+			cleanData(){
+				uni.removeStorageSync('openid');
+				uni.removeStorageSync('userinfo');
+				uni.removeStorageSync('sysInfo');
+				uni.removeStorageSync('has_h5_auth_key');
+				uni.navigateTo({
+					url:"../../index/index"
 				})
 			}
 		}

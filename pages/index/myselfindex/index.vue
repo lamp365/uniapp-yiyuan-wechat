@@ -29,7 +29,7 @@
 			<view class="main">
 				<view class="tit_line">
 					<view class="tit">新人福利专区</view>
-					<view class="more">更多</view>
+					<view class="more" @click="gotoNew()">更多</view>
 				</view>
 				<view class="good_list">
 					 <scroll-view scroll-x  scroll-left="scrollleft" class="box_scroll_view">
@@ -317,6 +317,11 @@ export default {
 				url:"/pages/product/coupon"
 			})
 		},
+		gotoNew(){
+			uni.navigateTo({
+				url:"/pages/product/new"
+			})
+		}
 	}
 }
 </script>
