@@ -198,6 +198,69 @@
             }
             
         }
+        ,{
+            "path" : "pages/article/article",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "资讯列表",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/article/gonggao",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "公告列表",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/article/detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "内容",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/active/active",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "活动列表",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/active/kanjia",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "砍价列表",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/active/tuan",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "拼团列表",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/active/yaoqing",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "邀请有奖",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 
 	"tabBar": {

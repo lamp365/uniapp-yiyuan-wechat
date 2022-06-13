@@ -49,25 +49,25 @@
 		<!-- nav log -->
 		<view class="nav_box">
 			<view class="nav_line">
-				<view class="nav_one_info">
+				<view class="nav_one_info" @click="gotoCate()">
 					<view class="logo">
 						<image src="../../../static/category.png"></image>
 						<view class="menu-txt">商品分类</view>
 					</view>
 				</view>
-				<view class="nav_one_info">
+				<view class="nav_one_info" @click="gotoPage('/pages/product/coupon')">
 					<view class="logo">
 						<image src="../../../static/youhuijuan.png"></image>
 						<view class="menu-txt">领优惠券</view>
 					</view>
 				</view>
-				<view class="nav_one_info">
+				<view class="nav_one_info" @click="gotoPage('/pages/article/gonggao')">
 					<view class="logo">
 						<image src="../../../static/zixun.png"></image>
 						<view class="menu-txt">资讯公告</view>
 					</view>
 				</view>
-				<view class="nav_one_info">
+				<view class="nav_one_info" @click="gotoPage('/pages/myAddress/addressList')">
 					<view class="logo">
 						<image src="../../../static/address_logo.png"></image>
 						<view class="menu-txt">地址管理</view>
@@ -75,25 +75,25 @@
 				</view>
 			</view>
 			<view class="nav_line">
-				<view class="nav_one_info">
+				<view class="nav_one_info" @click="gotoPage('/pages/active/kanjia')">
 					<view class="logo">
 						<image src="../../../static/canjia.png"></image>
 						<view class="menu-txt">砍价活动</view>
 					</view>
 				</view>
-				<view class="nav_one_info">
+				<view class="nav_one_info" @click="gotoPage('/pages/active/tuan')">
 					<view class="logo">
 						<image src="../../../static/pintuan.png"></image>
 						<view class="menu-txt">拼团活动</view>
 					</view>
 				</view>
-				<view class="nav_one_info">
+				<view class="nav_one_info" @click="gotoPage('/pages/active/yaoqing')">
 					<view class="logo">
 						<image src="../../../static/youjiang.png"></image>
 						<view class="menu-txt">邀请有奖</view>
 					</view>
 				</view>
-				<view class="nav_one_info">
+				<view class="nav_one_info"  @click="gotoPage('/pages/my/user_collection/index')">
 					<view class="logo">
 						<image src="../../../static/collect.png"></image>
 						<view class="menu-txt">我的收藏</view>
@@ -104,7 +104,7 @@
 		
 		<!-- 特别区域 -->
 		<view class="specialArea">
-			<view class="new_libao">
+			<view class="new_libao" @click="gotoPage('/pages/product/new')">
 				<view class="" style="margin-top: 12rpx;">
 					<view class="tit1">新用户首单福利专区</view>
 					<view class="tit2">全场享惊喜折扣</view>
@@ -117,10 +117,10 @@
 				</view>
 			</view>
 			<view class="huodong_list">
-				<view class="pingtuan">
+				<view class="pingtuan"  @click="gotoPage('/pages/active/tuan')">
 					<image src="../../../static/pingtuan_pic.jpg" mode="widthFix"></image>
 				</view>	
-				<view class="kangjia">
+				<view class="kangjia"  @click="gotoPage('/pages/active/kanjia')">
 					<image src="../../../static/kangjia_pic.jpg" mode="widthFix"></image>
 				</view>	
 			</view>
@@ -320,6 +320,16 @@ export default {
 		gotoNew(){
 			uni.navigateTo({
 				url:"/pages/product/new"
+			})
+		},
+		gotoPage(url){
+			uni.navigateTo({
+				url:url
+			})
+		},
+		gotoCate(){
+			uni.switchTab({
+				url:"/pages/category/category"
 			})
 		}
 	}
