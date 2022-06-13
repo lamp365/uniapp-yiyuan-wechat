@@ -19,9 +19,16 @@ export function messageList() {
 		method: 'GET'
 	})
 }
+export function getXieyi(parame) {
+	return request({
+		url: 'xieyi',
+		method: 'GET',
+		data: parame
+	})
+}
 export function getAbout(parame) {
 	return request({
-		url: 'about',
+		url: 'getShop',
 		method: 'GET',
 		data: parame
 	})

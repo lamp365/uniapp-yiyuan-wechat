@@ -8,11 +8,14 @@
 </template>
 
 <script>
-	import {getAbout} from "../../api/myApi.js";
+	import {getAbout,getXieyi} from "../../api/myApi.js";
 	export default {
 		data() {
 			return {
-				data2:'',
+				data2:{
+					title:'',
+					des:''
+				},
 				id:0
 			}
 		},
@@ -37,9 +40,17 @@
 			}
 		},
 		onShow() {
-			getAbout({id:id}).then(result=>{
-				this.data2 = result;
-			})
+			if(this.id  == 1){
+				getAbout({get_about:1}).then(result=>{
+					this.data2.des = result.about;
+					this.data2.title = '关于我们';
+				})
+			}else{
+				getXieyi({id:this.id}).then(result=>{
+					this.data2 = result;
+				})
+			}
+			
 		},
 		methods: {
 			

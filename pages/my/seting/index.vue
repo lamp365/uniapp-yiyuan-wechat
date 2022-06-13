@@ -12,11 +12,11 @@
 				<view><text class="iconfont icon-gengduo"></text></view>
 			</view>
 			
-			<view class="item" @click="gotoPage('/pages/my/seting/about?id=2')">
-				<view>关于隐私</view>
+			<view class="item" @click="gotoPage('/pages/my/seting/about?id=3')">
+				<view>隐私政策</view>
 				<view><text class="iconfont icon-gengduo"></text></view>
 			</view>
-			<view class="item" @click="gotoPage('/pages/my/seting/about?id=3')">
+			<view class="item" @click="gotoPage('/pages/my/seting/about?id=2')">
 				<view>注册协议</view>
 				<view><text class="iconfont icon-gengduo"></text></view>
 			</view>
