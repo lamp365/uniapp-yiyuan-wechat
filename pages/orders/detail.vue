@@ -24,17 +24,17 @@
 							<view :class="orderInfo.status  == 4 ? 'on':''">已完成</view>
 						</view>
 						<view class='progress acea-row row-between-wrapper'>
-							<view class='iconfont icon-yuandianxiao' :class='orderInfo.status == 1  ? "font-num":""'></view>
+							<view  :class='orderInfo.status == 1  ? "yuandianxiao_act":"yuandianxiao"'></view>
 							<view class='line' :class='orderInfo.status == 1  ? "bg-color":""'></view>
 							
-							<view class='iconfont icon-yuandianxiao' :class='orderInfo.status == 2  ? "font-num":""'></view>
+							<view  :class='orderInfo.status == 2  ? "yuandianxiao_act":"yuandianxiao"'></view>
 							<view class='line' :class='orderInfo.status == 2  ? "bg-color":""'></view>
 							
-							<view class='iconfont icon-yuandianxiao' :class='orderInfo.status == 3  ? "font-num":""'></view>
+							<view  :class='orderInfo.status == 3  ? "yuandianxiao_act":"yuandianxiao"'></view>
 							<view class='line' :class='orderInfo.status == 3  ? "bg-color":""'></view>
 							
-							<view class='iconfont icon-yuandianxiao' :class='orderInfo.status == 4  ? "font-num":""'></view>
-							<view class='line' :class='orderInfo.status == 4 ? "bg-color":""'></view>
+							<view  :class='orderInfo.status == 4  ? "yuandianxiao_act":"yuandianxiao"'></view>
+						
 							
 						</view>
 					</view>
@@ -92,7 +92,7 @@
 										<view class="specName">{{item.spec_name}} x {{item.buy_num}} x {{item.money}}</view>
 										<view class="price">￥{{parseFloat(item.money*item.buy_num).toFixed(2)}}</view>
 								</view>
-								<view class="action_btn" v-if="orderInfo.status>1 && orderInfo.after == 0" >
+								<view class="action_btn" v-if="orderInfo.status>1 && orderInfo.after == 0" @click="gotoApplyed(item.id)">
 									申请退款
 								</view>
 								
@@ -253,6 +253,11 @@
 				uni.setStorageSync('jiesuanFromKey',"order|"+this.order_id);
 				uni.navigateTo({
 					url:"../jiesuan/jiesuan"
+				})
+			},
+			gotoApplyed(id){
+				uni.navigateTo({
+					url:"./applyed?id="+id
 				})
 			}
 		}
@@ -461,10 +466,6 @@
 .bg-color{
 	background: #e93323 !important;
 }
-	.order-details .nav .progress {
-		padding: 0 65rpx;
-		margin-top: 10rpx;
-	}
 
 	.order-details .nav .progress .line {
 		width: 100rpx;
@@ -943,6 +944,7 @@
 		margin-top: 10rpx;
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 }
 
 	.order-details .nav .progress .line {
@@ -1320,4 +1322,28 @@
 	padding: 2rpx 22rpx;
 	margin-left: 10rpx;
 }
+.yuandianxiao {
+    font-size: 20rpx;
+    color:#999999;
+  }
+.yuandianxiao:before{
+		content:'';
+		display: block;
+		width:10rpx;
+		height:10rpx;
+		background:#999999;
+		border-radius: 50%;
+	}
+	.yuandianxiao_act {
+	    font-size: 20rpx;
+	    color:#e93323;
+	  }
+	.yuandianxiao_act:before{
+			content:'';
+			display: block;
+			width:10rpx;
+			height:10rpx;
+			background:#e93323;
+			border-radius: 50%;
+		}
 </style>

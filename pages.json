@@ -261,6 +261,24 @@
 		    }
 		    
 		}
+        ,{
+            "path" : "pages/orders/refund",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "售后订单",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/orders/applyed",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "申请退款",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 
 	"tabBar": {

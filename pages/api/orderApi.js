@@ -41,3 +41,17 @@ export function oneMorePay(params) {
 		data: params
 	})
 }
+export function getApplyedOrder(params) {
+	return request({
+		url: 'getApplyedOrder',
+		method: 'GET',
+		data: params
+	})
+}
+export function applyedAfter(params) {
+	return request({
+		url: 'applyedAfter',
+		method: 'GET',
+		data: params
+	})
+}

@@ -13,7 +13,7 @@
 		<view class="erweima_box">
 			<view class="erweima_main">
 				<image :src="sysInfo.erweima" mode="widthFix"></image>
-				<view class="kefu">指导微信</view>
+				<view class="kefu">客服微信</view>
 			</view>
 		</view>
 		

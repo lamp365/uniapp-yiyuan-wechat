@@ -63,8 +63,8 @@
 				})
 			},
 			gotoMy(){
-				uni.switchTab({
-					url:"../../my/my"
+				uni.navigateBack({
+					delta:1
 				})
 			},
 			gotoProduct(id){
