@@ -66,8 +66,9 @@
 			},
 			goOrder: function(id,index) {
 				if(this.addressList[index].is_default == 1){
-					uni.navigateTo({
-						url:"../jiesuan/jiesuan"
+					console.log(22222);
+					uni.navigateBack({
+						delta:1
 					})
 				}else{
 					addressDefault({id:id}).then(resMsg => {
@@ -92,9 +93,13 @@
 				});	
 			},
 			setDefaultFunc(id,index){
+				console.log(222);
 				let address = this.addressList[index];
 				if(address.is_default == 1){
-					return false;
+					uni.navigateBack({
+						delta:1
+					});
+					return '';
 				}
 				addressDefault({id:id}).then(res => {
 					for(var i=0;i<this.addressList.length;i++){

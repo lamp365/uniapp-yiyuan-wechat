@@ -439,6 +439,6 @@
 	.loadingicon{color: #666;text-align: center;margin-top: 12rpx;}
 	.c_loading .iconfont{font-size: 50rpx;}
 	.c_loadTitle{font-size: 24rpx;}
-	.goback{position: fixed;right: 40rpx;bottom: 180rpx;background: #fff;border-radius: 28rpx;}
+	.goback{position: fixed;right: 40rpx;bottom: 180rpx;background: #fff;border-radius: 48rpx;}
 	.goback .icon-back{color: #1db0fc;font-size: 80rpx;}
 </style>

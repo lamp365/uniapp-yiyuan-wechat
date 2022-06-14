@@ -28,24 +28,6 @@
             
         }
         ,{
-            "path" : "pages/my/about",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "关于我们",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/my/message",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "消息中心",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
             "path" : "pages/yeji/yeji",
             "style" :                                                                                    
             {
@@ -260,7 +242,25 @@
                 "enablePullDownRefresh": false
             }
             
-        }
+        },
+		{
+		    "path" : "pages/my/user_level/index",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "用户等级",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
+		    "path" : "pages/my/user_collection/index",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "我的收藏",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
     ],
 
 	"tabBar": {

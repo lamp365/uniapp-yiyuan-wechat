@@ -152,7 +152,7 @@
 									<image src="/static/user_tuiguang.png"></image>
 									<text>我的推广</text>
 								</view>
-								<view class="item" @click="goMenuPage('/pages/my/user_collect/index')">
+								<view class="item" @click="goMenuPage('/pages/my/user_collection/index')">
 									<image src="/static/user_collect.png"></image>
 									<text>我的收藏</text>
 								</view>

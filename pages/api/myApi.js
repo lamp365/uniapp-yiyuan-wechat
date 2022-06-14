@@ -19,6 +19,12 @@ export function messageList() {
 		method: 'GET'
 	})
 }
+export function getCollectList() {
+	return request({
+		url: 'collectList',
+		method: 'GET'
+	})
+}
 export function getXieyi(parame) {
 	return request({
 		url: 'xieyi',

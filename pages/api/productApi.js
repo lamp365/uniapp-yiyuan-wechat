@@ -27,3 +27,9 @@ export function getSearchProduct(params) {
 		data:params
 	})
 }
+export function getTuijianProduct() {
+	return request({
+		url: 'product/tuijian',
+		method: 'GET'
+	})
+}
