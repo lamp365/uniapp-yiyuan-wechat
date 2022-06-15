@@ -12,20 +12,35 @@
 		
 		<view class="list">
 			<view class="item">
-				<view>退款件数</view><view>{{order.buy_num}}</view>
+				<view>商品总额</view><view class="tip">{{order.total_money}}</view>
 			</view>
 			<view class="item">
-				<view>退款类型</view><view>仅退款</view>
+				<view>退款件数</view><view class="tip">{{order.buy_num}}</view>
+			</view>
+			
+			<view class="item" v-if="order.coupon_money>0">
+				<view>扣减优惠</view><view class="tip">-{{order.coupon_money}}</view>
 			</view>
 			<view class="item">
-				<view>退款原因</view><view>{{after == 1 ? '仅退款':'退货退款'}}</view>
+				<view>退款金额</view><view class="tip2">{{order.refund_money}}</view>
+			</view>
+			<view class="item">
+				<view>退款类型</view><view class="tip">{{after == 1 ? '仅退款':'退货退款'}}</view>
+			</view>
+			<view class="pingzheng">
+				<view class="top0">
+					<view>退款原因</view>
+					<view class="right">
+						<textarea class="input_area" placeholder-style="color:#bbb" placeholder="请输入退款原因" v-model="reason"/>
+					</view>
+				</view>
 			</view>
 			<view class="pingzheng">
 				<view class="top">
 					<view>上传凭证</view><view class="tip">( 最多上传5张 )</view>
 				</view>
 				<view class="up_pic_box">
-					<view v-for="(item,index) in imgList">
+					<view v-for="(item,index) in imgList" :key="index">
 						<view class="cancle" @click="bindDelete(index)">X</view>
 						<image :src="item" mode=""></image>
 					</view>
@@ -34,7 +49,7 @@
 			</view>
 		</view>
 		
-		<view class="sure_btn">申请退款</view>
+		<view class="sure_btn" @click="sureAfter()">申请退款</view>
 	</view>
 </template>
 
@@ -49,7 +64,8 @@
 				after:1,
 				curTotal:0,
 				imgList:[],
-				imgUrl:[]
+				imgUrl:[],
+				reason:''
 			}
 		},
 		onLoad(option) {
@@ -90,43 +106,57 @@
 				
 				        success: function (res) {
 				
-				            console.log('res:', res)
+				            // console.log('res:', res)
 				
 				            _self.curTotal++;
 				
 				            _self.imgList.push(res.tempFilePaths[0]);
 				
 				            const tempFilePaths = res.tempFilePaths[0];
-				
-										//加载中
+							console.log(tempFilePaths);
+							//加载中
 				            // 图片上传
 				
 				            const uploadTask = uni.uploadFile({
 				
-				                url : host_url+'admin/UpFiles/upload', // post请求地址
+				                url : host_url+'admin/up_files/upload', // post请求地址
 				
 				                filePath: tempFilePaths,
+								fileType: 'image',
 				
 				                name: 'file',  // 待确认
 				
 				                header: {
 				
-				                    'Content-Type': 'multipart/form-data',
-														'token': uni.getStorageSync('token'),
-														'shopToken': Config.shopToken 
+				                    // 'Content-Type': 'multipart/form-data',//不能开 开启后后台接收不到
+									'token': uni.getStorageSync('token'),
+									'shopToken': Config.shopToken 
 				
 				                },
 				
 				                success: function (uploadFileRes) {
 				
-				                    console.log('Success:', uploadFileRes);
-				
-				                    // _self.imgUrl.push(JSON.parse(uploadFileRes.data).data.fileId);
-				
+				                    // console.log('Success:', uploadFileRes);
+									var result = JSON.parse(uploadFileRes.data)
+									console.log(result);
+									if(result.code != 200){
+										uni.showToast({
+											title:result.msg,
+											duration:1500,
+											icon:"error"
+										})
+									}else{
+										  _self.imgUrl.push(result.image);
+									}
+				                  
 				                },
 				
 				                fail: function (uploadFileFail) {
-				
+									uni.showToast({
+										title:"异常错误",
+										duration:1500,
+										icon:"error"
+									})
 				                    console.log('Error:', uploadFileFail.data);
 				
 				                },
@@ -142,22 +172,52 @@
 				        },
 				
 				        error : function(e){
-				
-				            console.log(e);
-				
+							uni.showToast({
+								title:"异常错误啦",
+								duration:1500,
+								icon:"error"
+							})
+							console.log(e);
+								
 				        }
 				
 				   });
 			},
 			
 			 bindDelete(index){
-			    var temp = this.imgList;
-					 var temp2 = this.imgUrl;
-			    temp.splice(index,1);
-					 temp2.splice(index,1);
-			    this.imgList = temp;
-					this.imgUrl = temp2;
+				var temp = this.imgList;
+				 var temp2 = this.imgUrl;
+				temp.splice(index,1);
+				 temp2.splice(index,1);
+				this.imgList = temp;
+				this.imgUrl = temp2;
 			  },
+			  sureAfter(){
+				  var imgList = this.imgList;
+				  var pengzheng = '';
+				  if(imgList.length > 0){
+					  pengzheng = imgList.join(",");
+				  }
+				  var params = {
+					reason:this.reason,
+					refund_money:this.order.refund_money,
+					koujian:this.order.coupon_money,
+					after:this.after,
+					pengzheng:pengzheng
+				  };
+				  applyedOrder(params).then(result=>{
+					  uni.showToast({
+					  	title:"已提交申请",
+					  	duration:1500,
+					  	icon:"success"
+					  })
+					  setTimeout(function(){
+						uni.navigateBack({
+							delta:1
+						})
+					  },1500)
+				  })
+			  }
 		}
 	}
 </script>
@@ -234,8 +294,19 @@ page{
 	justify-content: space-between;
 	align-items: center;
 }
+.pingzheng .top0{
+	display: flex;
+	justify-content: space-between;
+}
+.pingzheng .top0 .right{
+	width: 65%;
+	text-align: right;
+}
 .tip{
 	color: #bbb;
+}
+.tip2{
+	color: #e93323;
 }
 .up_pic_box{
 	width: 100%;
@@ -292,5 +363,11 @@ page{
 	    line-height: 86rpx;
 	    margin-top: 42rpx;
 			background: #e93323;
+}
+.input_area{
+	width: 100%;
+	height: 160rpx;
+	color: #646464;
+	font-size: 30rpx;
 }
 </style>

@@ -51,7 +51,7 @@ export function getApplyedOrder(params) {
 export function applyedAfter(params) {
 	return request({
 		url: 'applyedAfter',
-		method: 'GET',
+		method: 'POST',
 		data: params
 	})
 }
