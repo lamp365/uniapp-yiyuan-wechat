@@ -24,16 +24,16 @@
 							<view :class="orderInfo.status  == 4 ? 'on':''">已完成</view>
 						</view>
 						<view class='progress acea-row row-between-wrapper'>
-							<view  :class='orderInfo.status == 1  ? "yuandianxiao_act":"yuandianxiao"'></view>
-							<view class='line' :class='orderInfo.status == 1  ? "bg-color":""'></view>
+							<view  :class='orderInfo.status >= 1  ? "yuandianxiao_act":"yuandianxiao"'></view>
+							<view class='line' :class='orderInfo.status >= 2  ? "bg-color":""'></view>
 							
-							<view  :class='orderInfo.status == 2  ? "yuandianxiao_act":"yuandianxiao"'></view>
-							<view class='line' :class='orderInfo.status == 2  ? "bg-color":""'></view>
+							<view  :class='orderInfo.status >= 2  ? "yuandianxiao_act":"yuandianxiao"'></view>
+							<view class='line' :class='orderInfo.status >= 3  ? "bg-color":""'></view>
 							
-							<view  :class='orderInfo.status == 3  ? "yuandianxiao_act":"yuandianxiao"'></view>
-							<view class='line' :class='orderInfo.status == 3  ? "bg-color":""'></view>
+							<view  :class='orderInfo.status >= 3  ? "yuandianxiao_act":"yuandianxiao"'></view>
+							<view class='line' :class='orderInfo.status >= 4  ? "bg-color":""'></view>
 							
-							<view  :class='orderInfo.status == 4  ? "yuandianxiao_act":"yuandianxiao"'></view>
+							<view  :class='orderInfo.status >= 4  ? "yuandianxiao_act":"yuandianxiao"'></view>
 						
 							
 						</view>

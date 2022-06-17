@@ -52,7 +52,7 @@
 						购买商品可获得对应不等的积分
 					</view>
 				</view>
-				<view class="right">
+				<view class="right" @click="gotoBuy()">
 					去购买
 				</view>
 			</view>
@@ -132,6 +132,11 @@
 					url:"../../my/my"
 				})
 			},
+			gotoBuy(){
+				uni.navigateTo({
+					url:"../../search/search"
+				})
+			}
 		}
 	}
 </script>
