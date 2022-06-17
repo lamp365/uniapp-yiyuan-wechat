@@ -55,3 +55,17 @@ export function applyedAfter(params) {
 		data: params
 	})
 }
+export function cancleAfter(params) {
+	return request({
+		url: 'cancleAfter',
+		method: 'GET',
+		data: params
+	})
+}
+export function getRefundList(params) {
+	return request({
+		url: 'refundList',
+		method: 'GET',
+		data: params
+	})
+}

@@ -18,7 +18,7 @@
 						<view class='navCon acea-row row-between-wrapper'>
 							<view :class="orderInfo.status == 1 ? 'on':''">待付款</view>
 							<view :class="orderInfo.status == 2 ? 'on':''">
-								待发货
+								待配送
 							</view>
 							<view :class="orderInfo.status == 3 ? 'on':''" >待收货</view>
 							<view :class="orderInfo.status  == 4 ? 'on':''">已完成</view>
@@ -42,10 +42,10 @@
 				</view>
 				<view v-else>
 					<!-- 拒绝退款 -->
-					<view class="refund" v-if="orderInfo.after != 0">
+					<view class="refund">
 						<view class="title">
-							
-							订单已发起退款
+							<text>订单申请售后：</text>
+						{{orderInfo.after_str}}
 						</view>
 						<view class="con">退款原因：---</view>
 					</view>
@@ -95,7 +95,9 @@
 								<view class="action_btn" v-if="orderInfo.status>1 && orderInfo.after == 0" @click="gotoApplyed(item.id)">
 									申请退款
 								</view>
-								
+								<view class="action_btn" v-if="orderInfo.after>0" @click="cancleAfterFunc(item.id)">
+									取消退款
+								</view>
 							</view>
 							
 						</view>
@@ -179,17 +181,21 @@
 	
 					<view class="qs-btn" v-if="orderInfo.status == 1" @click.stop="deleteOrderFunc()">取消订单</view>
 					<view class='bnt bg-color' v-if="orderInfo.status==1" @click='goPay(orderInfo.id)'>立即付款</view>
-					<view class='bnt cancel'	v-if="[2,3].includes(orderInfo.status)">
+					
+					
+					<view class='bnt cancel'	v-if="[2,3].includes(orderInfo.status) && orderInfo.after==0" @click="gotoApplyed(apply_order_id)">
 						申请退款
 					</view>
-					
+					<view class='bnt cancel'	v-if="[2,3].includes(orderInfo.status) && (orderInfo.after==1 || orderInfo.after==2)"  @click="gotoApplyed(refund_order_id)">
+						查看售后
+					</view>
 	
 	
 					<view class='bnt bg-color' v-if="orderInfo.type==2" @click='goJoinPink'>查看拼团</view>
 					<view class='bnt bg-color' v-if="orderInfo.status==3" @click='confirmOrder()'>确认收货</view>
 		
 					<view class='bnt bg-color refundBnt'
-						v-if="[1,2].includes(orderInfo.after)" @click='cancelRefundOrder'>取消申请
+						v-if="[1,2].includes(orderInfo.after) && orderProduct.length==1" @click='cancleAfterFunc(refund_order_id)'>取消退款
 					</view>
 				</view>
 			</view>
@@ -198,7 +204,7 @@
 </template>
 
 <script>
- import {orderDetail,deleteOrder} from "../api/orderApi.js";
+ import {orderDetail,deleteOrder,cancleAfter} from "../api/orderApi.js";
 	export default {
 		data() {
 			return {
@@ -206,6 +212,8 @@
 				orderInfo: {},
 				orderProduct:[],
 				moreBtn: false,
+				refund_order_id:0,
+				apply_order_id:0,
 			}
 		},
 		onLoad(option) {
@@ -228,6 +236,15 @@
 				orderDetail({id:this.order_id}).then(result=>{
 					this.orderInfo = result;
 					this.orderProduct = result.product;
+					for(var i=0;i<this.orderProduct.length;i++){
+						var temp = this.orderProduct[i];
+						if(temp.after != 0){
+							this.refund_order_id = temp.id;
+						}
+						if(temp.after == 0){
+							this.apply_order_id = temp.id;
+						}
+					}
 				})
 			},
 			goBack(){
@@ -258,6 +275,23 @@
 			gotoApplyed(id){
 				uni.navigateTo({
 					url:"./applyed?id="+id
+				})
+			},
+			cancleAfterFunc(id){
+				var params = {
+					id:id
+				};
+				cancleAfter(params).then(result=>{
+					uni.showToast({
+						title:"已取消申请",
+						duration:1500,
+						icon:"success"
+					})
+					setTimeout(function(){
+						uni.navigateTo({
+							url:"./orders"
+						})
+					},1500)
 				})
 			}
 		}

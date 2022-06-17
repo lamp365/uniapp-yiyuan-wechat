@@ -12,24 +12,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="nav acea-row row-around">
-					<view class="item" :class="after == 0 ? 'on' : ''" @click="statusClick(1)">
-						<view>全部</view>
-						<view class="num">{{ orderData.all_after || 0 }}</view>
-					</view>
-					<view class="item" :class="(after == 1 || after ==2) ? 'on' : ''" @click="statusClick(2)">
-						<view>申请中</view>
-						<view class="num">{{ orderData.applyed || 0 }}</view>
-					</view>
-					<view class="item" :class="after == -1 ? 'on' : ''" @click="statusClick(3)">
-						<view>已退款</view>
-						<view class="num ">{{ orderData.finish || 0 }}</view>
-					</view>
-					<view class="item" :class="after == -2 ? 'on' : ''" @click="statusClick(3)">
-						<view>已拒绝</view>
-						<view class="num ">{{ orderData.refuse || 0 }}</view>
-					</view>
-				</view>
+				
 				<view class="list" v-if="orderList.length>0">
 					<view class="item" v-for="(item, index) in orderList" :key="index">
 						<view>
@@ -40,33 +23,31 @@
 									<view>{{ item.create_time}}</view>
 								</view>
 							
-								<view v-if="item.status == 1" class="font-color">待付款</view>
-								<view v-else-if="item.status == 2" class="font-color">待发货
-									<text v-if="item.after">退款中</text>
+							
+								<view class="font-color">
+									<text>退款单</text>
 								</view>
-								<view v-else-if="item.status == 3" class="font-color">待收货</view>
-				
-								<view v-else-if="item.status == 4" class="font-color">已完成</view>	
+							
 							</view>
-							<view class="item-info acea-row row-between row-top" v-for="(items, index2) in item.productInfo" :key="index2" @click="goProductDetail(items.product_id)">
+							<view class="item-info acea-row row-between row-top"  @click="goProductDetail(item.product_id)">
 								<view class="pictrue">
-									<image :src="items.snap_img"></image>
+									<image :src="item.snap_img"></image>
 								</view>
 								<view class="text  row-between">
 									<view class="name line2">
 										<view class="">
-											{{ items.snap_name }}
+											{{ item.snap_name }}
 										</view>	
 										<view class="show_spec">
-											规格：{{ items.spec_name }}
+											规格：{{ item.spec_name }}
 										</view>	
 									</view>
 									<view class="money">
 							
-										<view>￥{{ items.money }}</view>
-										<view>x{{ items.buy_num }}</view>
-										<view v-if="items.after != 0" class="return">
-											退款单
+										<view>￥{{ item.money }}</view>
+										<view>x{{ item.buy_num }}</view>
+										<view class="return">
+											{{item.after_str}}
 										</view>
 									</view>
 								</view>
@@ -77,15 +58,11 @@
 							</view>
 						</view>
 						<view class="bottom acea-row row-right row-middle">
-							<view class="bnt cancelBnt" v-if="item.status == 1 "
-								@click="cancelOrder(item.id,index)">取消订单</view>
+							<view class="bnt cancelBnt" v-if="item.after > 0 "
+								@click="cancleAfterFunc(item.id,index)">取消退款</view>
+					
 								
-							<view class="bnt bg-color" v-if="item.status == 1"
-								@click="goPay(item.id)">立即付款</view>
-						
-			
-								
-							<view class="bnt bg-color" @click="goOrderDetails(item.id)">查看详情</view>
+							<view class="bnt bg-color" @click="goApplyDetail(item.id)">查看详情</view>
 						</view>
 					</view>
 				</view>
@@ -112,7 +89,7 @@
 </template>
 
 <script>
-	import {getOrderList,deleteOrder,oneMorePay} from "../api/orderApi.js";
+	import {getRefundList,cancleAfter} from "../api/orderApi.js";
 	import {orderState} from "../api/myApi.js";
 	export default {
 		data() {
@@ -139,9 +116,9 @@
 				this.getOrderData();
 		},
 		methods: {
-			goOrderDetail(id){
+			goApplyDetail(id){
 				uni.navigateTo({
-					url:"../orders/detail?id="+id
+					url:"../orders/applyed?id="+id
 				})
 			},
 			goProductDetail(id){
@@ -157,7 +134,7 @@
 				}
 				this.loading = true;
 				this.loadTitle = "加载中";
-				getOrderList(params).then(result=>{
+				getRefundList(params).then(result=>{
 					this.loading = false;
 					this.loadTitle = this.tempTitle;
 					
@@ -209,6 +186,21 @@
 				uni.navigateTo({
 					url:"../jiesuan/jiesuan"
 				})
+			},
+			cancleAfterFunc(id,index){
+				var params = {
+					id:id
+				};
+				cancleAfter(params).then(result=>{
+					uni.showToast({
+						title:"已取消申请",
+						duration:1500,
+						icon:"success"
+					})
+					var orderList = this.orderList;
+					orderList.splice(index,1);
+					this.orderList = orderList;
+				})
 			}
 		},
 		onReachBottom(){
@@ -227,7 +219,7 @@
 		background: #f8f8f8;
 	}
   .my-order .header {
-  		height: 260rpx;
+  		height: 200rpx;
   		padding: 0 30rpx;
 			background: #1db0fc;
   	}

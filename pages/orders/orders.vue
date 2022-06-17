@@ -1,6 +1,9 @@
 <template>
 		<view>
 			<view class="my-order">
+				
+				<view class="main_top">
+					
 				<view class="header bg-color">
 					<view class="picTxt acea-row row-between-wrapper">
 						<view class="text">
@@ -18,7 +21,7 @@
 						<view class="num">{{ orderData.wait_pay || 0 }}</view>
 					</view>
 					<view class="item" :class="orderStatus == 2 ? 'on' : ''" @click="statusClick(2)">
-						<view>待发货</view>
+						<view>待配送</view>
 						<view class="num">{{ orderData.wait_send || 0 }}</view>
 					</view>
 					<view class="item" :class="orderStatus == 3 ? 'on' : ''" @click="statusClick(3)">
@@ -31,6 +34,12 @@
 						<view class="num">{{ orderData.finish || 0 }}</view>
 					</view>
 				</view>
+				
+				</view>
+				
+				
+				<view style="height: 336rpx;"></view>
+				
 				<view class="list" v-if="orderList.length>0">
 					<view class="item" v-for="(item, index) in orderList" :key="index">
 						<view>
@@ -41,13 +50,8 @@
 									<view>{{ item.create_time}}</view>
 								</view>
 							
-								<view v-if="item.status == 1" class="font-color">待付款</view>
-								<view v-else-if="item.status == 2" class="font-color">待发货
-									<text v-if="item.after">退款中</text>
-								</view>
-								<view v-else-if="item.status == 3" class="font-color">待收货</view>
-				
-								<view v-else-if="item.status == 4" class="font-color">已完成</view>	
+								<view  class="font-color">{{item.status_str}}</view>
+						
 							</view>
 							<view class="item-info acea-row row-between row-top" v-for="(items, index2) in item.productInfo" :key="index2" @click="goProductDetail(items.product_id)">
 								<view class="pictrue">
@@ -67,7 +71,7 @@
 										<view>￥{{ items.money }}</view>
 										<view>x{{ items.buy_num }}</view>
 										<view v-if="items.after != 0" class="return">
-											退款单
+											{{items.after_str}}
 										</view>
 									</view>
 								</view>
@@ -227,10 +231,18 @@
 	page{
 		background: #f8f8f8;
 	}
+	.main_top{
+		position: fixed;
+		top:0;
+		left: 0;
+		width: 100%;
+		z-index: 666;
+	}
   .my-order .header {
   		height: 260rpx;
   		padding: 0 30rpx;
 			background: #1db0fc;
+
   	}
   
   	.my-order .header .picTxt {

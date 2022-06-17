@@ -223,7 +223,9 @@
 				})
 			},
 			goOrderAfter(){
-				
+				uni.navigateTo({
+					url:"../orders/refund"
+				})
 			},
 			goMenuPage(url){
 				uni.navigateTo({

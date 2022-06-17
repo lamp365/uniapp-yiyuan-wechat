@@ -49,12 +49,13 @@
 			</view>
 		</view>
 		
-		<view class="sure_btn" @click="sureAfter()">申请退款</view>
+		<view class="sure_btn" @click="sureAfter()" v-if="order.after == 0">申请退款</view>
+			<view class="sure_btn" @click="cancleAfterFunc()" v-if="order.after >= 1">取消退款</view>
 	</view>
 </template>
 
 <script>
-	 import {getApplyedOrder,applyedOrder} from "../api/orderApi.js";
+	 import {getApplyedOrder,applyedAfter,cancleAfter} from "../api/orderApi.js";
 	 import Config from '@/pages/utils/config.js';
 	export default {
 		data() {
@@ -80,6 +81,9 @@
 			
 			getApplyedOrder({id:this.id}).then(result=>{
 				this.order = result;
+				this.imgList = result.pengzheng;
+				this.reason = result.reason;
+				
 				if(result.status == 2){
 					this.after = 1;
 				}else if(result.status == 3){
@@ -106,12 +110,13 @@
 				
 				        success: function (res) {
 				
-				            // console.log('res:', res)
+				            console.log('res:', res.tempFilePaths[0])
 				
 				            _self.curTotal++;
-				
-				            _self.imgList.push(res.tempFilePaths[0]);
-				
+											var imgList = [];
+				            imgList.push(res.tempFilePaths[0]);
+										_self.imgList = imgList;
+										
 				            const tempFilePaths = res.tempFilePaths[0];
 							console.log(tempFilePaths);
 							//加载中
@@ -119,7 +124,7 @@
 				
 				            const uploadTask = uni.uploadFile({
 				
-				                url : host_url+'admin/up_files/upload', // post请求地址
+				                url : host_url+'admin/Upfiles/upload', // post请求地址
 				
 				                filePath: tempFilePaths,
 								fileType: 'image',
@@ -137,17 +142,17 @@
 				                success: function (uploadFileRes) {
 				
 				                    // console.log('Success:', uploadFileRes);
-									var result = JSON.parse(uploadFileRes.data)
-									console.log(result);
-									if(result.code != 200){
-										uni.showToast({
-											title:result.msg,
-											duration:1500,
-											icon:"error"
-										})
-									}else{
-										  _self.imgUrl.push(result.image);
-									}
+														var result = JSON.parse(uploadFileRes.data)
+														console.log(result);
+														if(result.code != 200){
+															uni.showToast({
+																title:result.msg,
+																duration:1500,
+																icon:"error"
+															})
+														}else{
+																_self.imgUrl.push(result.image);
+														}
 				                  
 				                },
 				
@@ -193,31 +198,50 @@
 				this.imgUrl = temp2;
 			  },
 			  sureAfter(){
-				  var imgList = this.imgList;
+				  var imgUrl = this.imgUrl;
 				  var pengzheng = '';
-				  if(imgList.length > 0){
-					  pengzheng = imgList.join(",");
+				  if(imgUrl.length > 0){
+					  pengzheng = imgUrl.join(",");
 				  }
 				  var params = {
-					reason:this.reason,
-					refund_money:this.order.refund_money,
-					koujian:this.order.coupon_money,
-					after:this.after,
-					pengzheng:pengzheng
+						reason:this.reason,
+						refund_money:this.order.refund_money,
+						koujian:this.order.coupon_money,
+						after:this.after,
+						pengzheng:pengzheng,
+						id:this.id
 				  };
-				  applyedOrder(params).then(result=>{
+				  applyedAfter(params).then(result=>{
 					  uni.showToast({
 					  	title:"已提交申请",
 					  	duration:1500,
 					  	icon:"success"
 					  })
 					  setTimeout(function(){
-						uni.navigateBack({
-							delta:1
+						uni.navigateTo({
+							url:"./orders"
 						})
 					  },1500)
 				  })
-			  }
+			  },
+				
+				cancleAfterFunc(){
+					var params = {
+						id:this.id
+					};
+					cancleAfter(params).then(result=>{
+						uni.showToast({
+							title:"已取消申请",
+							duration:1500,
+							icon:"success"
+						})
+						setTimeout(function(){
+							uni.navigateTo({
+								url:"./orders"
+							})
+						},1500)
+					})
+				}
 		}
 	}
 </script>
