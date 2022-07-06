@@ -61,10 +61,10 @@
 						<view class="menu-txt">领优惠券</view>
 					</view>
 				</view>
-				<view class="nav_one_info" @click="gotoPage('/pages/article/gonggao')">
+				<view class="nav_one_info" @click="gotoPage('/pages/article/article')">
 					<view class="logo">
 						<image src="../../../static/zixun.png"></image>
-						<view class="menu-txt">资讯公告</view>
+						<view class="menu-txt">资讯列表</view>
 					</view>
 				</view>
 				<view class="nav_one_info" @click="gotoPage('/pages/myAddress/addressList')">

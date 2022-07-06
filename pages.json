@@ -190,10 +190,10 @@
             
         }
         ,{
-            "path" : "pages/article/gonggao",
+            "path" : "pages/article/help",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "公告列表",
+                "navigationBarTitleText": "帮助中心",
                 "enablePullDownRefresh": false
             }
             
