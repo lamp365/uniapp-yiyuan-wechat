@@ -2,9 +2,7 @@
 	<view>
 		<view class="header">
 			<view class="serch-wrapper">
-				<view class="logo">{{sysInfo.shop_name}} 
-					<view class="tit_info">优质精选好物</view>
-				</view>
+		
 				<view class="input" @click="gotoSearch()">
 					<image src="../../../static/search.png"></image>
 					请输入搜索名称
@@ -52,7 +50,7 @@
 				<view class="nav_one_info" @click="gotoCate()">
 					<view class="logo">
 						<image src="../../../static/category.png"></image>
-						<view class="menu-txt">商品分类</view>
+						<view class="menu-txt">所有商品</view>
 					</view>
 				</view>
 				<view class="nav_one_info" @click="gotoPage('/pages/product/coupon')">
@@ -61,71 +59,26 @@
 						<view class="menu-txt">领优惠券</view>
 					</view>
 				</view>
-				<view class="nav_one_info" @click="gotoPage('/pages/article/article')">
-					<view class="logo">
-						<image src="../../../static/zixun.png"></image>
-						<view class="menu-txt">资讯列表</view>
-					</view>
-				</view>
-				<view class="nav_one_info" @click="gotoPage('/pages/myAddress/addressList')">
-					<view class="logo">
-						<image src="../../../static/address_logo.png"></image>
-						<view class="menu-txt">地址管理</view>
-					</view>
-				</view>
-			</view>
-			<view class="nav_line">
-				<view class="nav_one_info" @click="gotoPage('/pages/active/kanjia')">
-					<view class="logo">
-						<image src="../../../static/canjia.png"></image>
-						<view class="menu-txt">砍价活动</view>
-					</view>
-				</view>
-				<view class="nav_one_info" @click="gotoPage('/pages/active/tuan')">
-					<view class="logo">
-						<image src="../../../static/pintuan.png"></image>
-						<view class="menu-txt">拼团活动</view>
-					</view>
-				</view>
-				<view class="nav_one_info" @click="gotoPage('/pages/active/yaoqing')">
-					<view class="logo">
-						<image src="../../../static/youjiang.png"></image>
-						<view class="menu-txt">邀请有奖</view>
-					</view>
-				</view>
 				<view class="nav_one_info"  @click="gotoPage('/pages/my/user_collection/index')">
 					<view class="logo">
 						<image src="../../../static/collect.png"></image>
 						<view class="menu-txt">我的收藏</view>
 					</view>
 				</view>
-			</view>
-		</view>
-		
-		<!-- 特别区域 -->
-		<view class="specialArea">
-			<view class="new_libao" @click="gotoPage('/pages/product/new')">
-				<view class="" style="margin-top: 12rpx;">
-					<view class="tit1">新用户首单福利专区</view>
-					<view class="tit2">全场享惊喜折扣</view>
-					<view class="lijigou">
-						立即购
+				
+				<view class="nav_one_info" @click="gotoPage('/pages/article/article')">
+					<view class="logo">
+						<image src="../../../static/zixun.png"></image>
+						<view class="menu-txt">资讯列表</view>
 					</view>
-				</view>	
-				<view class="right_icon">
-					<image src="../../../static/lihe_icon.png" mode="heightFix"></image>
 				</view>
+			
 			</view>
-			<view class="huodong_list">
-				<view class="pingtuan"  @click="gotoPage('/pages/active/tuan')">
-					<image src="../../../static/pingtuan_pic.jpg" mode="widthFix"></image>
-				</view>	
-				<view class="kangjia"  @click="gotoPage('/pages/active/kanjia')">
-					<image src="../../../static/kangjia_pic.jpg" mode="widthFix"></image>
-				</view>	
-			</view>
+			
+
 		</view>
 		
+	
 		
 		<view class="bbox_bg">
 			<!-- 优惠券 -->
@@ -170,7 +123,7 @@
 
 			<!-- 好货推荐 -->
 			<view class="haohuo_title">
-				好货推荐
+				诊断项目
 			</view>
 			<view class="haohuo_box">
 				
@@ -339,7 +292,7 @@ export default {
 <style lang="scss">
 .header{
 		width: 100%;
-		height: 162rpx;
+		height: 144rpx;
 		background: #fff;
 		background: linear-gradient(to right, #ff6151, #e93323);
 }
@@ -510,12 +463,14 @@ export default {
 // 图标logo
 .nav_box{
 	padding: 0 30rpx;
-	height: 316rpx;
+	height: 172rpx;
+	background: linear-gradient(to bottom, #fff, #f8f8f8);
 }
 .nav_box .nav_line{
 	display: flex;
 	justify-content: space-between;
 	height: 158rpx;
+	
 }
 .nav_one_info{
 	margin-top: 16rpx;
@@ -540,7 +495,7 @@ export default {
 .specialArea{
 	margin-top: 25rpx;
 	padding: 0 30rpx;	
-	background:  linear-gradient(to bottom, #fff, #f5f5f5);
+	background:  linear-gradient(to bottom, #fff, #f8f8f8);
 }
 .specialArea .new_libao{
 	background:  linear-gradient(to right, #ffe7ea, #f7d7db);
@@ -589,7 +544,7 @@ export default {
 }
 // 优惠券
 .bbox_bg{
-	background: #f5f5f5;
+	background: #f8f8f8;
 	padding: 0rpx 30rpx;
 	overflow: hidden;
 }
