@@ -36,8 +36,7 @@
 				</view>
 				<view class="goods_title">{{one_product.name}}</view>
 				<view class="goods_stock">
-					<view>库存:{{one_product.stock}}件</view>
-					<view>已售:{{one_product.seller_num + one_product.virtual_num}}件</view>
+					<view>销量:{{one_product.seller_num + one_product.virtual_num}}件</view>
 				</view>
 				<!-- 优惠券 -->
 				<view class="coupon_list" v-if="twoCoupon.length > 0"  @click="chooseConponLog('bottom')">
@@ -64,7 +63,8 @@
 			
 			<!-- 详情 -->
 			<view class="goods_desc">
-				<view class="tit">商品介绍</view>
+				<view class="tit">图文详情</view>
+				<rich-text :nodes="one_product.common_cont" class="descript_ht" v-if="one_product.common_cont != '' && one_product.common_cont != null"></rich-text>
 				<rich-text :nodes="one_product.descript" class="descript_ht"></rich-text>
 			</view>
 			
@@ -232,7 +232,16 @@
 			},
 			getProductFunc(id){
 				getProduct({id:id}).then(result=>{
-							result.descript = this.imgDesc(result.descript);
+					        if(result.descript != '' && result.descript != null){
+								result.descript = this.imgDesc(result.descript);
+							}else{
+								result.descript = '';
+							}
+							if(result.common_cont != '' && result.common_cont != null){
+								result.common_cont = this.imgDesc(result.common_cont);
+							}else{
+								result.common_cont = '';
+							}
 							this.one_product = result;
 							this.one_product_spec = result.product_spec;
 							this.active_price    = result.product_spec[0].active_price;
@@ -510,7 +519,6 @@
 	float: right;
 }
 .goods_title{
-	margin-top: 10rpx;
 	font-size: 28rpx;
 	padding: 0 20rpx;
 }
@@ -650,7 +658,7 @@
 	
 	font-size: 24rpx;
 	color: #82848f;
-	margin-bottom: 40rpx;
+	margin-bottom: 84rpx;
 }
 .goods_desc .tit{
 	padding: 16rpx 16rpx 10rpx 16rpx;

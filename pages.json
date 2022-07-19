@@ -40,7 +40,7 @@
             "path" : "pages/category/category",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "点单",
+                "navigationBarTitleText": "项目",
                 "enablePullDownRefresh": false
             }
             
@@ -58,7 +58,7 @@
             "path" : "pages/product/product",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "商品详情",
+                "navigationBarTitleText": "项目详情",
                 "enablePullDownRefresh": false
             }
             
