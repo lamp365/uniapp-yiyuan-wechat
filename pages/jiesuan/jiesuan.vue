@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!--订单详情-->
-		<view class="showTips" v-if="showTipsStatus">提示：配送范围{{start_away}}公里</view>
+	
 		<view class="container order-container">
 		  <!--订单编号和下单时间，如果是旧订单就显示-->
 		  <view class="order-basic-info" v-if="basicInfo">
@@ -18,34 +18,17 @@
 		    <view class="order-status">
 		      <text class="order-status-txt unpay" v-if="orderStatus==1">待付款</text>
 		      <text class="order-status-txt payed" v-if="orderStatus==2">已付款</text>
-		      <text class="order-status-txt done" v-if="orderStatus==3">已发货</text>
 		    </view>
 		  </view>
 		
 		  <!--地址-->
-		  <view :class="[setOrderTypeClass()]"  v-if="selectAddressStatus == 1">
-		    <view v-if="!isNoAddressData">
-		      <view class="contact-box" @click="gotoAddressList()">
-		        <view>
-		          <view class="contact">
-		            <view>
-		              <text class="val">{{addressInfo.name}}</text>
-		            </view>
-		            <view class="mobile-box">
-		              <text class="val">{{addressInfo.mobile}}</text>
-		            </view>
-		          </view>
-		          <view class="detail">{{addressInfo.detail}}</view>
-		        </view>
-		        <view class="contact-icon">
-		          <text class="icon-gengduo icon iconfont"></text>
-		        </view>
-		      </view>
-		    </view>
-		    <view v-else>
-		      <view class="add-new-address"  @click="editAddress()">
-		        <text class="icon">+</text>
-		        <text>添加地址</text>
+		  <view :class="[setOrderTypeClass()]" >
+		
+		    <view>
+		      <view class="add-new-address">
+				  <view class="lianxiren">  <input type="text"  placeholder="请填写联系人" class="liuyan_put1" placeholder-class="liuyan_put_placeholder1" v-model="lianxiren"/></view>
+				  <view class="lianxishouji">  <input type="text"  placeholder="请填写手机号" class="liuyan_put1" placeholder-class="liuyan_put_placeholder1" v-model="lianxishouji"/></view>
+		        
 		      </view>
 		    </view>
 		  </view>
@@ -96,26 +79,10 @@
 		          <input type="text"  placeholder="请输入留言信息 >" class="liuyan_put" placeholder-class="liuyan_put_placeholder" v-model="msg_liuyan"/>
 		        </view>
 		      </view>
-		  		
-		      <view class="pay_info" v-if="start_away > 0">
-		        <view class="tit">配送范围</view><view class="">{{start_away}}公里内免费配送</view>
-		      </view>
+		  	
 		
 		  </view>
-		  <!--外卖还是店食-->
-		  <view class='select-item-checkbox'>
-		    <view class='select-item-detail' @click="selectPeisonType(1)" >
-		      <image v-if="selectAddressStatus == 1" src='../../static/circle@selected.png'></image>
-		      <image v-else src='../../static/circle@noselected.png'></image>
-		      <text>配送</text>
-		    </view>
-		
-		    <view class='select-item-detail' @click="selectPeisonType(2)" >
-		      <image v-if="selectAddressStatus == 2" src='../../static/circle@selected.png'></image>
-		      <image v-else src='../../static/circle@noselected.png'></image>
-		      <text>自取</text>
-		    </view>
-		  </view>
+		  
 		
 		  <!--结算-->
 		  <view class="footer-account-box order-accounts">
@@ -153,7 +120,6 @@
 			return {
 				 //订单编号id，有则订单生成成功，没就失败
 				    id: null,
-				    //选择店食还是外卖，1外卖，2自取
 				    selectAddressStatus: 1,
 				    //第一次支付，可以生成订单，但是不能付款，之后都不能支付了
 				    firstPayStatus:1,
@@ -178,7 +144,9 @@
 					loadModal:false,
 					productsArr:[],
 					account:'0.00',
-					orderStatus:0
+					orderStatus:0,
+					lianxiren:'',
+					lianxishouji:''
 			}
 		},
 		onLoad() {
@@ -186,7 +154,6 @@
 		},
 		onShow(){
 			this.sysInfo = uni.getStorageSync('sysInfo');
-			this.showSendTips();
 			this.jiesuanFrom = uni.getStorageSync('jiesuanFromKey');	
 			this._initpage();
 		},
@@ -254,16 +221,7 @@
 					that.getDefaultAddress(0);
 				});
 			},
-			showSendTips:function(){
-				if(this.sysInfo.start_away!=0){
-					this.showTipsStatus = true;
-				}
-				this.start_away = this.sysInfo.start_away;
-				var that = this;
-				setTimeout(function(){
-					that.showTipsStatus = false;
-				},3000)
-			},
+			
 			setOrderTypeClass(){
 				if(this.orderStatus!=0){
 					return "order-address-info disabled";
@@ -318,6 +276,8 @@
 						}
 						this.isNoAddressData = isNoAddressData;
 						this.addressInfo = result;
+						this.lianxiren = result.name;
+						this.lianxishouji = result.mobile;
 				})
 			},
 			editAddress() {
@@ -365,8 +325,8 @@
 			},
 			pay(){
 				 //判断地址信息是否填写
-					if (this.selectAddressStatus == 1 && Object.keys(this.addressInfo).length <= 0) {
-						this._showMessageToast('请填写你的收货地址');
+					if (this.lianxiren == '' || this.lianxiren == undefined || this.lianxishouji == '' || this.lianxishouji == undefined) {
+						this._showMessageToast('请填写您的个人信息');
 						return;
 					}
 					//判断订单是否生成（购物车里的支付是还没生成订单，个人中心里面的历史订单是已经生成了订单）
@@ -397,6 +357,8 @@
 				post_data.address_id     = this.addressInfo.id;
 				post_data.productInfo    = JSON.stringify(productInfo);
 				post_data.wap_url        = wap_url;
+				post_data.lianxiren      = this.lianxiren;
+				post_data.lianxishouji   = this.lianxishouji;
 				this.loadModal = true;
 				createOrder(post_data).then(result => {
 					this.loadModal = false;
@@ -515,6 +477,7 @@ page{
 }
 .order-main{
     padding-bottom:50rpx;
+	margin-bottom: 40rpx;
 }
 .order-address-info,.order-basic-info{
     padding:20rpx 40rpx;
@@ -556,13 +519,24 @@ page{
 
 .add-new-address{
     width: 100%;
-    height: 90rpx;
+    height: 50rpx;
     font-size:28rpx;
     color:#989898;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
 }
+.add-new-address .lianxiren{
+	width: 50%;
+}
+.add-new-address .lianxishouji{
+	width: 50%;
+}
+.liuyan_put_placeholder1,.liuyan_put1{
+    text-align: left;
+		font-size: 28rpx;
+}
+
 .add-new-address .icon{
     /*font-size: 40rpx;*/
     color:#AB956D;

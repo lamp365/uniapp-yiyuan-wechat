@@ -293,10 +293,10 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/category/category",
+				"pagePath": "pages/search/search",
 				"iconPath": "static/2-001.png",
 				"selectedIconPath": "static/2-002.png",
-				"text": "点单"
+				"text": "项目"
 			},
 			{
 				"pagePath": "pages/cart/cart",

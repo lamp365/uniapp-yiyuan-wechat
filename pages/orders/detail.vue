@@ -13,62 +13,37 @@
 				</view>
 				
 	
-				<view v-if="orderInfo.after == 0">
-					<view class='nav'>
-						<view class='navCon acea-row row-between-wrapper'>
-							<view :class="orderInfo.status == 1 ? 'on':''">待付款</view>
-							<view :class="orderInfo.status == 2 ? 'on':''">
-								待配送
-							</view>
-							<view :class="orderInfo.status == 3 ? 'on':''" >待收货</view>
-							<view :class="orderInfo.status  == 4 ? 'on':''">已完成</view>
-						</view>
-						<view class='progress acea-row row-between-wrapper'>
-							<view  :class='orderInfo.status >= 1  ? "yuandianxiao_act":"yuandianxiao"'></view>
-							<view class='line' :class='orderInfo.status >= 2  ? "bg-color":""'></view>
-							
-							<view  :class='orderInfo.status >= 2  ? "yuandianxiao_act":"yuandianxiao"'></view>
-							<view class='line' :class='orderInfo.status >= 3  ? "bg-color":""'></view>
-							
-							<view  :class='orderInfo.status >= 3  ? "yuandianxiao_act":"yuandianxiao"'></view>
-							<view class='line' :class='orderInfo.status >= 4  ? "bg-color":""'></view>
-							
-							<view  :class='orderInfo.status >= 4  ? "yuandianxiao_act":"yuandianxiao"'></view>
-						
-							
-						</view>
-					</view>
-					<!-- nav end -->
-				</view>
-				<view v-else>
-					<!-- 拒绝退款 -->
+		
+				<view>
 					<view class="refund">
 						<view class="title">
-							<text>订单申请售后：</text>
-						{{orderInfo.after_str}}
+						<text>门店信息：</text>
 						</view>
-						<view class="con">退款原因：---</view>
+						<view class="con">
+							<view>
+								<text>联系人：{{orderInfo.snap_address[0]}}</text><text style="float: right;">{{orderInfo.snap_address[1]}}</text>
+							</view>
+							<view>
+								<text>门店名称：{{sysData.shop_name}}</text>
+							</view>
+							<view style="display: flex;justify-content: space-between">
+								<text>联系方式：{{sysData.mobile}}</text>
+								<image class="tel_pic" src="../../static/mobile2.png" @click="callMobile()"></image>
+							</view>
+							<view>
+								<text>门店地址：{{sysData.address}}</text>
+							</view>
+							<view class="daohang_box">
+								<text class="daohang">导 航</text>
+							</view>
+						</view>
 					</view>
 				</view>
 				
 				
 				
 			
-				<view class="map acea-row row-between-wrapper" v-if="orderInfo.select_status == 2">
-					<view>自提地址信息</view>
-					<view class="place cart-color acea-row row-center-wrapper" @tap="showMaoLocation">
-						<text class="iconfont icon-weizhi"></text>查看位置
-					</view>
-				</view>
-
-				<view v-if="orderInfo.select_status == 1">
-					<view class='address'>
-						<view class='name'>{{orderInfo.snap_address.name}}<text class='phone'>{{orderInfo.snap_address.mobile}}</text>
-						</view>
-						<view>{{orderInfo.snap_address.province}}{{orderInfo.snap_address.country}}{{orderInfo.snap_address.city}}{{orderInfo.snap_address.detail}}</view>
-					</view>
-				</view>
-				
+		
 				
 				<view class='line'>
 					<image src='@/static/line.jpg'></image>
@@ -77,7 +52,7 @@
 				
 				<!-- 显示产品 -->
 				<view class="orderGoods">
-					<view class="showTotal">共{{orderInfo.buy_num}}件商品</view>
+					<view class="showTotal">共{{orderInfo.buy_num}}个项目</view>
 					<view class="goodBox" v-for="(item,index) in orderProduct" :key="index">
 						<view class="picture"><image :src="item.snap_img" mode=""></image></view>
 						<view class="right_info">
@@ -106,7 +81,7 @@
 				
 					<view style="height: 16rpx;"></view>
 				</view>
-				<div class="goodCall" @click="goGoodCall">
+				<div class="goodCall" @click="callMobile()">
 					联系客服
 				</div>
 				
@@ -132,7 +107,7 @@
 					</view>
 					<view class='item acea-row row-between'>
 						<view>订单类型：</view>
-						<view class='conter'>{{orderInfo.select_status_str}}</view>
+						<view class='conter'>线上订单</view>
 					</view>
 					
 					<view class='item acea-row row-between' v-if="orderInfo.remark">
@@ -214,6 +189,7 @@
 				moreBtn: false,
 				refund_order_id:0,
 				apply_order_id:0,
+				sysData:{}
 			}
 		},
 		onLoad(option) {
@@ -230,6 +206,7 @@
 					delta:1
 				})
 			}
+			this.sysData = uni.getStorageSync('sysInfo');
 		},
 		methods: {
 			getOrdeDetailFunc(){
@@ -277,6 +254,12 @@
 					url:"./applyed?id="+id
 				})
 			},
+			callMobile(){
+				var mobile = this.sysData.mobile;
+				uni.makePhoneCall({
+					phoneNumber:mobile
+				})
+			},
 			cancleAfterFunc(id){
 				var params = {
 					id:id
@@ -322,7 +305,10 @@
 			margin-right: 6rpx;
 		}
 	}
-
+.tel_pic{
+	width: 40rpx;
+	height: 40rpx;
+}
 	.qs-btn {
 		width: auto;
 		height: 60rpx;
@@ -870,9 +856,10 @@
 		}
 
 		.con {
-			padding-top: 25rpx;
+			padding-top: 20rpx;
 			font-size: 28rpx;
 			color: #868686;
+			line-height: 46rpx;
 		}
 	}
 </style>
@@ -1361,23 +1348,32 @@
     color:#999999;
   }
 .yuandianxiao:before{
+	content:'';
+	display: block;
+	width:10rpx;
+	height:10rpx;
+	background:#999999;
+	border-radius: 50%;
+}
+.yuandianxiao_act {
+	font-size: 20rpx;
+	color:#e93323;
+  }
+.yuandianxiao_act:before{
 		content:'';
 		display: block;
 		width:10rpx;
 		height:10rpx;
-		background:#999999;
+		background:#e93323;
 		border-radius: 50%;
 	}
-	.yuandianxiao_act {
-	    font-size: 20rpx;
-	    color:#e93323;
-	  }
-	.yuandianxiao_act:before{
-			content:'';
-			display: block;
-			width:10rpx;
-			height:10rpx;
-			background:#e93323;
-			border-radius: 50%;
-		}
+.daohang_box{
+	display: flex;
+	justify-content: flex-end;
+}
+.daohang{
+	padding: 4rpx 28rpx;
+	border-radius: 40rpx;
+	border: 2rpx solid #a19a9a;
+}
 </style>

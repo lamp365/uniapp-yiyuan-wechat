@@ -19,7 +19,7 @@
 		<!-- 商品信息 -->
 		<view class="boxbox">
 			<view class="goods_info">
-				<view class="price_title"><text v-if="one_product.type == 0">价格</text> <text v-else>新人价</text></view>
+				<view class="price_title"><text v-if="one_product.type == 0">活动价</text> <text v-else>活动价</text></view>
 				<view class="price_line">
 					<view class="sale_price" v-if="one_product.type == 0">
 						<text>￥</text><text class="price">{{one_product.sale_price}}</text>
@@ -51,7 +51,7 @@
 				<!-- 活动 -->
 				<view class="show_active" v-if="one_product.type != 0">
 					<view>活 <text class="temp_show">活</text> 动：</view>
-					<view class="active_name">参与新人价</view>
+					<view class="active_name">限时福利</view>
 				</view>
 			</view>
 			
@@ -101,12 +101,12 @@
 					<view class="show_info">
 						<view class="main_pic"><image :src="one_product.main_img_url" mode=""></image></view>
 						<view class="show_price">
-							<view class="tit"><text v-if="one_product.type ==1">新人价</text><text v-else>价格</text></view>
+							<view class="tit"><text v-if="one_product.type ==1">活动价</text><text v-else>活动价</text></view>
 							<view class="money">
 								￥<text class="sale_price" v-if="one_product.type ==1">{{active_price}}</text> <text class="sale_price" v-else>{{sale_price}}</text> 
 								<text class="huaxian_price" v-if="one_product.type ==1">￥{{sale_price}}</text>
 							</view>
-							<view class="choose_spec">已选：{{has_choose_spec}} <text class="kucun">库存：{{stock}}件</text></view>
+							<view class="choose_spec">已选：{{has_choose_spec}} <text class="kucun">销量：{{sale_num + one_product.virtual_num}} 件</text></view>
 						</view>
 					</view>
 					<view class="spec_list">
@@ -178,6 +178,7 @@
 				active_price:0.00,
 				sale_price:0.00,
 				stock:0,
+				sale_num:0,
 				add_num:1,
 				has_choose_spec:'',
 				spec_current_index:0,
@@ -216,6 +217,7 @@
 					 this.has_choose_spec = spec_item.spec_name;
 					 this.add_num = 1;
 					 this.spec_id         = spec_item.id;
+					 this.sale_num        = spec_item.sale_num;
 				 }
 			},
 			specSetClass(index){

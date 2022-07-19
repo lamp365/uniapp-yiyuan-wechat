@@ -21,14 +21,10 @@
 						<view class="num">{{ orderData.wait_pay || 0 }}</view>
 					</view>
 					<view class="item" :class="orderStatus == 2 ? 'on' : ''" @click="statusClick(2)">
-						<view>待配送</view>
+						<view>已付款</view>
 						<view class="num">{{ orderData.wait_send || 0 }}</view>
 					</view>
-					<view class="item" :class="orderStatus == 3 ? 'on' : ''" @click="statusClick(3)">
-						<view>待收货</view>
-						<view class="num ">{{ orderData.wait_get || 0 }}</view>
-					</view>
-				
+									
 					<view class="item" :class="orderStatus == 4 ? 'on' : ''" @click="statusClick(4)">
 						<view>已完成</view>
 						<view class="num">{{ orderData.finish || 0 }}</view>

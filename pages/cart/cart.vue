@@ -4,15 +4,13 @@
 		<view v-if="cartData.length>0">
 			<view class="header">
 				<view>{{sysData.shop_name}}</view>
-				<view>可自取</view>
-				<view>可配送</view>
+				
 				<view class="tel">
 					<image class="tel" src="../../static/mobile2.png" @click="callMobile()"></image>
 				</view>
 			</view>
 			<view class="send_time">
-				<text>配送时间：{{sysData.send_start_time}}:00-{{sysData.send_end_time}}:00</text>
-				<text>   营业时间：{{sysData.woke_start_time}}:00-{{sysData.woke_end_time}}:00</text>
+				<text>{{sysData.address}}{{sysData.address}}</text>
 			</view>
 		</view>
 		
@@ -295,22 +293,7 @@ page{
     color: #0d0d0e;
     font-size: 32rpx;
 }
-.header > view:nth-child(2){
-    font-size: 20rpx;
-    padding: 5rpx 8rpx;
-    background: rgb(247, 203, 210);
-    color: rgb(235, 99, 106);
-    margin-left: 8rpx;
-    border-radius: 4rpx;
-}
-.header > view:nth-child(3){
-    font-size: 20rpx;
-    padding: 5rpx 8rpx;
-    background: rgb(213, 241, 170);
-    color: rgb(97, 155, 11);
-    margin-left: 8rpx;
-    border-radius: 4rpx;
-}
+
 .send_time{
     margin-left: 20rpx;
     margin-right: 20rpx;
@@ -319,6 +302,10 @@ page{
     font-size: 24rpx;
     padding: 0rpx 30rpx;
     color: #454553;
+	 overflow:hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow:ellipsis;
 }
 .cart-container{
     background-color: #fff;

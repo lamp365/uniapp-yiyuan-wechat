@@ -282,7 +282,7 @@ export default {
 		},
 		gotoCate(){
 			uni.switchTab({
-				url:"/pages/category/category"
+				url:"/pages/search/search"
 			})
 		}
 	}
@@ -292,9 +292,9 @@ export default {
 <style lang="scss">
 .header{
 		width: 100%;
-		height: 144rpx;
+		height: 134rpx;
 		background: #fff;
-		background: linear-gradient(to right, #ff6151, #e93323);
+		background: linear-gradient(to right, #7cc9f1, #1db0fc);
 }
 .header .serch-wrapper{
     padding: 22rpx 32rpx 0 32rpx;
@@ -337,13 +337,12 @@ export default {
 .swiperBg{
     background-color: #fff;
     position: relative;
-    border-top: 1rpx solid #f18175;
 		height: 312rpx;
 }
 .swiperBg .bag{
 	    width: 100%;
 	    height: 150rpx;
-	    background: linear-gradient(to right, #ff6151, #e93323);
+	    background: linear-gradient(to right, #7cc9f1, #1db0fc);
 	    border-bottom-left-radius: 22px;
 	    border-bottom-right-radius: 22px;
 			position: absolute;

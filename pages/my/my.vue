@@ -45,12 +45,8 @@
 							</view>
 							
 							<view class="num-wrapper">
-								<view class="num-item" v-if="userInfo.total_shouyi"
-									@click="goMenuPage('/pages/my/user_money/index')">
-									<text class="num">{{userInfo.total_shouyi || 0}}</text>
-									<view class="txt">余额</view>
-								</view>
-								<view class="num-item" v-else
+							
+								<view class="num-item" 
 									@click="goMenuPage('/pages/my/user_collection/index')">
 									<text class="num">{{orderStateData.collect_num || 0}}</text>
 									<view class="txt">收藏</view>
@@ -98,14 +94,14 @@
 											<text class="iconfont icon-daifahuo"></text>
 											<text class="order-status-num" v-if="orderStateData.wait_send > 0">{{ orderStateData.wait_send}}</text>
 										</view>
-										<view class="txt">待发货</view>
+										<view class="txt">已付款</view>
 									</navigator>
-									<navigator class="order-item" hover-class="none" @click="goOrderPage(3)">
+									<navigator class="order-item" hover-class="none" @click="goOrderPage(4)">
 										<view class="pic">
 											<text class="iconfont icon-daishouhuo"></text>
-											<text class="order-status-num" v-if="orderStateData.wait_get > 0">{{ orderStateData.wait_get}}</text>
+											<text class="order-status-num" v-if="orderStateData.wait_finish > 0">{{ orderStateData.wait_finish}}</text>
 										</view>
-										<view class="txt">待收货</view>
+										<view class="txt">已完成</view>
 									</navigator>
 									<navigator class="order-item" hover-class="none" @click="goOrderAfter()">
 										<view class="pic">
@@ -144,27 +140,12 @@
 									<image src="/static/user_coupon.png"></image>
 									<text>优惠券</text>
 								</view>
-								<view class="item" @click="goMenuPage('/pages/my/user_money/index')">
-									<image src="/static/user_account.png"></image>
-									<text>我的余额</text>
-								</view>
-								<view class="item" @click="goMenuPage('/pages/my/user_tuiguang/index')">
-									<image src="/static/user_tuiguang.png"></image>
-									<text>我的推广</text>
-								</view>
+							
 								<view class="item" @click="goMenuPage('/pages/my/user_collection/index')">
 									<image src="/static/user_collect.png"></image>
 									<text>我的收藏</text>
 								</view>
-								<view class="item" @click="goMenuPage('/pages/my/user_kanjia/index')">
-									<image src="/static/user_kanjia.png"></image>
-									<text>砍价记录</text>
-								</view>
 								
-								<view class="item" @click="goMenuPage('/pages/myAddress/addressList')">
-									<image src="/static/user_address.png"></image>
-									<text>我的地址</text>
-								</view>
 								<view class="item" @click="goMenuPage('/pages/my/user_jifen/index')">
 									<image src="/static/user_jifen.png"></image>
 									<text>积分详情</text>
@@ -172,6 +153,10 @@
 								<view class="item" @click="goMenuPage('/pages/my/user_kefu/index')">
 									<image src="/static/user_kefu.png"></image>
 									<text>联系客服</text>
+								</view>
+								<view class="item" @click="cleanData()">
+									<image src="/static/user_tuiguang.png"></image>
+									<text>清除缓存</text>
 								</view>
 						</view>
 					</view>
@@ -255,6 +240,15 @@
 					this.orderStateData = result;
 				})
 			},
+			cleanData(){
+				uni.removeStorageSync('openid');
+				uni.removeStorageSync('userinfo');
+				uni.removeStorageSync('sysInfo');
+				uni.removeStorageSync('has_h5_auth_key');
+				uni.navigateTo({
+					url:"../../index/index"
+				})
+			}
 		},
 		
 	}

@@ -13,9 +13,10 @@ export function getHelp(parames) {
 	data:parames
   })
 }
-export function getContent() {
+export function getContent(parames) {
   return request({
     url: 'Article/content',
-    method: 'GET'	
+    method: 'GET',
+	data:parames
   })
 }
