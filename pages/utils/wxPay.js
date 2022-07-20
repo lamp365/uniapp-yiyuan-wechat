@@ -3,7 +3,8 @@
 	npm init 
 	npm install weixin-js-sdk -S
 **/
-const wx = require('jweixin-module');
+import wx from 'weixin-js-sdk'
+//const wx = require('jweixin-module');
 const wexinPay = (data, callback, errorCallback) => {
 	let [appId, timestamp, nonceStr, signature, packages, sign] = [data.appId, data.timeStamp, data.nonceStr, data.signature,
 		data.package, data.paySign
