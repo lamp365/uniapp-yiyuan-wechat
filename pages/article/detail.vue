@@ -28,8 +28,8 @@
 		onShow() {
 			this.sysInfo = uni.getStorageSync('sysInfo');
 			this.web_name = this.sysInfo.shop_name;
-			if(this.sysInfo != '' && this.sysInfo.sharePic != '' && this.sysInfo.sharePic!=undefined){
-				this.sharePic = this.sysInfo.sharePic;
+			if(this.sysInfo != '' && this.sysInfo.share_img != '' && this.sysInfo.share_img!=undefined){
+				this.sharePic = this.sysInfo.share_img;
 			}
 		},
 		onShareAppMessage(res) {

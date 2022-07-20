@@ -46,7 +46,7 @@
 				uni.removeStorageSync('userinfo');
 				uni.removeStorageSync('sysInfo');
 				uni.removeStorageSync('has_h5_auth_key');
-				uni.navigateTo({
+				uni.switchTab({
 					url:"../../index/index"
 				})
 			}

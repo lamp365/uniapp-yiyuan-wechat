@@ -32,7 +32,7 @@
 			 <view style="height: 48rpx;"></view>
 		</view>
 		
-		<view class="goback" v-if="product.length >0"><text class="iconfont icon-back" @click="gotoMy()"></text></view>
+		<view class="goback" ><text class="iconfont icon-back" @click="gotoMy()"></text></view>
 	</view>
 </template>
 
@@ -139,7 +139,6 @@ page{
 }
 	.no_data{
 		min-height: 600rpx;
-		 background-color: #fff;
 	}
 	.goback{position: fixed;right: 40rpx;bottom: 74rpx;background: #fff;border-radius: 48rpx;}
 	.goback .icon-back{color: #1db0fc;font-size: 80rpx;}

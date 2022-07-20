@@ -46,7 +46,7 @@
 			<view class="item">
 				<view class="left">
 					<view class="ttt">
-						购买商品 <text class="tip">+N个积分/元</text>
+						购买商品 <text class="tip">+{{jifen}}个积分/元</text>
 					</view>
 					<view class="info">
 						购买商品可获得对应不等的积分
@@ -60,7 +60,7 @@
 			<view class="item">
 				<view class="left">
 					<view class="ttt">
-						邀请好友 <text class="tip">+N个积分/人</text>
+						邀请好友 <text class="tip">+{{yaoqin_jifen}}个积分/人</text>
 					</view>
 					<view class="info">
 						邀请好友注册应用可获得积分
@@ -110,11 +110,16 @@
 	export default {
 		data() {
 			return {
-				product:[]
+				product:[],
+				jifen:'',
+				yaoqin_jifen:''
 			}
 		},
 		onLoad() {
 			this.getTuijianProductFunc();
+			var sysInfo  = uni.getStorageSync('sysInfo');
+			this.jifen = sysInfo.order_jifen;
+			this.yaoqin_jifen = sysInfo.invite_jifen;
 		},
 		methods: {
 			getTuijianProductFunc(){

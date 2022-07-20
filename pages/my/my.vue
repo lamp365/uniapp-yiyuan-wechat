@@ -150,7 +150,7 @@
 									<image src="/static/user_jifen.png"></image>
 									<text>积分详情</text>
 								</view>
-								<view class="item" @click="goMenuPage('/pages/my/user_kefu/index')">
+								<view class="item" @click="goMenuPage('/pages/my/seting/connect')">
 									<image src="/static/user_kefu.png"></image>
 									<text>联系客服</text>
 								</view>
@@ -245,8 +245,8 @@
 				uni.removeStorageSync('userinfo');
 				uni.removeStorageSync('sysInfo');
 				uni.removeStorageSync('has_h5_auth_key');
-				uni.navigateTo({
-					url:"../../index/index"
+				uni.switchTab({
+					url:"../index/index"
 				})
 			}
 		},
