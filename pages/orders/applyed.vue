@@ -35,6 +35,10 @@
 					</view>
 				</view>
 			</view>
+			<view class="item" v-if="order.after == -2">
+				<view>拒绝原因</view><view class="tip2">{{order.jujue_reason}}</view>
+			</view>
+			
 			<view class="pingzheng">
 				<view class="top">
 					<view>上传凭证</view><view class="tip">( 最多上传5张 )</view>
