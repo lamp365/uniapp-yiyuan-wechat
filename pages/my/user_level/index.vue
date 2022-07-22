@@ -10,7 +10,7 @@
 						<view class="">
 							<image src="../../../static/level_icon1.png" mode=""></image>
 							<view class="">
-								购物折扣
+								享受折扣
 							</view>	
 						</view>
 						

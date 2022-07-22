@@ -42,7 +42,7 @@
 		onShow() {
 			if(this.id  == 1){
 				getAbout({get_about:1}).then(result=>{
-					this.data2.des = result.about;
+					this.data2.des = this.imgDesc(result.about);
 					this.data2.title = '关于我们';
 				})
 			}else{
@@ -53,7 +53,25 @@
 			
 		},
 		methods: {
-			
+			imgDesc(html){
+			  // return str.replace(/\<img/gi, '<img style="width:100%;height:auto;display:block;margin-top:10px"');
+				html = html.replace(/style=""/gi,'');
+				html = html.replace(/<p>/gi,"<p style='width:100%'>");
+				// html = html.replace(/<\/p>/gi,'');
+				let newContent= html.replace(/<img[^>]*>/gi,function(match,capture){
+				    match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
+				    match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
+				    match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
+				    return match;
+				  });
+				  newContent = newContent.replace(/style="[^"]+"/gi,function(match,capture){
+				    match = match.replace(/width:[^;]+;/gi, 'width:100%;').replace(/width:[^;]+;/gi, 'width:100%;');
+				    return match;
+				  });
+				  // newContent = newContent.replace(/<br[^>]*\/>/gi, '');
+				  newContent = newContent.replace(/\<img/gi, '<img style="width:100%;height:auto;display:block;margin-top:0;margin-bottom:7px;"');
+				  return newContent;
+			}
 		}
 	}
 </script>
