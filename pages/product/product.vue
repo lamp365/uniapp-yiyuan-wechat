@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="topnav">
+		<view class="topnav" v-if="is_xcx == false">
 			<view class="back_box" @click="gotoBack()"><view class="back"></view></view>
 			<view class="title_name">
 				<view>商品</view><view>详情</view>
@@ -186,12 +186,16 @@
 				twoCoupon:[],
 				property:[],
 				click_gouwuche_times:0,
-				click_lijibuy_times:0
+				click_lijibuy_times:0,
+				is_xcx:true,
 			}
 		},
 		onLoad(option) {
 			this.id = option.id;
 			this.getProductFunc(this.id);
+			//#ifdef H5
+			this.is_xcx = false;
+			//#endif
 		},
 		onShow() {
 				this.getAllCouponFunc();
@@ -462,12 +466,19 @@
 .topnav .title_name view{
 	padding: 0rpx 16rpx;
 }
+// #ifdef H5
 .product-main {
 		width: 100%;
 		height: 750rpx;
 		margin-top: 74rpx;
 	}
-
+//#endif
+// #ifdef MP-WEIXIN
+.product-main {
+		width: 100%;
+		height: 750rpx;
+	}
+//#endif
 .product-main .pic_box {
 	width: 100%;
 	height: 100%;

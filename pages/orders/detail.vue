@@ -189,7 +189,8 @@
 				moreBtn: false,
 				refund_order_id:0,
 				apply_order_id:0,
-				sysData:{}
+				sysData:{},
+				is_xcx:true,
 			}
 		},
 		onLoad(option) {
@@ -207,6 +208,9 @@
 				})
 			}
 			this.sysData = uni.getStorageSync('sysInfo');
+			//#ifdef H5
+			this.is_xcx = false;
+			//#endif
 		},
 		methods: {
 			getOrdeDetailFunc(){

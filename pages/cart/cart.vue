@@ -202,7 +202,7 @@
 				uni.setStorageSync('local_cart_key',this.cartData);
 			},
 			callMobile(){
-				 var mobile = this.sysData.mobile;
+				 var mobile = this.sysData.kefu_tel;
 					uni.makePhoneCall({
 						phoneNumber:mobile
 					})
@@ -268,6 +268,7 @@
 page{
     background: #F5F5F5;
 }
+/* #ifdef H5 */
 .footer-account-box{
 		position: fixed;
 		bottom: 90rpx;
@@ -277,6 +278,17 @@ page{
 		border-top: 1rpx solid #eeeeee;
 		border-bottom: 1rpx solid #ccc;
 }
+/* #endif */
+/* #ifdef MP-WEIXIN */
+.footer-account-box{
+		position: fixed;
+		bottom: 0rpx;
+		height: 98rpx;
+		width: 100%;
+		display: flex;
+		border-top: 1rpx solid #eeeeee;
+}
+/* #endif */
 .header{
     height: 85rpx;
     margin-top: 20rpx;

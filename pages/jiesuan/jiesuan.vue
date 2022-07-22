@@ -341,7 +341,12 @@
 			_firstTimePay(){
 				var that = this;
 				//创建订单
-				var wap_url = location.href.split("#")[0];
+				// #ifdef H5
+				var wap_url = window.location.href.split("?")[0];
+				// #endif
+				// #ifdef MP-WEIXIN
+				var wap_url = '';
+				// #endif
 				var post_data = {},
 				productInfo = this.productsArr;
 				
@@ -384,30 +389,41 @@
 					}else{
 						//更新缓存记录来源
 						uni.setStorageSync('jiesuanFromKey',"order|"+result.order_id);
-						this.$wxPay(result, function (res) {
-						    /*成功的回调*/
-						    uni.showToast({
-						    	title: '支付成功',
-						    	duration: 2000,
-						    	icon: 'success'
-						    });
-							setTimeout(function(){
-								//清空缓存记录来源
-								uni.setStorageSync('jiesuanFromKey','');
-								//开发测试
-								uni.navigateTo({
-									url:"../orders/orders?status=2"
-								})
-							},2000)
-								
-						}, function (e) {
-						    /**失败的回调*/
-						     uni.showToast({
-						     	title: '支付失败了',
-						     	duration: 2000,
-						     	icon: 'error'
-						     })
-						})
+						//[data.appId, data.timeStamp, data.nonceStr, data.signature,data.package, data.paySign];
+						uni.requestPayment({
+							provider: 'wxpay',
+							timeStamp: result.timeStamp,
+							nonceStr: result.nonceStr,
+							package: result.package,
+							signType: result.signType,
+							paySign: result.paySign,
+							success: function (res) {
+								console.log('success:' + JSON.stringify(res));
+								/*成功的回调*/
+								uni.showToast({
+									title: '支付成功',
+									duration: 2000,
+									icon: 'success'
+								});
+								setTimeout(function(){
+									//清空缓存记录来源
+									uni.setStorageSync('jiesuanFromKey','');
+									//开发测试
+									uni.navigateTo({
+										url:"../orders/orders?status=2"
+									})
+								},2000)
+							},
+							fail: function (err) {
+								console.log('fail:' + JSON.stringify(err));
+								/**失败的回调*/
+								 uni.showToast({
+									title: '支付失败了',
+									duration: 2000,
+									icon: 'error'
+								 })
+							},
+						});
 					}
 			
 				}).catch(err => {
@@ -520,11 +536,12 @@ page{
 .add-new-address{
     width: 100%;
     height: 50rpx;
-    font-size:28rpx;
+    font-size:32rpx;
     color:#989898;
     display: flex;
     align-items: center;
     justify-content: space-around;
+	margin-top: 8rpx;
 }
 .add-new-address .lianxiren{
 	width: 50%;
