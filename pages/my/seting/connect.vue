@@ -52,7 +52,7 @@
 		methods: {
 			callPhone(){
 				uni.makePhoneCall({
-					phoneNumber:this.sysInfo.mobile
+					phoneNumber:this.sysInfo.kefu_tel
 				})
 			}
 		}

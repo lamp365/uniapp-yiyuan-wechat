@@ -10,7 +10,7 @@
 				</view>
 			</view>
 			<view class="send_time">
-				<text>{{sysData.address}}{{sysData.address}}</text>
+				<text>{{sysData.address}}</text>
 			</view>
 		</view>
 		

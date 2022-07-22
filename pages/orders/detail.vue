@@ -255,7 +255,7 @@
 				})
 			},
 			callMobile(){
-				var mobile = this.sysData.mobile;
+				var mobile = this.sysData.kefu_tel;
 				uni.makePhoneCall({
 					phoneNumber:mobile
 				})

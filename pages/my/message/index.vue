@@ -36,5 +36,7 @@
 </script>
 
 <style>
-
+.uni-list-item__content-title{
+	font-size: 32rpx !important;
+}
 </style>

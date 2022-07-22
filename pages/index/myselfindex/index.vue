@@ -45,7 +45,7 @@
 		</view>
 		
 		<!-- nav log -->
-		<view class="nav_box">
+		<!-- <view class="nav_box">
 			<view class="nav_line">
 				<view class="nav_one_info" @click="gotoCate()">
 					<view class="logo">
@@ -77,7 +77,7 @@
 			
 
 		</view>
-		
+		 -->
 	
 		
 		<view class="bbox_bg">
@@ -261,7 +261,7 @@ export default {
 			});
 		},
 		gotoSearch(){
-			uni.navigateTo({
+			uni.switchTab({
 				url:"/pages/search/search"
 			})
 		},
@@ -543,7 +543,7 @@ export default {
 }
 // 优惠券
 .bbox_bg{
-	background: #f8f8f8;
+	
 	padding: 0rpx 30rpx;
 	overflow: hidden;
 }
@@ -633,9 +633,10 @@ export default {
 // 好货推荐
 .haohuo_title{
 	margin-top: 20rpx;
-	color: #282828;
+	color: #bfbebe;
 	font-size: 36rpx;
 	font-weight: 700;
+	text-align: center;
 }
 .haohuo_box{
 	margin-bottom: 40rpx;
@@ -647,6 +648,7 @@ export default {
     border-radius: 10rpx;
     margin-bottom: 20rpx;
     padding-bottom: 18rpx;
+	box-shadow: 1px 0px 1px #888888;
 }
 .haohuo_box .one_list:nth-of-type(odd) {
     float: left;
@@ -709,7 +711,7 @@ export default {
 	border-radius: 8px;
 }
 	.dixian{
-		background:  #f5f5f5;
+	
 		color: #888;
 		font-size: 24rpx;
 		text-align: center;

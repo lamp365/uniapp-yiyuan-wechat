@@ -377,7 +377,7 @@
 							uni.setStorageSync('jiesuanFromKey','');
 							//开发测试
 							uni.navigateTo({
-								url:"../orders/orders"
+								url:"../orders/orders?status=2"
 							})
 						},2000)
 						
@@ -396,7 +396,7 @@
 								uni.setStorageSync('jiesuanFromKey','');
 								//开发测试
 								uni.navigateTo({
-									url:"../orders/orders"
+									url:"../orders/orders?status=2"
 								})
 							},2000)
 								
