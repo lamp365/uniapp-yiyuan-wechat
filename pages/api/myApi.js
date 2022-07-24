@@ -39,3 +39,10 @@ export function getAbout(parame) {
 		data: parame
 	})
 }
+export function saveUserInfo(data) {
+	return request({
+		url: 'saveUserInfo',
+		method: 'POST',
+		data: data
+	})
+}

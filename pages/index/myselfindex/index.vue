@@ -191,7 +191,7 @@ export default {
 	methods: {
 		getShopInfoInit(){
 			var cacheData = uni.getStorageSync('sysInfo');
-			if(!cacheData){
+			if(cacheData == "" || cacheData == null || cacheData == undefined){
 				getShopInfo().then(result=>{
 					var cacheTime = Date.now();
 					result.cacheTime = cacheTime;
@@ -223,9 +223,9 @@ export default {
 			})
 		},
 		getNewProductFunc(){
-			getNewProduct({limit:8}).then(result=>{
-				this.newProduct = result;
-			})
+			// getNewProduct({limit:8}).then(result=>{
+			// 	this.newProduct = result;
+			// })
 		},
 		getAllCouponFunc(){
 			getAllCoupon().then(result=>{

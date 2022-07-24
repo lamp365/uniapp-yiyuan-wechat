@@ -54,7 +54,12 @@
         "setting" : {
             "urlCheck" : false
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "您的位置用于获取计算距离"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true

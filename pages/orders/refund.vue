@@ -5,7 +5,7 @@
 					<view class="picTxt acea-row row-between-wrapper">
 						<view class="text">
 							<view class="name">售后订单</view>
-							<view>售后订单：{{ orderData.order_num || 0 }} </view>
+							<view>售后订单：{{ orderData.after || 0 }} </view>
 						</view>
 						<view class="pictrue">
 							<image src="../../static/orderTime.png"></image>
@@ -54,7 +54,7 @@
 							</view>
 							<view class="totalPrice">
 								共{{ item.buy_num || 0 }}件商品，总金额
-								<text class="money">￥{{ item.total_price}}</text>
+								<text class="money">￥{{ item.refund_money}}</text>
 							</view>
 						</view>
 						<view class="bottom acea-row row-right row-middle">
@@ -97,8 +97,8 @@
 				orderData:'',
 				orderStatus:1,
 				orderList:[],
-				loadTitle:'------我也是有底线的------',
-				tempTitle:'------我也是有底线的------',
+				loadTitle:'------人家也是有底线的哦------',
+				tempTitle:'------人家也是有底线的哦------',
 				page:1,
 				loading:false,
 				has_finish:false

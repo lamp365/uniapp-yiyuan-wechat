@@ -8,20 +8,28 @@
 							<view class="" style="padding:0 28rpx;">
 								<view class="user-info">
 									<view>
-										<view class="avatar-box">
+										<view class="avatar-box" v-if="headimgurl == ''">
+											
+											<image class="avatar" src="../../static/default_header.png"></image>
+	
+										</view>
+										<view class="avatar-box" v-else>
+										
 											<image class="avatar" :src='headimgurl'></image>
+											
 										</view>
 									
 									</view>
 									<view class="info">
 									
-										<view class="name" v-if="!userInfo.uid" @click="openOauth()"
-											style="height: 100%; display: flex; align-items: center;">
-											请点击授权
+										<view class="" v-if="headimgurl == ''"
+											style="height: 100%;">
+											<button class="personBtn" @click="gotoAuthFace()" data-name="shouquanBtn" lang="zh_CN"  open-type="getUserProfile" plain="true">请点击授权</button>
+										
 										</view>
 										
-										<view class="name" v-if="userInfo.uid">
-											{{userInfo.nickname}}
+										<view class="name" v-if="nickname!=''">
+											{{nickname}}
 										</view>
 										<view class="num" v-if="userInfo.mobile" @click="goEdit()">
 											<view class="num-txt">tel：{{userInfo.mobile}}</view>
@@ -170,8 +178,10 @@
 </template>
 
 <script>
-	import {orderState} from "../api/myApi.js";
+	import {orderState,saveUserInfo} from "../api/myApi.js";
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				userInfo:'',
@@ -181,7 +191,9 @@
 				orderStatus:'',
 				imgUrls:[],
 				orderStateData:'',
-				headimgurl:'/static/default_header.png',
+				//headimgurl:'../../static/default_header.png',
+				headimgurl:'',
+				nickname:''
 			}
 		},
 		onLoad() {
@@ -190,10 +202,16 @@
 		onShow(){
 			var userinfo = ''
 			var userinfoStr = uni.getStorageSync('userinfo');
-			if(userinfoStr != '' && userinfoStr != undefined){
+			if(userinfoStr != '' && userinfoStr != undefined && userinfoStr != null){
 				var userinfo = JSON.parse(userinfoStr);
 				this.isLogin = true;
-				this.headimgurl = userinfo.headimgurl;
+				if(userinfo.headimgurl != ''){
+					this.headimgurl = userinfo.headimgurl;
+				}
+				if(userinfo.nickname != ''){
+					this.nickname = userinfo.nickname;
+				}
+				
 			}
 			this.userInfo = userinfo;
 			this.sysInfo  = uni.getStorageSync('sysInfo');
@@ -248,7 +266,34 @@
 				uni.switchTab({
 					url:"../index/index"
 				})
-			}
+			},
+			gotoAuthFace() {
+				var that = this;
+				console.log('222222222222');
+				uni.getUserProfile({
+					desc:'获取昵称头像',
+					success: function(result) {
+						console.log(result);
+						//{cloudID: "59_7ei4wb3ppwgQm0mVh9qehEdpztL_kjNMA29rZl-4fWc2xkT9b9XgW5AntNY", encryptedData: "R/+1eYotBJHIV+aLG2fbybuD0edVqD+i4j7seidJC0/msoqoaW…sC9JPnwfYRUm/9wLL0ebd5me51KskJ/Mij1jJ0sRWvIXiJw==", iv: "C3LDP0f+HDSh36v5ux+NMA==", signature: "77d57427e694783595dcd4ce2bd9ff90b502ecb4", userInfo: {…}, …}
+						that.nickname = result.userInfo.nickName;
+						that.headimgurl = result.userInfo.avatarUrl;
+						var userinfoStr = uni.getStorageSync('userinfo');
+						var userinfo = JSON.parse(userinfoStr);
+						userinfo.nickname = result.userInfo.nickName;
+						userinfo.headimgurl = result.userInfo.avatarUrl;
+						uni.setStorageSync(
+							'userinfo',JSON.stringify(userinfo)
+						);
+						//解密用户信息
+						// let pc = new WXBizDataCrypt('wxb7b697f70649a7b6', userinfo.session_key);
+						// let data = pc.decryptData(result.encryptedData, result.iv);
+						// console.log(data);
+						saveUserInfo(result.userInfo).then(res=> {
+							
+						})
+					}
+				})
+			},
 		},
 		
 	}
@@ -320,7 +365,12 @@
 	
 
 
-
+.personBtn{
+	font-size: 26rpx;
+	color: #fff!important;
+	float: left;
+	padding-left: 8rpx;
+}
 	.new-users {
 		display: flex;
 		flex-direction: column;
@@ -823,5 +873,8 @@
 }
 .center_tips .right{
 	margin-right:66rpx;
+}
+button[plain]{
+	border:0;
 }
 </style>

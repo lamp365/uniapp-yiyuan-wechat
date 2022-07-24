@@ -38,7 +38,9 @@
 
 <script>
 	import {getCollectList,collectProduct} from "../../api/myApi.js";
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				product:[]

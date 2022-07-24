@@ -9,7 +9,9 @@
 
 <script>
 	import {getAbout,getXieyi} from "../../api/myApi.js";
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				data2:{

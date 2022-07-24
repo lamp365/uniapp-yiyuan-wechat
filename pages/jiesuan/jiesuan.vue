@@ -26,7 +26,7 @@
 		
 		    <view>
 		      <view class="add-new-address">
-				  <view class="lianxiren">  <input type="text"  placeholder="请填写联系人" class="liuyan_put1" placeholder-class="liuyan_put_placeholder1" v-model="lianxiren"/></view>
+				  <view class="lianxiren">  <input type="text"  placeholder="请填写您的名字" class="liuyan_put1" placeholder-class="liuyan_put_placeholder1" v-model="lianxiren"/></view>
 				  <view class="lianxishouji">  <input type="text"  placeholder="请填写手机号" class="liuyan_put1" placeholder-class="liuyan_put_placeholder1" v-model="lianxishouji"/></view>
 		        
 		      </view>
@@ -429,9 +429,6 @@
 				}).catch(err => {
 					this.loadModal = false;
 					//刷新页面
-					setTimeout(function(){
-						location.reload();
-					},1500)
 					
 				});
 			},

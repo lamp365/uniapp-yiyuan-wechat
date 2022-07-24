@@ -13,7 +13,9 @@
 
 <script>
 	import {getContent} from "../api/articleApi.js";
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				id:0,

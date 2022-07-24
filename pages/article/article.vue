@@ -29,13 +29,15 @@
 
 <script>
     import {getArticleList} from "../api/articleApi.js";
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				listData:[],
 				page:1,
-				loadTitle:'------我也是有底线的------',
-				tempTitle:'------我也是有底线的------',
+				loadTitle:'------人家也是有底线的哦------',
+				tempTitle:'------人家也是有底线的哦------',
 				loading:false,
 				has_finish:false
 			}

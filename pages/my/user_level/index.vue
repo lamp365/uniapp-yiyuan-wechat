@@ -107,7 +107,9 @@
 
 <script>
 	import {getTuijianProduct} from "../../api/productApi.js";
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				product:[],

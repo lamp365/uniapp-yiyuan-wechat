@@ -27,13 +27,13 @@
 								<text>门店名称：{{sysData.shop_name}}</text>
 							</view>
 							<view style="display: flex;justify-content: space-between">
-								<text>联系方式：{{sysData.mobile}}</text>
+								<text>联系方式：{{sysData.kefu_tel}}</text>
 								<image class="tel_pic" src="../../static/mobile2.png" @click="callMobile()"></image>
 							</view>
 							<view>
 								<text>门店地址：{{sysData.address}}</text>
 							</view>
-							<view class="daohang_box">
+							<view class="daohang_box" @click="showMap()">
 								<text class="daohang">导 航</text>
 							</view>
 						</view>
@@ -67,7 +67,7 @@
 										<view class="specName">{{item.spec_name}} x {{item.buy_num}} x {{item.money}}</view>
 										<view class="price">￥{{parseFloat(item.money*item.buy_num).toFixed(2)}}</view>
 								</view>
-								<view class="action_btn" v-if="orderInfo.status>1 && orderInfo.after == 0" @click="gotoApplyed(item.id)">
+								<view class="action_btn" v-if="[2,3].includes(orderInfo.status)  && orderInfo.after == 0" @click="gotoApplyed(item.id)">
 									申请退款
 								</view>
 								<view class="action_btn" v-if="orderInfo.after>0" @click="cancleAfterFunc(item.id)">
@@ -180,7 +180,9 @@
 
 <script>
  import {orderDetail,deleteOrder,cancleAfter} from "../api/orderApi.js";
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				order_id: '',				
@@ -279,6 +281,21 @@
 							url:"./orders"
 						})
 					},1500)
+				})
+			},
+			showMap(){
+				var location = this.sysData.location;
+				var location =location.split(',');
+				var lat = location[0];
+				var lng = location[1];
+				console.log(lat,lng);
+				var that = this;
+				uni.openLocation({
+				     latitude: Number(lat),//即将传到高德或腾讯地图的终点纬度  必须是数值，字符串无效
+				     longitude:Number(lng),//即将传到高德或腾讯地图的终点经度  必须是数值，字符串无效
+				     name: that.sysData.shop_name,//即将传到高德或腾讯地图的店铺名称
+				     address: that.sysData.address,//即将传到高德或腾讯地图的详细地址
+				     scale: 18
 				})
 			}
 		}

@@ -31,7 +31,10 @@
 					
 					<view class="huaxian_price" v-if="one_product.type != 0">￥{{one_product.sale_price}}</view>
 					<view class="share">
-						<image src="../../static/share.png"></image>
+						<button class="shareBtn"  data-name="shareBtn"  open-type="share" plain="true">
+							<image src="../../static/share.png"></image>
+						</button>
+						
 					</view>
 				</view>
 				<view class="goods_title">{{one_product.name}}</view>
@@ -168,7 +171,9 @@
 	import {collectProduct} from "../api/myApi.js";
 	import {getAllCoupon,lingQuan} from "../api/couponApi.js";
 	import {addCart,deleteCart,changeCartStatus} from "../utils/cart.js";
+	import { shareMixins} from '@/mixins/share'
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				id:0,
@@ -912,5 +917,8 @@
 }
 .bnt_bg2{
 	background: #ccc;
+}
+button[plain]{
+	border:0;
 }
 </style>

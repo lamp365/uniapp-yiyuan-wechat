@@ -61,7 +61,9 @@
 <script>
 	import fullLoading from "../../components/loading/fullLoading.vue";
 	import {getRandProduct,getSearchProduct} from "../api/productApi.js";
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		components:{
 			fullLoading
 		},

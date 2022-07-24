@@ -10,7 +10,9 @@
   import {getOauthUrl} from "../api/indexApi.js";
   import {weixinLogin,verifykWeixnLogin,getH5Login} from "../utils/login.js";
 	import myselfindex from './myselfindex'
+	import { shareMixins} from '@/mixins/share'
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				title: '',

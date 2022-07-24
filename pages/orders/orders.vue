@@ -115,7 +115,9 @@
 <script>
 	import {getOrderList,deleteOrder,oneMorePay} from "../api/orderApi.js";
 	import {orderState} from "../api/myApi.js";
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				orderData:'',

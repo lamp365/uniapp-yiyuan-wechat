@@ -49,7 +49,9 @@
 </template>
 
 <script>
+	import { shareMixins} from '@/mixins/share';
 	export default {
+		mixins: [shareMixins],
 		data() {
 			return {
 				accordionVal:'1',
