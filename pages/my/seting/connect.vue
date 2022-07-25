@@ -12,7 +12,7 @@
 		
 		<view class="erweima_box">
 			<view class="erweima_main">
-				<image :src="sysInfo.erweima" mode="widthFix"></image>
+				<image :src="sysInfo.erweima" mode="widthFix" @click="previewImage"  :show-menu-by-longpress="true"></image>
 				<view class="kefu">客服微信</view>
 			</view>
 		</view>
@@ -54,6 +54,33 @@
 				uni.makePhoneCall({
 					phoneNumber:this.sysInfo.kefu_tel
 				})
+			},
+			previewImage(e) {
+				//我这里 URLS 置空的原因是 我不需要预览，只需要开启 图片的 :show-menu-by-longpress="true"  属性，就可以识别出长按操作；需要预览的多张图片的URL 可以直接放在 URLS 里即可用！
+				//可以根据自己的业务 把 current 设置为 e.target.src 属性，动态的把当前路径写为 当前预览图片地址！
+				//版权声明：本文为CSDN博主「Fashion_Barry」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+				//原文链接：https://blog.csdn.net/weixin_56650035/article/details/122147640
+				console.log('e', e);
+				uni.previewImage({
+					// 需要预览的图片链接列表
+					urls: [],
+					// 为当前显示图片的链接/索引值
+					current: e.target.src,
+					// 图片指示器样式	
+					indicator:'default',
+					// 是否可循环预览
+					loop:false,
+					// 长按图片显示操作菜单，如不填默认为保存相册
+					// longPressActions:{
+					// 	itemList:[this.l('发送给朋友'),this.l]
+					// },
+					success: res => {
+						console.log('res', res);
+					}, 
+					fail: err => {
+						onsole.log('err', err);
+					}
+				});
 			}
 		}
 	}

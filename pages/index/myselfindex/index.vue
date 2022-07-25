@@ -157,7 +157,7 @@
 			</view>
 		</view>
 		
-		<view class="dixian">---- 人家也是有底线哦 ----</view>
+		<view class="dixian">---- 祝您早日康复！ ----</view>
 	</view>
 </template>
 

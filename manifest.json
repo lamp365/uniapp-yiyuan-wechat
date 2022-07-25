@@ -1,5 +1,5 @@
 {
-    "name" : "大庆妇科医院",
+    "name" : "大庆北部医院",
     "appid" : "__UNI__6BE3FB0",
     "description" : "",
     "versionName" : "1.0.0",
@@ -50,7 +50,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx39bc6eb884e58132",
+        "appid" : "wx15f6d357d0f790f9",
         "setting" : {
             "urlCheck" : false
         },

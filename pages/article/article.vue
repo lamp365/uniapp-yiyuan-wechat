@@ -36,8 +36,8 @@
 			return {
 				listData:[],
 				page:1,
-				loadTitle:'------人家也是有底线的哦------',
-				tempTitle:'------人家也是有底线的哦------',
+				loadTitle:'------祝您早日康复！------',
+				tempTitle:'------祝您早日康复！------',
 				loading:false,
 				has_finish:false
 			}
