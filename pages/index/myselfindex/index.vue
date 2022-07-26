@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="header">
+		<view class="header" :style="{background:headStyle}">
 			<view class="serch-wrapper">
 		
 				<view class="input" @click="gotoSearch()">
@@ -10,7 +10,7 @@
 			</view>
 		</view>
 		<view class="swiperBg">
-			<view class="bag"></view>
+			<view class="bag" :style="{background:headStyle}"></view>
 			<view class="swiper">
 				<swiper :indicator-dots="true" :autoplay="true"   class="box">
 					<swiper-item v-for="(item,index) in topBanner" :key="index">
@@ -179,7 +179,8 @@ export default {
 			newProduct:[],
 			allCoupon:[],
 			copyright:"祝您早日康复！",
-			show_lanmu:0
+			show_lanmu:0,
+			headstyle:'#fff'
 		}
 	},
 	mounted(){
@@ -204,6 +205,7 @@ export default {
 					this.sysInfo = result;
 					this.copyright = result.copyright;
 					this.show_lanmu = result.show_lanmu;
+					this.headstyle = result.headstyle;
 					uni.setNavigationBarTitle({
 						title:result.shop_name
 					})
@@ -217,6 +219,7 @@ export default {
 				this.sysInfo = cacheData;
 				this.copyright = cacheData.copyright;
 				this.show_lanmu = cacheData.show_lanmu;
+				this.headstyle = cacheData.headstyle;
 				uni.setNavigationBarTitle({
 					title:cacheData.shop_name
 				})
@@ -229,6 +232,7 @@ export default {
 						this.sysInfo = result;
 						this.copyright = result.copyright;
 						this.show_lanmu = result.show_lanmu;
+						this.headstyle = result.headstyle;
 						uni.setNavigationBarTitle({
 							title:result.shop_name
 						})
