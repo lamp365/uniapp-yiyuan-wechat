@@ -327,7 +327,7 @@ export default {
 		width: 100%;
 		height: 134rpx;
 		background: #fff;
-		background: linear-gradient(to right, #7cc9f1, #1db0fc);
+		// background: linear-gradient(to right, #7cc9f1, #1db0fc);
 }
 .header .serch-wrapper{
     padding: 22rpx 32rpx 0 32rpx;
@@ -375,7 +375,7 @@ export default {
 .swiperBg .bag{
 	    width: 100%;
 	    height: 150rpx;
-	    background: linear-gradient(to right, #7cc9f1, #1db0fc);
+	    // background: linear-gradient(to right, #7cc9f1, #1db0fc);
 	    border-bottom-left-radius: 22px;
 	    border-bottom-right-radius: 22px;
 			position: absolute;
