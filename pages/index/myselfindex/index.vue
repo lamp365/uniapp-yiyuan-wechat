@@ -21,6 +21,10 @@
 			
 		</view>
 		
+		<view class="anli_box" v-if="show_lanmu !=0">
+			<view @click="gotoPage('/pages/article/article')"><image src="../../../static/article_anli.png" mode="widthFix"></image></view>
+			<view @click="gotoPage('/pages/article/video')"><image src="../../../static/video_anli.png" mode="widthFix"></image></view>
+		</view>
 		
 		<!-- 新人福利专区 -->
 		<view class="newfuli" v-if="newProduct.length > 0">
@@ -122,7 +126,7 @@
 
 
 			<!-- 好货推荐 -->
-			<view class="haohuo_title">
+			<view class="haohuo_title" v-if="show_lanmu ==0">
 				诊断项目
 			</view>
 			<view class="haohuo_box">
@@ -157,7 +161,7 @@
 			</view>
 		</view>
 		
-		<view class="dixian">---- 祝您早日康复！ ----</view>
+		<view class="dixian">---- {{copyright}} ----</view>
 	</view>
 </template>
 
@@ -173,7 +177,9 @@ export default {
 			page:1,
 			randProduct:[],
 			newProduct:[],
-			allCoupon:[]
+			allCoupon:[],
+			copyright:"祝您早日康复！",
+			show_lanmu:0
 		}
 	},
 	mounted(){
@@ -196,6 +202,8 @@ export default {
 					var cacheTime = Date.now();
 					result.cacheTime = cacheTime;
 					this.sysInfo = result;
+					this.copyright = result.copyright;
+					this.show_lanmu = result.show_lanmu;
 					uni.setNavigationBarTitle({
 						title:result.shop_name
 					})
@@ -205,14 +213,27 @@ export default {
 				const oldTime = cacheData.cacheTime;
 				const currentTime = Date.now();
 				const overTime = (currentTime - oldTime)/1000;
-				var condition = 60*60*24;
+				var condition = 60*60;
 				this.sysInfo = cacheData;
+				this.copyright = cacheData.copyright;
+				this.show_lanmu = cacheData.show_lanmu;
 				uni.setNavigationBarTitle({
 					title:cacheData.shop_name
 				})
 				if(overTime > condition){
 					//清空下次 重新请求
 					uni.setStorageSync('sysInfo','')
+					getShopInfo().then(result=>{
+						var cacheTime = Date.now();
+						result.cacheTime = cacheTime;
+						this.sysInfo = result;
+						this.copyright = result.copyright;
+						this.show_lanmu = result.show_lanmu;
+						uni.setNavigationBarTitle({
+							title:result.shop_name
+						})
+						uni.setStorageSync('sysInfo',result)
+					});
 				}
 				
 			}
@@ -290,6 +311,14 @@ export default {
 </script>
 
 <style lang="scss">
+.anli_box{
+	display: flex;
+	justify-content: space-between;
+	margin-top: 22rpx;
+	padding: 0rpx 22rpx;
+}
+.anli_box view{width: 50%;}
+.anli_box image{width: 100%;}
 .header{
 		width: 100%;
 		height: 134rpx;

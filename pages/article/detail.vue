@@ -34,22 +34,7 @@
 				this.sharePic = this.sysInfo.share_img;
 			}
 		},
-		onShareAppMessage(res) {
-			return {
-				title:this.web_name,
-				path:'/pages/index/index',
-				desc:'发现一款日常健康小知识很有用的小程序，分享给你来看看吧！',
-				imageUrl: this.sharePic
-			}
-		},
-		onShareTimeline(res) {
-			return {
-				title:this.web_name,
-				query:'a=1&b=2',
-				desc:'发现一款日常健康小知识很有用的小程序，分享给你来看看吧！',
-				imageUrl:this.sharePic
-			}
-		},
+	
 		onLoad(option){
 			var that = this;
 			this.id = option.id;

@@ -184,7 +184,7 @@
             "path" : "pages/article/article",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "资讯列表",
+                "navigationBarTitleText": "案例展示",
                 "enablePullDownRefresh": false
             }
             
@@ -279,6 +279,16 @@
             }
             
         }
+        ,{
+            "path" : "pages/article/video",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "科普介绍",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+		
     ],
 
 	"tabBar": {

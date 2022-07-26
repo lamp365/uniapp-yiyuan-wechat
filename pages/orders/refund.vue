@@ -107,7 +107,10 @@
 		onShow() {
 			orderState({from:'order'}).then(result=>{
 				this.orderData = result;
-			}) 
+			});
+			 var cacheData = uni.getStorageSync('sysInfo');
+			 this.loadTitle = cacheData.copyright;
+			 this.tempTitle = cacheData.copyright;
 		},
 		onLoad: function(options) {
 			if (options.status) 

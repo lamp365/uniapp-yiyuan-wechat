@@ -40,7 +40,7 @@
 								在线客服
 							</view>
 							<view class="tel">客服电话：18850737047 <text class="call" @click="callPhone()">点击拨打</text></view>
-							<view class="show_erweima"><image src="../../static/erweima.png" mode="widthFix"></image></view>
+							<view class="show_erweima"><image :src="erweima" mode="widthFix"></image></view>
 							<view class="sao">扫扫上面的二维码，联系在线客服</view>
 						</view>
 					</uni-popup>
@@ -55,7 +55,12 @@
 		data() {
 			return {
 				accordionVal:'1',
+				erweima:''
 			}
+		},
+		onShow() {
+			var cacheData = uni.getStorageSync('sysInfo');
+			this.erweima = cacheData.erweima;
 		},
 		methods: {
 			change(e) {

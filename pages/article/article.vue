@@ -1,9 +1,13 @@
 <template>
 	<view class="main_box">
 		
-		<uni-list v-if="listData.length > 0">
-			<uni-list-item v-for="(item,index) in listData" showArrow :title="item.title" :key="index"  link="redirectTo" :to="goToContent(item.id)" />
-		</uni-list>
+		<view class="artitle_list_box" v-for="(item,index) in listData" :key="index" @click="goToContent(item.id)">
+				<view class="pic"><image :src="item.picture" mode=""></image></view>
+				<view class="right">
+					<view class="title">{{item.title}}</view>
+					<view class="read">{{item.reading}}次阅读</view>
+				</view>
+		</view>
 		
 		
 		<view class="loadingicon" v-if="listData.length > 0">
@@ -28,7 +32,7 @@
 </template>
 
 <script>
-    import {getArticleList} from "../api/articleApi.js";
+    import {getArticleAnli} from "../api/articleApi.js";
 	import { shareMixins} from '@/mixins/share';
 	export default {
 		mixins: [shareMixins],
@@ -42,6 +46,11 @@
 				has_finish:false
 			}
 		},
+		onShow() {
+			var cacheData = uni.getStorageSync('sysInfo');
+			this.loadTitle = cacheData.copyright;
+			this.tempTitle = cacheData.copyright;
+		},
 		onLoad() {
 			this.getArticleListFunc();
 		},
@@ -49,8 +58,8 @@
 			getArticleListFunc(){
 				this.loading = true;
 				this.loadTitle = "加载中";
-				getArticleList({page:this.page}).then(response=>{
-					var result = response.list;
+				getArticleAnli({page:this.page}).then(response=>{
+					var result = response;
 					this.loading = false;
 					this.loadTitle = this.tempTitle;
 					if(result.length < 1){
@@ -64,7 +73,9 @@
 			},
 			goToContent(id){			
 				var url = "./detail?id="+id;
-				return url;
+				uni.navigateTo({
+					url:url
+				})
 			},
 			gotoMy(){
 				uni.navigateBack({
@@ -77,11 +88,38 @@
 
 <style>
 page{
-	background-color: #f8f8f8;
+	background: #fff;
 }
 .main_box{
 	padding: 20rpx 30rpx;
+	
 }
+/* article list */
+	.artitle_list_box{
+		padding: 0rpx 20rpx 16rpx 20rpx;
+		display: flex;
+		margin-top: 24rpx;
+		border-bottom: 1px solid #e9e9e9;
+	}
+	.artitle_list_box .pic image{
+		width: 200rpx;
+		height: 130rpx;
+	}	
+	.artitle_list_box .right{
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 10rpx 0rpx 22rpx 20rpx;
+	}
+	.artitle_list_box .right .title{
+		font-size: 28rpx;
+		color: #000;
+	}
+	.artitle_list_box .right .read{
+		font-size: 24rpx;
+		color: #888;
+	}
+	
 	.loadingicon{color: #666;text-align: center;margin-top: 12rpx;}
 	.c_loading .iconfont{font-size: 50rpx;}
 	.c_loadTitle{font-size: 24rpx;}
