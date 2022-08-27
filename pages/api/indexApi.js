@@ -5,6 +5,12 @@ export function getTopBanner() {
 		method: 'GET'
 	})
 }
+export function getShopYYBanner() {
+	return request({
+		url: 'shopBanner',
+		method: 'GET'
+	})
+}
 export function getShopInfo() {
   return request({
     url: 'getShop',

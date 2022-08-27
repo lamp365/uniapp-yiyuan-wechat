@@ -21,11 +21,13 @@
 			
 		</view>
 		
-		<view class="anli_box" v-if="show_lanmu !=0">
+		<view class="anli_box" v-if="shopYYID ==506">
 			<view @click="gotoPage('/pages/article/article')"><image src="../../../static/article_anli.png" mode="widthFix"></image></view>
 			<view @click="gotoPage('/pages/article/video')"><image src="../../../static/video_anli.png" mode="widthFix"></image></view>
 		</view>
-		
+		<view class="ling_banner" v-if="shopYYID ==508">
+			<view><image :src="yyBanner.fuke_head_bg" mode="widthFix"></image></view>
+		</view>
 		<!-- 新人福利专区 -->
 		<view class="newfuli" v-if="newProduct.length > 0">
 			<view class="main">
@@ -85,7 +87,7 @@
 	
 		
 		<view class="bbox_bg">
-			<!-- 优惠券 -->
+			<!-- 优惠券 --> 
 			<view class="coupon_main" v-if="allCoupon.length>0">
 				<view class="title">
 					<view class="tit1">
@@ -126,7 +128,7 @@
 
 
 			<!-- 好货推荐 -->
-			<view class="haohuo_title" v-if="show_lanmu ==0">
+			<view class="haohuo_title" v-if="shopYYID ==505">
 				诊断项目
 			</view>
 			<view class="haohuo_box">
@@ -161,14 +163,24 @@
 			</view>
 		</view>
 		
+		<view class="ling_banner" v-if="shopYYID ==508">
+			<view><image :src="yyBanner.yiyuan_about_bg" mode="widthFix"></image></view>
+			<view class="maps">
+				<map :longitude="location.longitude" :latitude="location.latitude" :scale="14" style="width:100%;height:100%;" :markers="locationMarkers"></map>
+			 </view>
+			 <view><image :src="yyBanner.jinan_map" mode="widthFix"></image></view>
+			 <view><image :src="yyBanner.yiyuan_lianxi_bg" mode="widthFix"></image></view>
+		</view>
+		
 		<view class="dixian">---- {{copyright}} ----</view>
 	</view>
 </template>
 
 <script>
-import {getShopInfo,getTopBanner} from "../../api/indexApi.js";
+import {getShopInfo,getTopBanner,getShopYYBanner} from "../../api/indexApi.js";
 import {getRandProduct,getNewProduct} from "../../api/productApi.js";
 import {getAllCoupon,lingQuan} from "../../api/couponApi.js";
+import Config from '@/pages/utils/config.js';
 export default {
 	data(){
 		return{
@@ -179,12 +191,17 @@ export default {
 			newProduct:[],
 			allCoupon:[],
 			copyright:"祝您早日康复！",
-			show_lanmu:0,
-			headstyle:'#fff'
+			shopYYID:0,
+			headstyle:'#fff',
+			yyBanner:{},
+			location:{},
+			locationMarkers:[{longitude:'',latitude:'',iconPath:''}]
 		}
 	},
 	mounted(){
+		this.shopYYID = Config.shopYYID;
 		this.getShopInfoInit();
+		this.getShopYYBannerFunc();
 		this.getRandProductFunc();
 		this.getNewProductFunc();
 		this.getAllCouponFunc();
@@ -204,8 +221,8 @@ export default {
 					result.cacheTime = cacheTime;
 					this.sysInfo = result;
 					this.copyright = result.copyright;
-					this.show_lanmu = result.show_lanmu;
 					this.headstyle = result.headstyle;
+					this.setLocationMap(result.location);
 					uni.setNavigationBarTitle({
 						title:result.shop_name
 					})
@@ -218,7 +235,8 @@ export default {
 				var condition = 60*60;
 				this.sysInfo = cacheData;
 				this.copyright = cacheData.copyright;
-				this.show_lanmu = cacheData.show_lanmu;
+				this.setLocationMap(cacheData.location);
+				
 				if(cacheData.headstyle != '' && cacheData.headstyle !=null && cacheData != undefined)
 				  this.headstyle = cacheData.headstyle;
 				uni.setNavigationBarTitle({
@@ -232,8 +250,8 @@ export default {
 						result.cacheTime = cacheTime;
 						this.sysInfo = result;
 						this.copyright = result.copyright;
-						this.show_lanmu = result.show_lanmu;
 						this.headstyle = result.headstyle;
+						this.setLocationMap(result.location);
 						uni.setNavigationBarTitle({
 							title:result.shop_name
 						})
@@ -242,6 +260,16 @@ export default {
 				}
 				
 			}
+		},
+		setLocationMap(location){
+			var location = location.split(",");
+			this.location.longitude = location[0];
+			this.location.latitude = location[1];
+			this.location.iconPath = '/static/address.png';
+			var locationMarkers = [];
+			locationMarkers.push(this.location);
+			this.locationMarkers = locationMarkers;
+			console.log(locationMarkers);
 		},
 		getRandProductFunc(){
 			getRandProduct().then(result=>{
@@ -310,6 +338,14 @@ export default {
 			uni.switchTab({
 				url:"/pages/search/search"
 			})
+		},
+		getShopYYBannerFunc(){
+			if(Config.shopYYID != 508){
+				return '';
+			}
+			getShopYYBanner().then(result=>{
+				this.yyBanner = result;
+			});
 		}
 	}
 }
@@ -394,6 +430,9 @@ export default {
 	width: 100%;
 	height: 306rpx;
 	border-radius: 20rpx;
+}
+.ling_banner image{
+	width: 100%;
 }
 // 新人福利
 .newfuli{
