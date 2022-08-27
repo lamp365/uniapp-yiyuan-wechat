@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="header" :style="{background:headStyle}">
+		<view class="header" :style="{background:headstyle}">
 			<view class="serch-wrapper">
 		
 				<view class="input" @click="gotoSearch()">
@@ -10,7 +10,7 @@
 			</view>
 		</view>
 		<view class="swiperBg">
-			<view class="bag" :style="{background:headStyle}"></view>
+			<view class="bag" :style="{background:headstyle}"></view>
 			<view class="swiper">
 				<swiper :indicator-dots="true" :autoplay="true"   class="box">
 					<swiper-item v-for="(item,index) in topBanner" :key="index">
@@ -219,7 +219,8 @@ export default {
 				this.sysInfo = cacheData;
 				this.copyright = cacheData.copyright;
 				this.show_lanmu = cacheData.show_lanmu;
-				this.headstyle = cacheData.headstyle;
+				if(cacheData.headstyle != '' && cacheData.headstyle !=null && cacheData != undefined)
+				  this.headstyle = cacheData.headstyle;
 				uni.setNavigationBarTitle({
 					title:cacheData.shop_name
 				})

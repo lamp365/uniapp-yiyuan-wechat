@@ -51,7 +51,7 @@
 	  	
 	  </view>
 	  
-	  <view class="dixian">---- {{copyright}} ----</view>
+	  <view class="dixian">{{copyright}}</view>
 	  
 		<!-- 弹窗end -->
 		<fullLoading :loadModal="loadModal"></fullLoading>
@@ -73,7 +73,7 @@
 				productData:[],
 				searchDataList:[],
 				loadModal:false,
-				copyright:'祝您早日康复!'
+				copyright:'------祝您早日康复!------'
 			}
 		},
 		onShow() {
@@ -81,7 +81,8 @@
 			this.searchDataList = uni.getStorageSync('search_history');
 			
 			var cacheData = uni.getStorageSync('sysInfo');
-			this.copyright = cacheData.copyright;
+			console.log(cacheData.copyright);
+			this.copyright = '------'+cacheData.copyright+'------';
 		},
 		methods: {
 			sureSearch(){

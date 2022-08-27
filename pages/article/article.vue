@@ -48,8 +48,8 @@
 		},
 		onShow() {
 			var cacheData = uni.getStorageSync('sysInfo');
-			this.loadTitle = cacheData.copyright;
-			this.tempTitle = cacheData.copyright;
+			this.loadTitle = '------'+cacheData.copyright+'------';
+			this.tempTitle =  '------'+cacheData.copyright+'------';
 		},
 		onLoad() {
 			this.getArticleListFunc();
