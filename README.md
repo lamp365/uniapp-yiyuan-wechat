@@ -28,5 +28,10 @@
 + 在打开微信小程序开发软件，导入上面打包出来的应用，在工具中把不校验https监测，打上勾，否则无法请求数据
 
 #### 图片展示
-![pic1](https://gitee.com/hanyi365/uniapp-yiyuan-wechat/blob/master/app-img/1.png)
+![pic1](https://gitee.com/hanyi365/uniapp-yiyuan-wechat/raw/master/app-img/1.png)
+![pic1](https://gitee.com/hanyi365/uniapp-yiyuan-wechat/raw/master/app-img/2.png)
+![pic1](https://gitee.com/hanyi365/uniapp-yiyuan-wechat/raw/master/app-img/3.png)
+![pic1](https://gitee.com/hanyi365/uniapp-yiyuan-wechat/raw/master/app-img/4.png)
+![pic1](https://gitee.com/hanyi365/uniapp-yiyuan-wechat/raw/master/app-img/5.png)
+![pic1](https://gitee.com/hanyi365/uniapp-yiyuan-wechat/raw/master/app-img/6.png)
 
