@@ -1,5 +1,5 @@
 {
-    "name" : "酒小二",
+    "name" : "预约",
     "appid" : "__UNI__6BE3FB0",
     "description" : "",
     "versionName" : "1.0.0",
@@ -50,7 +50,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wxb7b697f70649a7b6",
+        "appid" : "wx9aff60b6ee317050",
         "setting" : {
             "urlCheck" : false
         },

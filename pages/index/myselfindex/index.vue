@@ -165,10 +165,10 @@
 		
 		<view class="ling_banner" v-if="shopYYID ==508">
 			<view><image :src="yyBanner.yiyuan_about_bg" mode="widthFix"></image></view>
-			<view class="maps">
-				<map :longitude="location.longitude" :latitude="location.latitude" :scale="14" style="width:100%;height:100%;" :markers="locationMarkers"></map>
+			<view class="maps" style="height: 660rpx;padding: 30rpx;">
+				<map :longitude="location.longitude" :latitude="location.latitude" :scale="18" style="width:100%;height:100%;" :markers="locationMarkers"></map>
 			 </view>
-			 <view><image :src="yyBanner.jinan_map" mode="widthFix"></image></view>
+			 <!-- <view @click="showMap()"><image :src="yyBanner.jinan_map" mode="widthFix"></image></view> -->
 			 <view><image :src="yyBanner.yiyuan_lianxi_bg" mode="widthFix"></image></view>
 		</view>
 		
@@ -195,7 +195,7 @@ export default {
 			headstyle:'#fff',
 			yyBanner:{},
 			location:{},
-			locationMarkers:[{longitude:'',latitude:'',iconPath:''}]
+			locationMarkers:[{longitude:'',latitude:'',iconPath:'',id:202,width:20,height:20}]
 		}
 	},
 	mounted(){
@@ -266,10 +266,29 @@ export default {
 			this.location.longitude = location[0];
 			this.location.latitude = location[1];
 			this.location.iconPath = '/static/address.png';
+			this.location.id = 202;
+			this.location.width = 20;
+			this.location.height = 20;
 			var locationMarkers = [];
 			locationMarkers.push(this.location);
 			this.locationMarkers = locationMarkers;
 			console.log(locationMarkers);
+		},
+		showMap(){
+			var locationInfo = uni.getStorageSync('sysInfo');
+			var location = locationInfo.location;
+			var location =location.split(',');
+			var lat = location[0];
+			var lng = location[1];
+			console.log(lat,lng);
+			var that = this;
+			uni.openLocation({
+			     latitude: Number(lat),//即将传到高德或腾讯地图的终点纬度  必须是数值，字符串无效
+			     longitude:Number(lng),//即将传到高德或腾讯地图的终点经度  必须是数值，字符串无效
+			     name: locationInfo.shop_name,//即将传到高德或腾讯地图的店铺名称
+			     address: locationInfo.address,//即将传到高德或腾讯地图的详细地址
+			     scale: 18
+			})
 		},
 		getRandProductFunc(){
 			getRandProduct().then(result=>{

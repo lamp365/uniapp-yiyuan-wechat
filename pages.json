@@ -323,7 +323,7 @@
 		]
 	},
 	"globalStyle": {
-		"navigationStyle": "custom", //取消原生导航栏custom
+		"navigationStyle": "default", //取消原生导航栏custom default
 		"navigationBarTextStyle":"black",
 		"navigationBarTitleText": "加载中",
 		"navigationBarBackgroundColor": "#fff",
