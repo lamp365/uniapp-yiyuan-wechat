@@ -27,3 +27,6 @@
 + 打包生成一个H5应用，或者微信小程序应用
 + 在打开微信小程序开发软件，导入上面打包出来的应用，在工具中把不校验https监测，打上勾，否则无法请求数据
 
+#### 图片展示
+![pic1](https://gitee.com/hanyi365/uniapp-yiyuan-wechat/blob/master/%E9%A1%B9%E7%9B%AE%E5%9B%BE%E7%89%87/1.png)
+
